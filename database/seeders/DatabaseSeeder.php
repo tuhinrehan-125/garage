@@ -17,24 +17,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(CurrencySeeder::class);
-        $this->call(PermissionsTableSeeder::class);
-        DB::table('users')->insert([
-            'surname' => 'MR',
-            'first_name' => 'Imtiaz',
-            'last_name' => 'ahmed',
-            'username' => 'admin',
-            'email' => 'admin@gmail.com',
-            'password' => bcrypt('admin1234'),
-        ]);
+        $this->call(UserTableSeeder::class);
+//        $this->call(CurrencySeeder::class);
+//        $this->call(PermissionsTableSeeder::class);
+//        DB::table('users')->insert([
+//            'surname' => 'MR',
+//            'first_name' => 'Imtiaz',
+//            'last_name' => 'ahmed',
+//            'username' => 'admin',
+//            'email' => 'admin@gmail.com',
+//            'password' => bcrypt('admin1234'),
+//        ]);
 
-        DB::table('business')->insert([
-            'name' => 'Xyz',
-            'currency_id' => Currency::first()->id,
-            'owner_id' => User::first()->id
-        ]);
-        $user = User::first();
-        $user->business_id = Business::first()->id;
-        $user->save();
+//        DB::table('business')->insert([
+//            'name' => 'Xyz',
+//            'currency_id' => Currency::first()->id,
+//            'owner_id' => User::first()->id
+//        ]);
+//        $user = User::first();
+//        $user->business_id = Business::first()->id;
+//        $user->save();
     }
 }

@@ -8,4 +8,24 @@ use Illuminate\Database\Eloquent\Model;
 class Vehicle extends Model
 {
     use HasFactory;
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class);
+    }
+    public function brand(){
+        return $this->belongsTo(Brand::class,'brand_id','id');
+
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->latest();
+    }
+
 }

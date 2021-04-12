@@ -22,4 +22,9 @@ class Brand extends Model
     {
         return $query->where('business_id', Auth::user()->business_id)->orderBy('created_at', 'desc');
     }
+
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class, 'id', 'brand_id');
+    }
 }

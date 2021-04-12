@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdvanceController;
-use App\Http\Controllers\BankController;
-use App\Http\Controllers\ClientController;
+//use App\Http\Controllers\BankController;
+//use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\ContactController;
@@ -69,7 +69,7 @@ Route::group(
 Route::resource('product', ProductsController::class);
 Route::post('product/search', [ProductsController::class, 'productSearch']);
 Route::get('customer-search', [CustomerController::class, 'customerSearch']);
-Route::get('client-search', [ClientController::class, 'clientSearch']);
+//Route::get('client-search', [ClientController::class, 'clientSearch']);
 Route::post('contact-search', [ContactController::class, 'contactSearch']);
 
 Route::resource('category', CategoryController::class);
@@ -78,7 +78,7 @@ Route::get('get-subunits/{unit}', [UnitController::class, 'getSubUnits']);
 
 
 Route::resource('advance', AdvanceController::class);
-Route::resource('client', ClientController::class);
+//Route::resource('client', ClientController::class);
 Route::resource('customer', CustomerController::class);
 Route::resource('customer-group', CustomerGroupController::class);
 Route::resource('contact', ContactController::class);
@@ -95,7 +95,7 @@ Route::get('dashboard-data', [UserController::class, 'dashboardData']);
 
 Route::post('order', [OrderController::class, 'store']);
 Route::get('pos-prodcuts', [OrderController::class, 'posProducts']);
-Route::get('banks', [BankController::class, 'index']);
+//Route::get('banks', [BankController::class, 'index']);
 
 Route::group(
     [
@@ -148,3 +148,4 @@ Route::post('role-has-permission/{id}', [RoleController::class, 'permissionList'
 Route::post('user-role/{id}', [RoleController::class, 'userRole']);
 Route::resource('permission', PermissionController::class);
 
+Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);

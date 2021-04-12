@@ -32,9 +32,15 @@ class Contact extends Model
         'is_active',
         'deleted_at',
     ];
-    public function scopeActive($query,$type)
+
+    public function scopeActive($query, $type)
     {
-        return $query->where('business_id',Auth::user()->business_id)->where('type',$type);
+        return $query->where('business_id', Auth::user()->business_id)->where('type', $type);
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
     }
 
 }
