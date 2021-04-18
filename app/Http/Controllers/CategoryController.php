@@ -52,7 +52,7 @@ class CategoryController extends Controller
             $category->parent_id = 0;
         }
 
-        $category->business_id = auth()->user()->business_id;
+        $category->owner_id = auth()->user()->id;
         $category->name = $request->name;
         $category->short_code = $request->short_code;
 
