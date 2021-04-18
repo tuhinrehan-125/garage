@@ -40,7 +40,7 @@ class SalePurchaseReturn extends Model
 
     public function Product()
     {
-        return $this->belongsTo(Products::class);
+        return $this->belongsTo(Product::class);
     }
     public function Business()
     {

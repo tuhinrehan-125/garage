@@ -22,6 +22,10 @@ class Vehicle extends Model
         return $this->belongsTo(Brand::class,'brand_id','id');
 
     }
+    public function vehicleType(){
+        return $this->belongsTo(VehicleType::class,'type_id','id');
+
+    }
 
     public function scopeActive($query)
     {

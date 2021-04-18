@@ -23,10 +23,10 @@ class UserResource extends JsonResource
             'last_name' => ucfirst($this->last_name),
             'username' => $this->username,
             'email' => $this->email,
-            'business_id' => $this->business_id,
+//            'business_id' => $this->business_id,
             'language' => $this->language,
             'created_at' => $this->created_at ? $this->created_at->format('Y-m-d') : null,
-            'user_business_location' => auth()->user()->Business->location,
+//            'user_business_location' => auth()->user()->Business->location,
         ];
     }
 }

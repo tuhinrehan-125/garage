@@ -17,17 +17,17 @@ class CreateVehiclesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('owner_id');
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
-            
+
             $table->unsignedBigInteger('contact_id');
             $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
-            $table->unsignedBigInteger('brand_id');
+            $table->unsignedBigInteger('brand_id')->nullable();
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
             $table->string('model');
             $table->string('reg_no');
             $table->string('chassis_no');
             $table->string('mileage');
             $table->string('color')->nullable();
-            $table->string('type');
+            $table->string('type_id');
             $table->string('description')->nullable();
             $table->timestamps();
         });

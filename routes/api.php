@@ -149,3 +149,4 @@ Route::post('user-role/{id}', [RoleController::class, 'userRole']);
 Route::resource('permission', PermissionController::class);
 
 Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);
+Route::resource('service', \App\Http\Controllers\ServiceController::class);

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CustomerResource;
 use Illuminate\Http\Request;
 use App\Models\Customer;
-use App\Models\Products;
+use App\Models\Product;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 

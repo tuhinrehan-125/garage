@@ -17,24 +17,16 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('owner_id');
-            $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
-            $table->enum('type', ['single', 'variable']);
-            $table->unsignedBigInteger('unit_id');
-            $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');
-            $table->unsignedBigInteger('brand_id')->nullable();
-            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->unsignedBigInteger('sub_category_id')->nullable();
-            $table->foreign('sub_category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->enum('tax_type', ['inclusive', 'exclusive']);
-            $table->boolean('enable_stock')->default(0);
-            $table->integer('alert_quantity');
-            $table->string('sku');
-            $table->text('product_description')->nullable();
-            $table->string('weight')->nullable();
-            $table->enum('barcode_type', ['C39', 'C128', 'EAN13', 'EAN8', 'UPCA', 'UPCE']);
+//            $table->unsignedBigInteger('brand_id')->nullable();
+//            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
+            $table->string('brand');
+            $table->double('buying_price');
+            $table->double('selling_price')->nullable();
+            $table->string('image')->nullable();
+            $table->double('quantity');
+            $table->string('status')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('updated_by')->nullable();
@@ -45,7 +37,6 @@ class CreateProductsTable extends Migration
 
             //Indexing
             $table->index('name');
-            $table->index('unit_id');
             $table->index('created_by');
         });
     }

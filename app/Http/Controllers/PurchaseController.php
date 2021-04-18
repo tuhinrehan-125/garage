@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PurchaseResource;
 use App\Models\BusinessLocation;
 use App\Models\Contact;
-use App\Models\Products;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
@@ -64,7 +64,7 @@ class PurchaseController extends Controller
             $item_subtotal_price = 0;
             $afterDiscount=0;
             $afterTax=0;
-            
+
             foreach ($request->purchase_items as $store_items) {
                 $purchase_item = PurchaseItem::savePurchaseItem($purchase->id, $store_items);
                 $item_purchase_quantity += $purchase_item->purchase_quantity;
@@ -82,7 +82,7 @@ class PurchaseController extends Controller
                 $taxInPercentage = ($purchase->purchase_tax / 100);
                 $afterTax = $item_subtotal_price + ($item_subtotal_price * $taxInPercentage);
             }
-            
+
             $purchase->total_cost = $item_subtotal_price - ($afterDiscount + $afterTax);
 
             $purchase->save();
@@ -178,7 +178,7 @@ class PurchaseController extends Controller
             DB::rollback();
             return response()->json(['success' => false, 'errmsg' => $e->getMessage()], 500);
         }
-        
+
 
         return response(new PurchaseResource($purchase), Response::HTTP_CREATED);
     }
@@ -244,7 +244,7 @@ class PurchaseController extends Controller
     public function getProducts(Request $request)
     {
         $name = $request->name;
-        $products = Products::where('name', 'LIKE', "%$name%")->get();
+        $products = Product::where('name', 'LIKE', "%$name%")->get();
         return \response()->json($products);
     }
 

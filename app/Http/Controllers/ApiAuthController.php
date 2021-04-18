@@ -75,11 +75,11 @@ class ApiAuthController extends Controller
             $validator = Validator::make(
                 $request->all(),
                 [
-                    'business_name' => 'required|string',
-                    'owner_first_name' => 'required',
-                    'owner_last_name' => 'required',
-                    'owner_username' => 'required',
-                    'owner_email' => 'required',
+//                    'business_name' => 'required|string',
+                    'first_name' => 'required',
+                    'last_name' => 'required',
+                    'username' => 'required',
+                    'email' => 'required',
                     'password' => 'required',
 
                 ]
@@ -89,15 +89,15 @@ class ApiAuthController extends Controller
             }
             DB::beginTransaction();
             //Create owner.
-            $user = User::createUser($request->only(['owner_first_name', 'owner_last_name', 'owner_username', 'owner_email', 'password']));
+            $user = User::createUser($request->only(['surname','first_name', 'last_name', 'username', 'email', 'password']));
 
-            $business_details = $request->only(['business_name']);
+//            $business_details = $request->only(['business_name']);
 
             //Create the business
-            $business_details['owner_id'] = $user->id;
+//            $business_details['owner_id'] = $user->id;
 
-            $business = Business::createBusiness($business_details);
-            $user->business_id = $business->id;
+//            $business = Business::createBusiness($business_details);
+//            $user->business_id = $business->id;
             $user->save();
 
             DB::commit();
@@ -136,7 +136,8 @@ class ApiAuthController extends Controller
                 'token_type'     => 'bearer',
                 'expires_in' => auth('api')->factory()->getTTL() * 60,
                 'user' => auth()->user(),
-                'user_business_location' => auth()->user()->Business->location,
+//                'user_business_location' => auth()->user()->Business->location,
+
             ]
         );
     }

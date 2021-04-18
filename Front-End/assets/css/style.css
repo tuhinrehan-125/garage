@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&display=swap');
+
+.body,
+.v-application{
+    font-family: 'Lato', sans-serif !important;
+}
+
+.login-card.pa-7 {
+  padding: 12px !important;
+}
+@media (min-width: 1264px) and (max-width: 1903px) {
+  .flex.lg5-custom {
+    width: 20%;
+    max-width: 20%;
+    flex-basis: 20%;
+  }
+}
+
+.v-list-item--active {
+  background-color: #4caf50 !important;
+  box-shadow: 0 12px 20px -10px rgba(76, 175, 80, 0.28),
+    0 4px 20px 0 rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(76, 175, 80, 0.2);
+}
+.v-list-item--active .v-list-item__title {
+  color: #fff !important;
+}
+.v-alert--material .v-alert__icon {
+  top: 0px !important;
+}
+.v-alert {
+  padding: 14px !important;
+}
+.v-alert .v-alert__wrapper .v-alert__content {
+  font-size: 15px !important;
+}
+.v-picker {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+.v-main {
+  background-color: #ebeef6;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+.v-application p {
+  margin-bottom: 10px !important;
+}
+.v-chip__content {
+  font-size: 12px !important;
+  text-align: center;
+  margin: 0 auto;
+}
+.v-chip {
+  width: 57px;
+}
+.v-footer
+{
+  position: absolute !important;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  width: 100%;
+}
+.arot-logo img {
+  width: 180px !important;
+  width: 100px;
+}
+.no-gutters>.col, .no-gutters>[class*=col-]
+{
+  padding-right: 10px !important;
+  padding-bottom: 10px !important;
+}
+.mb-50
+{
+  margin-bottom: 50px !important;
+}
+.mb-60
+{
+  margin-bottom: 60px !important;
+}
+.mb-70
+{
+  margin-bottom: 70px !important;
+}
+.v-list-group .v-icon.v-icon
+{
+  font-size: 16px !important;
+}

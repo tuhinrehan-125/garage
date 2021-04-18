@@ -27,9 +27,9 @@ class Category extends Model
         return $this->hasMany(SubCategory::class, 'category_id');
     }
 
-    public function Products()
+    public function products()
     {
-        return $this->hasMany(Products::class, 'category_id');
+        return $this->hasMany(Product::class, 'category_id');
     }
 
     public function Parent()
@@ -39,6 +39,12 @@ class Category extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('business_id', Auth::user()->business_id)->orderBy('created_at', 'desc');
+//        return $query->where('business_id', Auth::user()->business_id)->orderBy('created_at', 'desc');
+        return $query->orderBy('created_at', 'desc');
+    }
+
+    public function services()
+    {
+        return $this->hasMany(Service::class);
     }
 }

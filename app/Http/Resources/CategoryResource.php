@@ -17,7 +17,7 @@ class CategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'short_code' => $this->short_code,
+            'short_code' => $this->short_code? $this->short_code:'N/A',
             'business_id' => $this->business_id,
             'parent_id' => $this->parent_id,
             'parent_cat_name' => $this->Parent?$this->Parent->name:'N/A',

@@ -15,6 +15,7 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory, Notifiable;
 
     use HasRoles;
+
     protected $guard_name = 'api';
 
     /**
@@ -66,10 +67,11 @@ class User extends Authenticatable implements JWTSubject
     public static function createUser($data)
     {
         $user = User::create([
-            'first_name' => $data['owner_first_name'],
-            'last_name' => $data['owner_last_name'],
-            'username' => $data['owner_username'],
-            'email' => $data['owner_email'],
+            'surname' => $data['surname'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'username' => $data['username'],
+            'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'language' => 'en'
         ]);
@@ -82,8 +84,13 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Business::class, 'owner_id');
     }
 
-    public function vehicles(){
+    public function vehicles()
+    {
         return $this->hasMany(Vehicle::class);
     }
 
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
 }

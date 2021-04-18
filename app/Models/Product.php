@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class Products extends Model
+class Product extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -15,10 +15,10 @@ class Products extends Model
     protected $table = "products";
 
     protected $fillable = [
-        'name',  'type', 'unit_id', 'brand_id', 'category_id', 'tax', 'tax_type', 'enable_stock', 'alert_quantity', 'sku', 'product_description', 'weight', 'price', 'image', 'barcode_type', 'deleted_at',
+        'name', 'type', 'brand_id', 'category_id', 'buying_price', 'selling_price', 'quantity', 'status', 'image', 'created_by', 'updated_by', 'deleted_at',
     ];
 
-    public function Category()
+    public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
@@ -28,10 +28,10 @@ class Products extends Model
         return $this->belongsTo(Unit::class, 'unit_id');
     }
 
-    public function Brand()
-    {
-        return $this->belongsTo(Brand::class, 'brand_id');
-    }
+//    public function brand()
+//    {
+//        return $this->belongsTo(Brand::class, 'brand_id');
+//    }
 
     public function getImageAttribute($value)
     {
@@ -43,9 +43,14 @@ class Products extends Model
         return $this->hasMany(SalePurchaseReturn::class);
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('status','active')->latest();
+    }
+
     public function media()
     {
-        return $this->morphOne(File::class,'fileable');
+        return $this->morphOne(File::class, 'fileable');
     }
 
     public static function generateSku($sku)
@@ -53,7 +58,7 @@ class Products extends Model
         if (!empty($sku)) {
             $checkSku = self::where('sku', $sku)->get();
             if (count($checkSku) > 0) {
-                return $sku+'-'+count($checkSku) + 1;
+                return $sku + '-' + count($checkSku) + 1;
             } else {
                 return $sku;
             }
@@ -64,10 +69,11 @@ class Products extends Model
 
     public static function generateSubSku($product)
     {
-        $countvariations= ProductVariation::where('product_id', $product->id)->count() + 1;
-        return $product->sku. '-' . $countvariations;
+        $countvariations = ProductVariation::where('product_id', $product->id)->count() + 1;
+        return $product->sku . '-' . $countvariations;
     }
-    public static function createSingleProductVariation($product,$purchase_price,$sell_price,$tax)
+
+    public static function createSingleProductVariation($product, $purchase_price, $sell_price, $tax)
     {
         $variation_data = [
             'name' => $product->name,
@@ -80,15 +86,16 @@ class Products extends Model
         ProductVariation::create($variation_data);
         return true;
     }
-    public static function createVariableProductVariations($product,$product_variation)
+
+    public static function createVariableProductVariations($product, $product_variation)
     {
         $variation_data = [
             'name' => $product_variation['name'],
             'product_id' => $product->id,
-            'sub_sku' => empty($product_variation['sub_sku'])? self::generateSubSku($product):$product_variation['sub_sku'],
+            'sub_sku' => empty($product_variation['sub_sku']) ? self::generateSubSku($product) : $product_variation['sub_sku'],
             'purchase_price' => $product_variation['purchase_price'],
             'sell_price' => $product_variation['sell_price'],
-            'tax' =>$product_variation['tax']
+            'tax' => $product_variation['tax']
         ];
         ProductVariation::create($variation_data);
         return true;

@@ -17,19 +17,12 @@ class ProductResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'type' => $this->type,
-            'unit_id' => $this->unit_id,
-            'unit_name' => $this->Unit ? $this->Unit->name : null,
-            'brand' => $this->Brand?$this->Brand->name:null,
-            'category' => $this->Category->name,
-            'tax' => $this->tax,
-            'tax_type' => $this->tax_type,
-            'enable_stock' => $this->enable_stock,
-            'alert_quantity' => $this->alert_quantity,
-            'sku' => $this->sku,
-            'product_description' => $this->product_description,
-            'weight' => $this->weight,
-            'barcode_type' => $this->barcode_type,
+            'category' => $this->category? $this->category->name:'',
+            'buying_price' => $this->buying_price,
+            'selling_price' => $this->selling_price,
+            'quantity' => $this->quantity,
+            'brand' => $this->brand,
+
         ];
     }
 }

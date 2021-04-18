@@ -6,7 +6,7 @@ use App\Models\Client;
 use App\Models\Collection;
 use App\Models\Customer;
 use App\Models\Payment;
-use App\Models\Products;
+use App\Models\Product;
 use App\Models\Setting;
 use App\Models\User;
 use Carbon\Carbon;
@@ -89,7 +89,7 @@ class UserController extends Controller
             ->take(4)
             ->get();
 
-        $popular_fish = Products::join('order_products', 'products.id', '=', 'order_products.product_id')
+        $popular_fish = Product::join('order_products', 'products.id', '=', 'order_products.product_id')
             ->selectRaw("products.*, sum(order_products.total) as total_amount")
             ->where('products.delete_status', 1)
             ->groupBy('products.id')
