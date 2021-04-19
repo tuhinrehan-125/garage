@@ -40,7 +40,7 @@
         </v-card>
         <v-card class="mb-70" v-else>
           <v-card-title>
-            {{ $t("brand_list") }}
+            {{ $t("Brand List") }}
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"

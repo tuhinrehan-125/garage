@@ -34,8 +34,7 @@ class BrandController extends Controller
         }
 
         $brand = new Brand();
-
-        $brand->business_id = auth()->user()->business_id;
+        $brand->owner_id = auth()->user()->id;
         $brand->name = $request->name;
         $brand->description = $request->description;
 

@@ -73,6 +73,7 @@ Route::get('customer-search', [CustomerController::class, 'customerSearch']);
 Route::post('contact-search', [ContactController::class, 'contactSearch']);
 
 Route::resource('category', CategoryController::class);
+Route::get('getAllCategories',[ProductsController::class,'getAllCategories']);
 Route::get('get-subcategories/{category}', [CategoryController::class, 'getSubcategories']);
 Route::get('get-subunits/{unit}', [UnitController::class, 'getSubUnits']);
 

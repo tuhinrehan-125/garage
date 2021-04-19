@@ -117,12 +117,7 @@ export default {
           let response = await this.$auth.loginWith("local", {
             data: this.form,
           });
-        // if(response.data.user_business_location.length==0)
-        //  {
-        //    this.$router.push('/business-setting-and-location')
-        //  }else{
-        //    this.$router.push('/dashboard')
-        //  }
+
 
           this.$router.push('/dashboard')
          this.isLoading = false;
