@@ -19,14 +19,6 @@
               <v-row no-gutters>
                 <v-col cols="12" md="6" lg="6">
                   <v-text-field
-                    v-model="form.surname"
-                    label="Sur Name"
-                    required
-                    outlined
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6" lg="6">
-                  <v-text-field
                     v-model="form.first_name"
                     :rules="[rules.required]"
                     label="First Name"
@@ -34,8 +26,6 @@
                      outlined
                   ></v-text-field>
                 </v-col>
-              </v-row>
-              <v-row no-gutters>
                 <v-col cols="12" md="6" lg="6">
                   <v-text-field
                     v-model="form.last_name"
@@ -45,7 +35,10 @@
                     outlined
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="6" lg="6">
+              </v-row>
+              <v-row no-gutters>
+
+                <v-col cols="12">
                   <v-text-field
                     v-model="form.username"
                     :rules="[rules.required]"
@@ -55,15 +48,6 @@
                   ></v-text-field>
                 </v-col>
 
-<!--                <v-col cols="12" md="6" lg="6">-->
-<!--                  <v-text-field-->
-<!--                    v-model="form.business_name"-->
-<!--                    :rules="[rules.required]"-->
-<!--                    label="Business Name"-->
-<!--                    required-->
-<!--                     outlined-->
-<!--                  ></v-text-field>-->
-<!--                </v-col>-->
               </v-row>
               <v-row no-gutters>
                 <v-col cols="12">
@@ -152,7 +136,6 @@ export default {
       tab: 0,
       valid: true,
       form: {
-        surname:"",
         first_name: "",
         last_name: "",
         username: "",
