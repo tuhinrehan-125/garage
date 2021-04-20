@@ -1,6 +1,7 @@
 <template>
   <v-container grid-list-sm>
     <v-row justify="center">
+      <edit-product :item="singleItem"  :items="productslist" @refresh="getProducts()"/>
       <v-dialog v-model="confirmation" max-width="300">
         <v-card>
           <v-card-title>
@@ -41,13 +42,13 @@
               :items="productslist"
               :search="search"
             >
-              <template v-slot:item.image="{ item }">
-                <img
-                  class="product-img"
-                  :src="item.image"
-                  style="width: 50px; height: 50px"
-                />
-              </template>
+<!--              <template v-slot:item.image="{ item }">-->
+<!--                <img-->
+<!--                  class="product-img"-->
+<!--                  :src="item.image"-->
+<!--                  style="width: 50px; height: 50px"-->
+<!--                />-->
+<!--              </template>-->
 
               <template v-slot:item.actions="{ item }">
                 <v-btn
@@ -78,13 +79,14 @@
 </template>
 
 <script>
+import editProduct from "~/components/product/editProduct";
 export default {
   name: "Products",
   middleware: "auth",
   head: {
     title: "Product List",
   },
-  components: {},
+  components: { editProduct},
   data() {
     return {
       search: "",
@@ -107,22 +109,24 @@ export default {
         price: "",
         image: null,
       },
+      singleItem: {},
       prodid: "",
-      categories: [],
+      // categories: [],
       productslist: [],
-      categories: [],
+      // categories: [],
       subcategories: [],
       units: [],
+      items: [],
     };
   },
   computed: {
     headers() {
       return [
-        {
-          sortable: false,
-          text: this.$t("image"),
-          value: "image",
-        },
+        // {
+        //   sortable: false,
+        //   text: this.$t("image"),
+        //   value: "image",
+        // },
         {
           sortable: false,
           text: this.$t("product_name"),
@@ -156,6 +160,11 @@ export default {
         },
         {
           sortable: false,
+          text: this.$t("Status"),
+          value: "status",
+        },
+        {
+          sortable: false,
           text: this.$t("action"),
           value: "actions",
         },
@@ -179,18 +188,28 @@ export default {
     this.getProducts();
   },
   methods: {
+    opendialog(type) {
+      this.$store.commit("SET_MODAL", { type: type, status: true });
+    },
     editProduct(item) {
-      this.update = true;
-      this.dialog = true;
-      this.headline = this.$t("edit_product");
-      this.form.name = item.name;
-      this.form.details = item.details;
-      this.form.category_id = item.category_id;
-      this.form.subcategory_id = item.subcategory_id;
-      this.form.unit_id = item.unit_id;
-      this.form.weight = item.weight;
-      this.form.price = item.price;
-      this.prodid = item.id;
+      // this.$store.commit('changeDataState',item);
+      this.$store.commit("SET_MODAL", { type: "edit", status: true });
+      this.singleItem = item;
+      // this.$router.push({ path: '/product/edit' ,params: {
+      //     items: item
+      //   }});
+      // this.singleItem = item;
+      // this.update = true;
+      // this.dialog = true;
+      // this.headline = this.$t("edit_product");
+      // this.form.name = item.name;
+      // this.form.details = item.details;
+      // this.form.category_id = item.category_id;
+      // this.form.subcategory_id = item.subcategory_id;
+      // this.form.unit_id = item.unit_id;
+      // this.form.weight = item.weight;
+      // this.form.price = item.price;
+      // this.prodid = item.id;
     },
     deleteProduct(item) {
       this.confirmation = true;

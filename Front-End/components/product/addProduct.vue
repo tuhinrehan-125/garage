@@ -137,13 +137,14 @@
 </template>
 
 <script>
+import editProduct from "~/components/product/editProduct";
 export default {
   name: "Add Product",
   middleware: "auth",
   head: {
     title: "Add Product",
   },
-  components: {},
+  components: {editProduct},
   data: () => ({
     isLoading: false,
     valid: true,
@@ -196,19 +197,16 @@ export default {
       if (this.$refs.form.validate()) {
 
         try {
+          let formData = new FormData();
+          for (var key in this.form) {
+            formData.append(key, this.form[key]);
+          }
 
-          await this.$axios
-            .post("/product", {
-              name: this.form.name,
-              buying_price: this.form.buying_price,
-              selling_price: this.form.selling_price,
-              brand: this.form.brand,
-              quantity: this.form.quantity,
-              status: this.form.status,
-              category_id: this.form.category_id,
-              image: this.form.image,
-
-            })
+          await this.$axios.post("/product", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          })
             .then(response => {
               this.isLoading = false;
               let data = {alert: true, message: "Product Added Successfully", type: 'success'};

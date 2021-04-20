@@ -63,7 +63,7 @@ class ProductsController extends Controller
             $product->selling_price = $request->selling_price;
             $product->quantity = $request->quantity;
             $product->status = $request->status;
-//            $product->created_by = auth()->user()->id;
+            $product->created_by = auth()->user()->id;
             $product->save();
             return response(new ProductResource($product), Response::HTTP_CREATED);
         }
@@ -74,7 +74,7 @@ class ProductsController extends Controller
         $product->selling_price = $request->selling_price;
         $product->quantity = $request->quantity;
         $product->status = $request->status;
-        //            $product->created_by = auth()->user()->id;
+        $product->created_by = auth()->user()->id;
 
         $product->save();
         return response(new ProductResource($product), Response::HTTP_CREATED);
@@ -97,7 +97,7 @@ class ProductsController extends Controller
                 'buying_price' => 'numeric',
                 'selling_price' => 'numeric',
                 'quantity' => 'numeric',
-                'image' => 'image|mimes:jpeg,jpg,png|max:300'
+//                'image' => 'image|mimes:jpeg,jpg,png|max:300'
             ]
         );
 
@@ -118,14 +118,13 @@ class ProductsController extends Controller
             $product->selling_price = $request->selling_price;
             $product->quantity = $request->quantity;
             $product->status = $request->status;
-//            $product->updated_by = auth()->user()->id;
+            $product->updated_by = auth()->user()->id;
             $product->save();
             $request->image->move(public_path('images/products/'), $imageName);
 
             return response(new ProductResource($product), Response::HTTP_CREATED);
         }
 
-//        dd($request->all());
         $product->name = $request->name;
         $product->category_id = $request->category_id;
         $product->brand = $request->brand;
@@ -133,8 +132,8 @@ class ProductsController extends Controller
         $product->selling_price = $request->selling_price;
         $product->quantity = $request->quantity;
         $product->status = $request->status;
-//            $product->updated_by = auth()->user()->id;
-//        dd($product);
+        $product->updated_by = auth()->user()->id;
+
         $product->save();
 
 

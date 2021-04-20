@@ -29,7 +29,7 @@ class ContactResource extends JsonResource
             'mobile' => $this->mobile,
             'alternate_number' => $this->alternate_number,
             'is_active' => $this->is_active,
-            'customer_group_id' => $this->customer_group_id,
+//            'customer_group_id' => $this->customer_group_id,
             'created_at' => $this->created_at->format('Y-m-d'),
         ];
     }

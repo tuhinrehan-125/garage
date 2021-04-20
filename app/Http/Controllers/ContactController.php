@@ -10,10 +10,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ContactController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('jwt', ['except' => ['index']]);
-    // }
+     public function __construct()
+     {
+         $this->middleware('jwt', ['except' => ['index']]);
+     }
 
     public function index(Request $request)
     {
@@ -32,9 +32,9 @@ class ContactController extends Controller
                 'name'     => 'required',
                 'email'     => 'required',
                 'address'     => 'required',
-                'city'     => 'required',
-                'mobile'     => 'required',
-                'zip_code'     => 'required',
+//                'city'     => 'required',
+//                'mobile'     => 'required',
+//                'zip_code'     => 'required',
             ]
         );
         if ($validator->fails()) {
@@ -42,7 +42,7 @@ class ContactController extends Controller
         }
 
         $contact = new Contact();
-        $contact->business_id = auth()->user()->business_id;
+        $contact->owner_id = auth()->user()->id;
         $contact->name = $request->name;
         $contact->supplier_business_name = $request->supplier_business_name;
         $contact->type = $request->type;
@@ -56,7 +56,7 @@ class ContactController extends Controller
         $contact->mobile = $request->mobile;
         $contact->alternate_number = $request->alternate_number;
         $contact->created_by = auth()->user()->id;
-        $contact->customer_group_id = $request->customer_group_id;
+//        $contact->customer_group_id = $request->customer_group_id;
         $contact->save();
 
         return response(new ContactResource($contact), Response::HTTP_CREATED);
@@ -122,17 +122,18 @@ class ContactController extends Controller
 
     public function contactSearch(Request $request)
     {
-        $business_id = auth()->user()->business_id;
-
+//        $business_id = auth()->user()->business_id;
+        $owner_id = auth()->user()->id;
         $type = $request->type;
         $name = $request->name;
         if ($type == "customer") {
             $type = "customer";
-            $contact = Contact::where('type', 'LIKE', "%$type%")->where('name', 'LIKE', "%$name%")->where('business_id', 'LIKE', "%$business_id%")->get();
+            $contact = Contact::where('type', 'LIKE', "%$type%")->where('name', 'LIKE', "%$name%")->where('owner_id', 'LIKE', "%$owner_id%")->get();
         } elseif ($type == "supplier") {
             $type = "supplier";
-            $contact = Contact::where('type', 'LIKE', "%$type%")->where('name', 'LIKE', "%$name%")->where('business_id', 'LIKE', "%$business_id%")->get();
+            $contact = Contact::where('type', 'LIKE', "%$type%")->where('name', 'LIKE', "%$name%")->where('owner_id', 'LIKE', "%$owner_id%")->get();
         }
+
 
         if (count($contact) > 0) {
             return response(ContactResource::collection($contact), Response::HTTP_OK);

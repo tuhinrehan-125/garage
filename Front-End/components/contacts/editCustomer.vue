@@ -27,14 +27,14 @@
                   dense
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  :label="$t('tax_number')"
-                  v-model="form.tax_number"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
+<!--              <v-col cols="12" md="6">-->
+<!--                <v-text-field-->
+<!--                  :label="$t('tax_number')"-->
+<!--                  v-model="form.tax_number"-->
+<!--                  outlined-->
+<!--                  dense-->
+<!--                ></v-text-field>-->
+<!--              </v-col>-->
 
               <v-col cols="12" md="6">
                 <v-text-field
@@ -44,39 +44,39 @@
                   dense
                 ></v-text-field>
               </v-col>
+<!--              <v-col cols="12" md="6">-->
+<!--                <v-text-field-->
+<!--                  :label="$t('country')"-->
+<!--                  v-model="form.country"-->
+<!--                  outlined-->
+<!--                  dense-->
+<!--                ></v-text-field>-->
+<!--              </v-col>-->
+<!--              <v-col cols="12" md="6">-->
+<!--                <v-text-field-->
+<!--                  :label="$t('city')"-->
+<!--                  v-model="form.city"-->
+<!--                  outlined-->
+<!--                  dense-->
+<!--                ></v-text-field>-->
+<!--              </v-col>-->
+<!--              <v-col cols="12" md="6">-->
+<!--                <v-text-field-->
+<!--                  :label="$t('state')"-->
+<!--                  v-model="form.state"-->
+<!--                  outlined-->
+<!--                  dense-->
+<!--                ></v-text-field>-->
+<!--              </v-col>-->
+<!--              <v-col cols="12" md="6">-->
+<!--                <v-text-field-->
+<!--                  :label="$t('zip_code')"-->
+<!--                  v-model="form.zip_code"-->
+<!--                  outlined-->
+<!--                  dense-->
+<!--                ></v-text-field>-->
+<!--              </v-col>-->
               <v-col cols="12" md="6">
-                <v-text-field
-                  :label="$t('country')"
-                  v-model="form.country"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  :label="$t('city')"
-                  v-model="form.city"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  :label="$t('state')"
-                  v-model="form.state"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  :label="$t('zip_code')"
-                  v-model="form.zip_code"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
                 <v-text-field
                   :label="$t('address')"
                   v-model="form.address"

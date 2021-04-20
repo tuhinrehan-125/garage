@@ -124,11 +124,11 @@ export default {
           text: this.$t("address"),
           value: "address",
         },
-        {
-          sortable: false,
-          text: this.$t("company_name"),
-          value: "supplier_business_name",
-        },
+        // {
+        //   sortable: false,
+        //   text: this.$t("company_name"),
+        //   value: "supplier_business_name",
+        // },
         {
           sortable: false,
           text: this.$t("action"),

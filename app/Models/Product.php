@@ -45,7 +45,7 @@ class Product extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('status','active')->latest();
+        return $query->latest();
     }
 
     public function media()
