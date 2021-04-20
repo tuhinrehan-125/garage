@@ -13,7 +13,7 @@
             </v-icon>
           </v-card-title>
           <v-card-text class="pb-6 pt-12 text-center">
-            <v-btn class="mr-3" text @click="confirmation = false"> No </v-btn>
+            <v-btn class="mr-3" text @click="confirmation = false"> NO </v-btn>
             <v-btn color="success" text @click="confirmDelete()"> Yes </v-btn>
           </v-card-text>
         </v-card>
