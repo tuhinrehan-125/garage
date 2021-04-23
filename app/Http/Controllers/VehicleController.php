@@ -9,10 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 class VehicleController extends Controller
 {
-//    public function __construct()
-//    {
-//        $this->middleware('jwt', ['except' => ['index']]);
-//    }
+    public function __construct()
+    {
+        $this->middleware('jwt', ['except' => ['index']]);
+    }
 
     public function index()
     {
@@ -30,8 +30,7 @@ class VehicleController extends Controller
                 'model' => 'required',
                 'reg_no' => 'required|unique:vehicles',
                 'chassis_no' => 'required|unique:vehicles',
-                'mileage' => 'required',
-                'type_id' => 'required'
+                'mileage' => 'required'
             ]
         );
         if ($validator->fails()) {
@@ -42,13 +41,13 @@ class VehicleController extends Controller
         $vehicle->owner_id  = $request->owner_id;
         $vehicle->contact_id = $request->contact_id;
         $vehicle->brand_id = $request->brand_id;
-        $vehicle->brand_name = $request->brand_name;
+        //$vehicle->brand_name = $request->brand_name;
         $vehicle->model = $request->model;
         $vehicle->reg_no = $request->reg_no;
         $vehicle->chassis_no = $request->chassis_no;
         $vehicle->mileage = $request->mileage;
         $vehicle->color = $request->color;
-        $vehicle->type_id = $request->type_id;
+        //$vehicle->type = $request->type_id;
         $vehicle->description = $request->description;
         $vehicle->save();
 

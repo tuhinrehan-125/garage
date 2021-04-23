@@ -55,16 +55,7 @@ Route::group(
         Route::get('refresh', 'ApiAuthController@refresh');
     }
 );
-Route::group(
-    [
-        'middleware' => 'api',
-        'namespace'  => 'App\Http\Controllers',
-    ],
-    function ($router) {
-        Route::post('business-setting-and-location', "BusinessController@saveSettingsAndLocation");
-        Route::get('get-currency', "BusinessController@getAllCurrency");
-    }
-);
+
 
 Route::resource('product', ProductsController::class);
 Route::post('product/search', [ProductsController::class, 'productSearch']);
@@ -122,12 +113,9 @@ Route::resource('brand', BrandController::class);
 
 Route::resource('unit', UnitController::class);
 
-Route::resource('product-variation', VariationController::class);
-
 Route::resource('purchase', PurchaseController::class);
 
 Route::get('purchase-contacts', [PurchaseController::class, 'getContacts']);
-Route::get('purchase-business-locations', [PurchaseController::class, 'getBusinessLocations']);
 Route::get('purchase-products/{name}',[PurchaseController::class, 'getProducts']);
 
 Route::patch('addpayment/{id}', [PurchaseController::class, 'addPayment']);
@@ -150,4 +138,5 @@ Route::post('user-role/{id}', [RoleController::class, 'userRole']);
 Route::resource('permission', PermissionController::class);
 
 Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);
+Route::resource('vehicle-type', \App\Http\Controllers\VehicleTypeController::class);
 Route::resource('service', \App\Http\Controllers\ServiceController::class);

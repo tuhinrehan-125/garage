@@ -168,11 +168,27 @@ export default {
             // }
           ]
         },
-
         {
           icon: "mdi-car",
           title: this.$t("Vehicles"),
-
+          to: "/vehicle",
+          children: [
+            {
+              icon: "mdi-shape",
+              title: this.$t("Vehicle List"),
+              to: "/list"
+            },
+            {
+              icon: "mdi-shape",
+              title: this.$t("Add Vehicle"),
+              to: "/add"
+            },
+            {
+              icon: "mdi-shape",
+              title: this.$t("Vehicle Type"),
+              to: "/vehicletype"
+            },
+            ]
         },
 
         {
