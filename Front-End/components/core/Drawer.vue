@@ -188,7 +188,12 @@ export default {
               title: this.$t("Vehicle Type"),
               to: "/vehicletype"
             },
-            ]
+            {
+              icon: "mdi-shape",
+              title: this.$t("Vehicle Color"),
+              to: "/vehiclecolor"
+            },
+          ]
         },
 
         {
