@@ -199,7 +199,7 @@ export default {
         {
           icon: "mdi-link",
           title: this.$t("Services"),
-
+          to: "/service",
         },
         {
           icon: "mdi-cart",
@@ -215,6 +215,28 @@ export default {
               icon: "mdi-plus-circle-outline",
               title: this.$t("Add Purchase"),
               to: "/add"
+            }
+          ]
+        },
+        {
+          icon: "mdi-inbox-arrow-up",
+          title: this.$t("expense"),
+          to: "/expense",
+          children: [
+            {
+              icon: "mdi-inbox-arrow-up",
+              title: this.$t("expense_list"),
+              to: "/list"
+            },
+            {
+              icon: "mdi-inbox-arrow-up",
+              title: this.$t("add_expense"),
+              to: "/add",
+            },
+            {
+              icon: "mdi-shape",
+              title: this.$t("expense_category"),
+              to: "/category"
             }
           ]
         },

@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     use HasFactory;
+    protected $table = "services";
+    protected $fillable = [
+        'name', 'category_id', 'selling_price', 'status', 'description'
+    ];
 
     public function category()
     {
@@ -21,4 +25,8 @@ class Service extends Model
     {
         return $query->where('status','active')->latest();
     }
+    // public function scopeActive($query)
+    // {
+    //     return $query->orderBy('created_at', 'desc');
+    // }
 }

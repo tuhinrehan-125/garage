@@ -140,4 +140,5 @@ Route::resource('permission', PermissionController::class);
 Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);
 Route::resource('vehicle-type', \App\Http\Controllers\VehicleTypeController::class);
 Route::resource('vehicle-color', \App\Http\Controllers\ColorController::class);
+
 Route::resource('service', \App\Http\Controllers\ServiceController::class);

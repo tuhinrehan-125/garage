@@ -9,10 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 class ServiceController extends Controller
 {
-    //    public function __construct()
-//    {
-//        $this->middleware('jwt', ['except' => ['index']]);
-//    }
+    public function __construct()
+    {
+        $this->middleware('jwt', ['except' => ['index']]);
+    }
 
     public function index()
     {
@@ -26,7 +26,7 @@ class ServiceController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'owner_id' => 'required',
+                
                 'name' => 'required',
                 'category_id' => 'required',
                 'selling_price' => 'numeric',
@@ -37,8 +37,9 @@ class ServiceController extends Controller
         }
 
         $service = new Service();
+        $service->owner_id = auth()->user()->id;
+
         $service->name  =$request->name;
-        $service->owner_id =$request->owner_id;
         $service->category_id=$request->category_id;
         $service->selling_price=$request->selling_price;
         $service->status=$request->status;
@@ -51,19 +52,16 @@ class ServiceController extends Controller
     public function update(Request $request, $id)
     {
         $service = Service::findOrFail($id);
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'name' => "unique:services,name,$service->id,id",
-                'selling_price' => 'numeric',
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'error' => $validator->errors()], 422);
-        }
-        if ($request->has('owner_id')) {
-            $service->owner_id = $request->owner_id;
-        }
+        // $validator = Validator::make(
+        //     $request->all(),
+        //     [
+        //         'name' => "unique:services,name,$service->id,id",
+        //         'selling_price' => 'numeric',
+        //     ]
+        // );
+        // if ($validator->fails()) {
+        //     return response()->json(['success' => false, 'error' => $validator->errors()], 422);
+        // }
         if ($request->has('name')) {
             $service->name = $request->name;
         }
