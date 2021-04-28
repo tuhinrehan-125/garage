@@ -15,7 +15,7 @@
       <v-col cols="12" sm="12" md="12">
         <v-card>
           <v-card-title>
-            {{ $t("Add Product") }}
+            {{ $t("Add Vehicle") }}
           </v-card-title>
           <v-card-text>
             <v-form
@@ -26,94 +26,118 @@
               v-on:submit="submitForm"
             >
               <v-row no-gutters>
+                <!-- <v-col cols="12" md="4" sm="12" xl="4">
+                    <v-select
+                              label="Select Supplier"
+                              v-model="form.contact_id"
+                              :items="suppliers"
+                              item-text="name"
+                              item-value="id"
+                              required
+                              dense
+                              outlined
+                    ></v-select>
+                </v-col> -->
                 <v-col cols="12" md="4" sm="12" xl="4">
                   <v-text-field
-                    label="Product Name"
-                    outlined
-                    dense
-                    required
-                    :rules="[v => !!v || 'Name is required']"
-                    v-model="form.name"
-                  ></v-text-field>
-                    <p  v-if="error" class="text-danger" style="color: red">{{error}}</p>
-                </v-col>
-
-                <v-col cols="12" md="4" sm="12" xl="4">
-                  <v-text-field
-                    label="Buying price"
+                    label="Contact Id"
                     outlined
                     dense
                     required
                     type="number"
-                    :rules="[v => !!v || 'Buying price is required']"
-                    v-model="form.buying_price"
+                    v-model="form.contact_id"
                   ></v-text-field>
+                </v-col>
+                
+                <v-col cols="12" md="4" sm="12" xl="4">
+                    <v-select
+                              label="Select Brand"
+                              v-model="form.brand_id"
+                              :items="brands"
+                              item-text="name"
+                              item-value="id"
+                              required
+                              dense
+                              outlined
+                    ></v-select>
                 </v-col>
 
                 <v-col cols="12" md="4" sm="12" xl="4">
                   <v-text-field
-                    label="Selling price"
+                    label="Vehicle Model"
                     outlined
                     dense
                     required
-                    v-model="form.selling_price"
-                    :rules="[v => !!v || 'Selling price is required']"
+                    v-model="form.model"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="4" sm="12" xl="4">
                   <v-text-field
-                    label="Brand"
+                    label="Registration Number"
                     outlined
                     dense
                     required
-                    v-model="form.brand"
+                    v-model="form.reg_no"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="4" sm="12" xl="4">
                   <v-text-field
-                    label="Quantity"
+                    label="Chassis Number"
                     outlined
                     dense
                     required
                     type="number"
-                    v-model="form.quantity"
-                    :rules="[v => !!v || 'Quantity is required']"
+                    v-model="form.chassis_no"
                   ></v-text-field>
                 </v-col>
-
+                
                 <v-col cols="12" md="4" sm="12" xl="4">
-                  <v-file-input
-                    label="Image"
-                    type="file"
-                    id="file"
-                    v-model="form.image"
-                  ></v-file-input>
-                </v-col>
-                <v-col cols="12" md="4" sm="12" xl="4">
-                  <v-select
-                    label="Category"
-                    :items="categories"
-                    item-text="name"
-                    item-value="id"
+                  <v-text-field
+                    label="Mileage"
                     outlined
                     dense
                     required
-                    :rules="[v => !!v || 'Category is required']"
-                    v-model="form.category_id"
-                  ></v-select>
+                    type="number"
+                    v-model="form.mileage"
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="4" sm="12" xl="4">
-                  <v-select
-                    label="Status"
-                    :items="statuses"
-                    item-text="name"
-                    item-value="id"
+                    <v-select
+                              label="Select Color"
+                              v-model="form.color_id"
+                              :items="colors"
+                              item-text="name"
+                              item-value="id"
+                              required
+                              dense
+                              outlined
+                    ></v-select>
+                </v-col>
+
+                <v-col cols="12" md="4" sm="12" xl="4">
+                    <v-select
+                              label="Select Type"
+                              v-model="form.type_id"
+                              :items="types"
+                              item-text="name"
+                              item-value="id"
+                              required
+                              dense
+                              outlined
+                    ></v-select>
+                </v-col>
+
+                <v-col cols="12" md="4" sm="12" xl="4">
+                  <v-text-field
+                    label="Description*"
                     outlined
                     dense
-                    :rules="[v => !!v || 'Status is required']"
-                    v-model="form.status"
-                  ></v-select>
+                    required
+                    v-model="form.description"
+                  ></v-text-field>
                 </v-col>
+               
+                
               </v-row>
               <v-row>
                 <v-col cols="12" class="">
@@ -138,10 +162,10 @@
 
 <script>
 export default {
-  name: "Add Product",
+  name: "Add Vehicle",
   middleware: "auth",
   head: {
-    title: "Add Product",
+    title: "Add Vehicle",
   },
   components: {},
   data: () => ({
@@ -156,17 +180,22 @@ export default {
     statuses: ["active", "inactive"],
     error:null,
     form: {
-      name: "",
-      buying_price: "",
-      selling_price: "",
-      brand: "",
-      quantity: "",
-      category_id: "",
-      image: "",
+      model: "",
+      reg_no: "",
+      chassis_no: "",
+      contact_id: "",
+      brand_id: "",
+      color_id: "",
+      type_id: "",
+      mileage: "",
+      description: "",
       status:""
     },
     direction: "top right",
-    categories: [],
+    suppliers: [],
+    brands: [],
+    colors: [],
+    types: [],
   }),
   computed: {
 
@@ -177,7 +206,10 @@ export default {
   async asyncData({params, axios}) {
   },
   mounted() {
-    this.getCategories();
+    this.getSuppliers();
+    this.getBrands();
+    this.getColors();
+    this.getTypes();
   },
   methods: {
     reserve() {
@@ -185,10 +217,28 @@ export default {
       setTimeout(() => (this.loading = false), 2000);
     },
 
-    async getCategories()
+    async getSuppliers()
     {
-      await this.$axios.get("/getAllCategories").then((response) => {
-          this.categories = response.data;
+      await this.$axios.get("/contact").then((response) => {
+          this.suppliers = response.data;
+      });
+    },
+    async getBrands()
+    {
+      await this.$axios.get("/brand").then((response) => {
+          this.brands = response.data;
+      });
+    },
+    async getColors()
+    {
+      await this.$axios.get("/vehicle-color").then((response) => {
+          this.colors = response.data;
+      });
+    },
+    async getTypes()
+    {
+      await this.$axios.get("/vehicle-type").then((response) => {
+          this.types = response.data;
       });
     },
     async submitForm() {
@@ -196,23 +246,26 @@ export default {
       if (this.$refs.form.validate()) {
 
         try {
-          let formData = new FormData();
-          for (var key in this.form) {
-            formData.append(key, this.form[key]);
-          }
 
           await this.$axios
-            .post("/product", formData, {
-              headers: {
-                "Content-Type": "multipart/form-data"
-              }
+            .post("/vehicle", {
+              model: this.form.model,
+              reg_no: this.form.reg_no,
+              chassis_no: this.form.chassis_no,
+              contact_id: this.form.contact_id,
+              brand_id: this.form.brand_id,
+              color_id: this.form.color_id,
+              type_id: this.form.type_id,
+              mileage: this.form.mileage,
+              description: this.form.description,
+
             })
             .then(response => {
               this.isLoading = false;
-              let data = {alert: true, message: "Product Added Successfully", type: 'success'};
+              let data = {alert: true, message: "Vehicle Added Successfully", type: 'success'};
               this.$store.commit("SET_ALERT", data);
               this.$store.commit("SET_MODAL", true);
-              this.$router.push('/product/list')
+              this.$router.push('/vehicle/list')
             });
         }
 
@@ -269,5 +322,9 @@ export default {
 .v-sheet
 button.v-btn.v-size--default:not(.v-btn--icon):not(.v-btn--fab) {
   margin-left: 20px;
+}
+
+v-textarea{
+          height:100px;
 }
 </style>

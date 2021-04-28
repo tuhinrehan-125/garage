@@ -75,7 +75,6 @@ class ApiAuthController extends Controller
             $validator = Validator::make(
                 $request->all(),
                 [
-//                    'business_name' => 'required|string',
                     'first_name' => 'required',
                     'last_name' => 'required',
                     'username' => 'required',
@@ -89,15 +88,8 @@ class ApiAuthController extends Controller
             }
             DB::beginTransaction();
             //Create owner.
-            $user = User::createUser($request->only(['surname','first_name', 'last_name', 'username', 'email', 'password']));
+            $user = User::createUser($request->only(['first_name', 'last_name', 'username', 'email', 'password']));
 
-//            $business_details = $request->only(['business_name']);
-
-            //Create the business
-//            $business_details['owner_id'] = $user->id;
-
-//            $business = Business::createBusiness($business_details);
-//            $user->business_id = $business->id;
             $user->save();
 
             DB::commit();

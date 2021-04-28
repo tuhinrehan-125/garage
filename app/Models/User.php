@@ -67,7 +67,6 @@ class User extends Authenticatable implements JWTSubject
     public static function createUser($data)
     {
         $user = User::create([
-            'surname' => $data['surname'],
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'username' => $data['username'],

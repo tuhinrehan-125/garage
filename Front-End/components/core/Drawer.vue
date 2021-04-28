@@ -181,6 +181,39 @@ export default {
 
         },
         {
+          icon: "mdi-car",
+          title: this.$t("Vehicles"),
+          to: "/vehicle",
+          children: [
+            {
+              icon: "mdi-shape",
+              title: this.$t("Vehicle List"),
+              to: "/list"
+            },
+            {
+              icon: "mdi-shape",
+              title: this.$t("Add Vehicle"),
+              to: "/add"
+            },
+            {
+              icon: "mdi-shape",
+              title: this.$t("Vehicle Type"),
+              to: "/vehicletype"
+            },
+            {
+              icon: "mdi-shape",
+              title: this.$t("Vehicle Color"),
+              to: "/vehiclecolor"
+            },
+          ]
+        },
+
+        {
+          icon: "mdi-link",
+          title: this.$t("Services"),
+          to: "/service",
+        },
+        {
           icon: "mdi-cart",
           title: this.$t("Purchase"),
           to: "/purchase",
@@ -194,6 +227,28 @@ export default {
               icon: "mdi-plus-circle-outline",
               title: this.$t("Add Purchase"),
               to: "/add"
+            }
+          ]
+        },
+        {
+          icon: "mdi-inbox-arrow-up",
+          title: this.$t("expense"),
+          to: "/expense",
+          children: [
+            {
+              icon: "mdi-inbox-arrow-up",
+              title: this.$t("expense_list"),
+              to: "/list"
+            },
+            {
+              icon: "mdi-inbox-arrow-up",
+              title: this.$t("add_expense"),
+              to: "/add",
+            },
+            {
+              icon: "mdi-shape",
+              title: this.$t("expense_category"),
+              to: "/category"
             }
           ]
         },

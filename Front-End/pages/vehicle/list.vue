@@ -25,7 +25,7 @@
         </v-card>
         <v-card class="mb-70" v-else>
           <v-card-title>
-            {{ $t("product_list") }}
+            {{ $t("Vehicle List") }}
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
@@ -41,13 +41,7 @@
               :items="productslist"
               :search="search"
             >
-              <template v-slot:item.image="{ item }">
-                <img
-                  class="product-img"
-                  :src="item.image"
-                  style="width: 50px; height: 50px"
-                />
-              </template>
+              
 
               <template v-slot:item.actions="{ item }">
                 <v-btn
@@ -79,10 +73,10 @@
 
 <script>
 export default {
-  name: "Products",
+  name: "Vehicles",
   middleware: "auth",
   head: {
-    title: "Product List",
+    title: "Vehicle List",
   },
   components: {},
   data() {
@@ -92,7 +86,7 @@ export default {
       update: false,
       dialog: false,
       confirmation: false,
-      headline: this.$t("add_product"),
+      headline: this.$t("Add Vehicle"),
       valid: true,
       catRules: [(v) => !!v || this.$t("category_is_required")],
       nameRules: [(v) => !!v || this.$t("product_name_is_required")],
@@ -118,41 +112,48 @@ export default {
   computed: {
     headers() {
       return [
-        // {
-        //   sortable: false,
-        //   text: this.$t("image"),
-        //   value: "image",
-        // },
         {
           sortable: false,
-          text: this.$t("product_name"),
-          value: "name",
+          text: this.$t("Client Name"),
+          value: "contact_id",
         },
         {
           sortable: false,
           text: this.$t("Brand"),
-          value: "brand",
+          value: "brand_id",
         },
         {
           sortable: false,
-          text: this.$t("category"),
-          value: "category",
+          text: this.$t("Model"),
+          value: "model",
         },
 
         {
           sortable: false,
-          text: this.$t("Buying Price"),
-          value: "buying_price",
+          text: this.$t("Registration No."),
+          value: "reg_no",
         },
          {
           sortable: false,
-          text: this.$t("Selling Price"),
-          value: "selling_price",
+          text: this.$t("Chassis No."),
+          value: "chassis_no",
         },
         {
           sortable: false,
-          text: this.$t("Quantity"),
-          value: "quantity",
+          text: this.$t("Mileage"),
+          value: "mileage",
+        },
+        
+        {
+          sortable: false,
+          text: this.$t("Color"),
+          value: "color_id",
+        },
+        
+        {
+          sortable: false,
+          text: this.$t("Type"),
+          value: "type_id",
         },
         {
           sortable: false,
@@ -176,7 +177,7 @@ export default {
   },
   async asyncData({ params, axios }) {},
   created() {
-    this.getProducts();
+    this.getVehicles();
   },
   methods: {
     editProduct(item) {
@@ -204,9 +205,9 @@ export default {
         this.getProducts();
       });
     },
-    async getProducts() {
+    async getVehicles() {
       this.isLoading = true;
-      await this.$axios.get("/product").then((response) => {
+      await this.$axios.get("/vehicle").then((response) => {
         this.isLoading = false;
         this.productslist = response.data;
       });
@@ -226,3 +227,4 @@ export default {
   border-radius: 5px;
 }
 </style>
+

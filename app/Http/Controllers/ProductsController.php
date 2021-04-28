@@ -44,7 +44,7 @@ class ProductsController extends Controller
                 'buying_price' => 'required|numeric',
                 'selling_price' => 'required|numeric',
                 'quantity' => 'required|numeric',
-                'image' => 'image|mimes:jpeg,jpg,png|max:300'
+//                'image' => 'image|mimes:jpeg,jpg,png|max:300'
             ]
         );
 
@@ -209,9 +209,8 @@ class ProductsController extends Controller
 
     public function getAllCategories()
     {
-        $categories = Category::get();
+        $categories = Category::where('parent_id',null)->get();
 
         return response()->json($categories);
-
     }
 }

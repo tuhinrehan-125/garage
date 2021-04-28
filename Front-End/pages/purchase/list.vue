@@ -3,8 +3,9 @@
     <v-overlay :value="full_loading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <add-payment :item="singleitem" type="purchase"/>
+    <add-payment :item="singleitem" type="purchase" />
     <view-payment :data="paymentinfo" />
+    <return-purchase :item="singleitem"  :ItemList="purchaseItems"/>
     <v-row justify="center">
       <v-dialog v-model="confirmation" max-width="300">
         <v-card>
@@ -24,7 +25,7 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-btn tile color="indigo" class="float-right" to="/purchase/add" >
+        <v-btn tile color="indigo" class="float-right" to="/purchase/add">
           <v-icon left> mdi-plus </v-icon>
           {{ $t("Add Purchase") }}
         </v-btn>
@@ -65,15 +66,22 @@
                 <v-menu open-on-hover top offset-y>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn color="primary" dark small v-bind="attrs" v-on="on">
-                       <v-icon dark> mdi-dots-horizontal </v-icon>
+                      <v-icon dark> mdi-dots-horizontal </v-icon>
                     </v-btn>
                   </template>
                   <v-list>
-                    <v-list-item link @click="openAddPayment(item)" v-if="item.total_due!=0">
+                    <v-list-item
+                      link
+                      @click="openAddPayment(item)"
+                      v-if="item.total_due != 0"
+                    >
                       <v-list-item-title>Add Payment</v-list-item-title>
                     </v-list-item>
                     <v-list-item link @click="openViewPayment(item)">
                       <v-list-item-title>View Payment</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link @click="openReturnPurchase(item)">
+                      <v-list-item-title>Return Purchase</v-list-item-title>
                     </v-list-item>
                     <v-list-item link @click="editProduct(item)">
                       <v-list-item-title>Edit</v-list-item-title>
@@ -95,16 +103,18 @@
 <script>
 import addPayment from "../../components/payment/addPayment";
 import viewPayment from "../../components/payment/viewPayment";
+import returnPurchase from '../../components/purchase/returnPurchase';
 export default {
   name: "Purchase",
   middleware: "auth",
   head: {
     title: "Purchase List"
   },
-  components: { addPayment, viewPayment },
+  components: { addPayment, viewPayment,returnPurchase },
   data() {
     return {
       full_loading: false,
+      purchaseItems:[],
       singleitem: {},
       paymentinfo: [],
       search: "",
@@ -201,6 +211,15 @@ export default {
         this.full_loading = false;
       });
     },
+    async openReturnPurchase(item){
+      this.full_loading = true;
+       await this.$axios.get("purchase-items?purchase_id=" + item.id).then(res => {
+        this.purchaseItems=res.data
+        this.singleitem = item;
+        this.$store.commit("SET_MODAL", { type: "returnPurchase", status: true });
+         this.full_loading = false;
+       })
+    },
     deleteProduct(item) {
       this.confirmation = true;
       this.prodid = item.id;
@@ -224,6 +243,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
