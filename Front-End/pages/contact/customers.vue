@@ -28,7 +28,7 @@
           @click="opendialog('add')"
         >
           <v-icon left> mdi-plus </v-icon>
-          {{ $t("add_customer") }}
+          {{ $t("Add Client") }}
         </v-btn>
       </v-col>
     </v-row>
@@ -108,7 +108,7 @@ export default {
       return [
         {
           sortable: false,
-          text: this.$t("customer_name"),
+          text: this.$t("Client name"),
           value: "name",
         },
         {
@@ -165,7 +165,7 @@ export default {
     },
     async confirmDelete() {
       await this.$axios.delete(`contact/${this.customerid}`).then((res) => {
-        let data = { alert: true, message: "customer Deleted Successfully",type:'success'};
+        let data = { alert: true, message: "Client Deleted Successfully",type:'success'};
         this.$store.commit("SET_ALERT", data);
         this.$store.commit("SET_MODAL", false);
         this.confirmation = false;

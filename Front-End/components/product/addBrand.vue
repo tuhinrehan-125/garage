@@ -66,7 +66,7 @@ export default {
   },
   computed: {
     dialog() {
-       return this.$store.getters.modaltype=='add'?this.$store.getters.modal:false;
+      return this.$store.getters.modaltype=='add'?this.$store.getters.modal:false;
     },
   },
   async asyncData({ params, axios }) {},

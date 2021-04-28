@@ -19,35 +19,19 @@
                 required
                 outlined
                 dense
-                :rules="[v => !!v || 'Name is required']"
+                :rules="[v => !!v || 'name is required']"
                 v-model="form.name"
               ></v-text-field>
             </v-col>
-<!--            <v-col  cols="12" md="6" >-->
-<!--              <v-text-field-->
-<!--                :label="$t('supplier_business_name')"-->
-<!--                outlined-->
-<!--                dense-->
-<!--                v-model="form.supplier_business_name"-->
-<!--              ></v-text-field>-->
-<!--            </v-col>-->
             <v-col cols="12" md="6">
               <v-text-field
                 :label="$t('email')"
                 v-model="form.email"
                 outlined
+                :rules="[v => !!v || 'email is required']"
                 dense
-                :rules="[v => !!v || 'Email is required']"
               ></v-text-field>
             </v-col>
-<!--            <v-col cols="12" md="6">-->
-<!--              <v-text-field-->
-<!--                :label="$t('tax_number')"-->
-<!--                v-model="form.tax_number"-->
-<!--                outlined-->
-<!--                dense-->
-<!--              ></v-text-field>-->
-<!--            </v-col>-->
 
             <v-col cols="12" md="6">
               <v-text-field
@@ -57,70 +41,20 @@
                 dense
               ></v-text-field>
             </v-col>
-<!--            <v-col cols="12" md="6">-->
-<!--              <v-text-field-->
-<!--                :label="$t('country')"-->
-<!--                v-model="form.country"-->
-<!--                outlined-->
-<!--                dense-->
-<!--              ></v-text-field>-->
-<!--            </v-col>-->
-<!--            <v-col cols="12" md="6">-->
-<!--              <v-text-field-->
-<!--                :label="$t('city')"-->
-<!--                v-model="form.city"-->
-<!--                outlined-->
-<!--                dense-->
-<!--              ></v-text-field>-->
-<!--            </v-col>-->
-<!--            <v-col cols="12" md="6">-->
-<!--              <v-text-field-->
-<!--                :label="$t('state')"-->
-<!--                v-model="form.state"-->
-<!--                outlined-->
-<!--                dense-->
-<!--              ></v-text-field>-->
-<!--            </v-col>-->
-<!--            <v-col cols="12" md="6">-->
-<!--              <v-text-field-->
-<!--                :label="$t('zip_code')"-->
-<!--                v-model="form.zip_code"-->
-<!--                outlined-->
-<!--                dense-->
-<!--              ></v-text-field>-->
-<!--            </v-col>-->
+
+
             <v-col cols="12" md="6">
               <v-text-field
                 :label="$t('address')"
                 v-model="form.address"
                 outlined
+                :rules="[v => !!v || 'address is required']"
                 dense
-                :rules="[v => !!v || 'Address is required']"
               ></v-text-field>
             </v-col>
-<!--
-            <v-col cols="6">
-              <v-text-field
-                :label="$t('nid_no')"
-                required
-                outlined
-                dense
-                type="number"
-                v-model="form.nid_no"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="6">
-              <v-text-field
-                :label="$t('commission_rate')"
-                outlined
-                dense
-                v-model="form.commission_rate"
-              ></v-text-field>
-            </v-col> -->
           </v-row>
             </v-form>
         </v-container>
-        <small>{{ $t("indicates_required_field") }}</small>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -151,11 +85,7 @@ export default {
         email:"",
         mobile: "",
         address: "",
-        city: "",
-        state: "",
-        zip_code: "",
-        tax_number:"",
-        country:"",
+
       },
     };
   },
@@ -176,7 +106,7 @@ export default {
       if (this.$refs.form.validate()) {
         await this.$axios.post("/contact", this.form).then((res) => {
           this.$refs.form.reset();
-          let data = { alert: true, message: "Supplier Addedd Successfully",type:'success' };
+          let data = { alert: true, message: "Supplier Added Successfully",type:'success' };
           this.$store.commit("SET_ALERT", data);
           this.$store.commit("SET_MODAL", false);
           this.$emit("refresh");

@@ -1,13 +1,13 @@
 <template>
   <v-container class="v-centered">
-    <h3 class="text-center mt-20">Welcome to E-Shop</h3>
+    <h3 class="text-center mt-20">Welcome to Vehicle Management</h3>
     <v-row align="center" justify="center">
       <v-col cols="12" md="5" lg="5">
         <v-card
          elevation="5"
           class="login-card d-flex align-content-center flex-wrap "
         >
-        <v-card-title style="margin: 0 auto" class="mb-2">E-Shop | Login</v-card-title>
+        <v-card-title style="margin: 0 auto" class="mb-2">Vehcile Management | Login</v-card-title>
           <v-card-text>
             <v-form
               ref="loginForm"

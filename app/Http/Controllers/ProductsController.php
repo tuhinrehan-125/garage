@@ -132,11 +132,8 @@ class ProductsController extends Controller
         $product->selling_price = $request->selling_price;
         $product->quantity = $request->quantity;
         $product->status = $request->status;
-        $product->updated_by = auth()->user()->id;
-
+//            $product->updated_by = auth()->user()->id;
         $product->save();
-
-
         return response(new ProductResource($product), Response::HTTP_CREATED);
     }
 

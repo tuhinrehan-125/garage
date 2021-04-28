@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" persistent max-width="800px">
     <v-card>
       <v-card-title>
-        Add customer
+        Add Client
         <v-spacer></v-spacer>
         <v-btn text @click="closedialog">
           <v-icon>mdi-close</v-icon>
@@ -28,18 +28,10 @@
                 :label="$t('email')"
                 v-model="form.email"
                 outlined
-                dense
                 :rules="[v => !!v || 'Email is required']"
+                dense
               ></v-text-field>
             </v-col>
-<!--            <v-col cols="12" md="6">-->
-<!--              <v-text-field-->
-<!--                :label="$t('tax_number')"-->
-<!--                v-model="form.tax_number"-->
-<!--                outlined-->
-<!--                dense-->
-<!--              ></v-text-field>-->
-<!--            </v-col>-->
             <v-col cols="12" md="6">
               <v-text-field
                 :label="$t('phone_no')"
@@ -48,51 +40,19 @@
                 dense
               ></v-text-field>
             </v-col>
-<!--            <v-col cols="12" md="6">-->
-<!--              <v-text-field-->
-<!--                :label="$t('country')"-->
-<!--                v-model="form.country"-->
-<!--                outlined-->
-<!--                dense-->
-<!--              ></v-text-field>-->
-<!--            </v-col>-->
-<!--            <v-col cols="12" md="6">-->
-<!--              <v-text-field-->
-<!--                :label="$t('city')"-->
-<!--                v-model="form.city"-->
-<!--                outlined-->
-<!--                dense-->
-<!--              ></v-text-field>-->
-<!--            </v-col>-->
-<!--            <v-col cols="12" md="6">-->
-<!--              <v-text-field-->
-<!--                :label="$t('state')"-->
-<!--                v-model="form.state"-->
-<!--                outlined-->
-<!--                dense-->
-<!--              ></v-text-field>-->
-<!--            </v-col>-->
-<!--            <v-col cols="12" md="6">-->
-<!--              <v-text-field-->
-<!--                :label="$t('zip_code')"-->
-<!--                v-model="form.zip_code"-->
-<!--                outlined-->
-<!--                dense-->
-<!--              ></v-text-field>-->
-<!--            </v-col>-->
             <v-col cols="12" md="6">
               <v-text-field
                 :label="$t('address')"
                 v-model="form.address"
                 outlined
+                :rules="[v => !!v || 'address is required']"
                 dense
-                :rules="[v => !!v || 'Address is required']"
+
               ></v-text-field>
             </v-col>
           </v-row>
             </v-form>
         </v-container>
-        <small>{{ $t("indicates_required_field") }}</small>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -122,11 +82,8 @@ export default {
         email:"",
         mobile: "",
         address: "",
-        city: "",
-        state: "",
-        zip_code: "",
-        tax_number:"",
-        country:"",
+
+
       },
     };
   },
@@ -147,7 +104,7 @@ export default {
       if (this.$refs.form.validate()) {
         await this.$axios.post("/contact", this.form).then((res) => {
           this.$refs.form.reset();
-          let data = { alert: true, message: "customer Addedd Successfully",type:'success'};
+          let data = { alert: true, message: "Client Added Successfully",type:'success'};
           this.$store.commit("SET_ALERT", data);
           this.$store.commit("SET_MODAL", false);
           this.$emit("refresh");

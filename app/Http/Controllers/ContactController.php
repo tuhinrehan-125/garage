@@ -32,9 +32,7 @@ class ContactController extends Controller
                 'name'     => 'required',
                 'email'     => 'required',
                 'address'     => 'required',
-//                'city'     => 'required',
-//                'mobile'     => 'required',
-//                'zip_code'     => 'required',
+                'mobile'     => 'required',
             ]
         );
         if ($validator->fails()) {
@@ -44,19 +42,11 @@ class ContactController extends Controller
         $contact = new Contact();
         $contact->owner_id = auth()->user()->id;
         $contact->name = $request->name;
-        $contact->supplier_business_name = $request->supplier_business_name;
         $contact->type = $request->type;
         $contact->email = $request->email;
-        $contact->tax_number = $request->tax_number;
-        $contact->city = $request->city;
         $contact->address = $request->address;
-        $contact->state = $request->state;
-        $contact->country = $request->country;
-        $contact->zip_code = $request->zip_code;
         $contact->mobile = $request->mobile;
-        $contact->alternate_number = $request->alternate_number;
         $contact->created_by = auth()->user()->id;
-//        $contact->customer_group_id = $request->customer_group_id;
         $contact->save();
 
         return response(new ContactResource($contact), Response::HTTP_CREATED);
@@ -69,42 +59,21 @@ class ContactController extends Controller
         if ($request->has('name')) {
             $contact->name = $request->name;
         }
-        if ($request->has('supplier_business_name')) {
-            $contact->supplier_business_name = $request->supplier_business_name;
-        }
         if ($request->has('type')) {
             $contact->type = $request->type;
         }
         if ($request->has('email')) {
             $contact->email = $request->email;
         }
-        if ($request->has('tax_number')) {
-            $contact->tax_number = $request->tax_number;
-        }
-        if ($request->has('city')) {
-            $contact->city = $request->city;
-        }
+
         if ($request->has('address')) {
             $contact->address = $request->address;
         }
-        if ($request->has('state')) {
-            $contact->state = $request->state;
-        }
-        if ($request->has('country')) {
-            $contact->country = $request->country;
-        }
-        if ($request->has('zip_code')) {
-            $contact->zip_code = $request->zip_code;
-        }
+
         if ($request->has('mobile')) {
             $contact->mobile = $request->mobile;
         }
-        if ($request->has('alternate_number')) {
-            $contact->alternate_number = $request->alternate_number;
-        }
-        if ($request->has('customer_group_id')) {
-            $contact->customer_group_id = $request->customer_group_id;
-        }
+
 
         $contact->save();
 

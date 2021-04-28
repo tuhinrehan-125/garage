@@ -202,11 +202,12 @@ export default {
             formData.append(key, this.form[key]);
           }
 
-          await this.$axios.post("/product", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data"
-            }
-          })
+          await this.$axios
+            .post("/product", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data"
+              }
+            })
             .then(response => {
               this.isLoading = false;
               let data = {alert: true, message: "Product Added Successfully", type: 'success'};

@@ -8,7 +8,7 @@
     <v-list dense nav>
       <NuxtLink to="/dashboard">
         <v-list-item>
-<!--          <img src="~/assets/image/e-shop.png" style="width: 100%" />-->
+          <!--          <img src="~/assets/image/e-shop.png" style="width: 100%" />-->
           <h1 class="text-center">Vehicle Management</h1>
         </v-list-item>
       </NuxtLink>
@@ -167,6 +167,18 @@ export default {
             //   to: "/customer-groups"
             // }
           ]
+        },
+
+        {
+          icon: "mdi-car",
+          title: this.$t("Vehicles"),
+
+        },
+
+        {
+          icon: "mdi-link",
+          title: this.$t("Services"),
+
         },
         {
           icon: "mdi-car",
