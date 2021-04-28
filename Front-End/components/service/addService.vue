@@ -22,8 +22,8 @@
                   v-model="form.name"
                 ></v-text-field>
               </v-col>
-               <v-col cols="12" sm="6" md="6">
-                 <v-select
+              <v-col cols="12" sm="6" md="6">
+                <v-select
                       label="Select category"
                       v-model="form.category_id"
                       :items="category"
@@ -32,9 +32,9 @@
                       required
                       dense
                       outlined
-                    ></v-select>
+                  ></v-select>
               </v-col>
-               <v-col cols="12" sm="6" md="6">
+              <v-col cols="12" sm="6" md="6">
                 <v-text-field
                   outlined
                   dense
@@ -43,7 +43,7 @@
                   v-model="form.selling_price"
                 ></v-text-field>
               </v-col>
-               <v-col cols="12" sm="6" md="6">
+              <v-col cols="12" sm="6" md="6">
                 <v-text-field
                   outlined
                   dense
@@ -101,7 +101,7 @@ export default {
   },
   computed: {
     dialog() {
-       return this.$store.getters.modaltype=='add'?this.$store.getters.modal:false;
+      return this.$store.getters.modaltype=='add'?this.$store.getters.modal:false;
     },
   },
   async asyncData({ params, axios }) {},

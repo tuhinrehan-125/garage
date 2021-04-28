@@ -74,7 +74,7 @@ export default {
   },
   computed: {
     dialog() {
-       return this.$store.getters.modaltype=='edit'?this.$store.getters.modal:false;
+      return this.$store.getters.modaltype=='edit'?this.$store.getters.modal:false;
     },
     modaltype() {
       return this.$store.getters.modaltype;
@@ -83,7 +83,7 @@ export default {
   async asyncData({ params, axios }) {},
   mounted() {},
   methods: {
-     closedialog() {
+    closedialog() {
       this.$store.commit("SET_MODAL", {type:'',status:false});
     },
     async submitForm(){

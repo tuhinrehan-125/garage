@@ -25,8 +25,7 @@ class VehicleController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'owner_id' => 'required',
-                'contact_id' => 'required',
+                
                 'model' => 'required',
                 'reg_no' => 'required|unique:vehicles',
                 'chassis_no' => 'required|unique:vehicles',
@@ -38,7 +37,9 @@ class VehicleController extends Controller
         }
 
         $vehicle = new Vehicle();
-        $vehicle->owner_id  = $request->owner_id;
+
+        $vehicle->owner_id = auth()->user()->id;
+
         $vehicle->contact_id = $request->contact_id;
         $vehicle->brand_id = $request->brand_id;
         //$vehicle->brand_name = $request->brand_name;
@@ -46,8 +47,8 @@ class VehicleController extends Controller
         $vehicle->reg_no = $request->reg_no;
         $vehicle->chassis_no = $request->chassis_no;
         $vehicle->mileage = $request->mileage;
-        $vehicle->color = $request->color;
-        //$vehicle->type = $request->type_id;
+        $vehicle->color_id = $request->color_id;
+        $vehicle->type_id = $request->type_id;
         $vehicle->description = $request->description;
         $vehicle->save();
 

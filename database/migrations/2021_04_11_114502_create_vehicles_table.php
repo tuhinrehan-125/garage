@@ -26,8 +26,10 @@ class CreateVehiclesTable extends Migration
             $table->string('reg_no');
             $table->string('chassis_no');
             $table->string('mileage');
-            $table->string('color')->nullable();
-            $table->string('type_id');
+            $table->unsignedBigInteger('color_id')->nullable();
+            $table->foreign('color_id')->references('id')->on('colors')->onDelete('cascade');
+            $table->unsignedBigInteger('type_id')->nullable();
+            $table->foreign('type_id')->references('id')->on('vehicle_types')->onDelete('cascade');
             $table->string('description')->nullable();
             $table->timestamps();
         });

@@ -19,19 +19,19 @@
                   v-model="form.name"
                 ></v-text-field>
               </v-col>
-               <v-col cols="12" sm="6" md="6">
-                 <v-select
-                      label="Select category"
-                      v-model="form.category_id"
-                      :items="category"
-                      item-text="name"
-                      item-value="id"
-                      required
-                      dense
-                      outlined
-                    ></v-select>
+              <v-col cols="12" sm="6" md="6">
+                <v-select
+                  label="Select category"
+                  v-model="form.category_id"
+                  :items="category"
+                  item-text="name"
+                  item-value="id"
+                  required
+                  dense
+                  outlined
+                ></v-select>
               </v-col>
-               <v-col cols="12" sm="6" md="6">
+              <v-col cols="12" sm="6" md="6">
                 <v-text-field
                   outlined
                   dense
@@ -40,7 +40,7 @@
                   v-model="form.selling_price"
                 ></v-text-field>
               </v-col>
-               <v-col cols="12" sm="6" md="6">
+              <v-col cols="12" sm="6" md="6">
                 <v-text-field
                   outlined
                   dense
@@ -62,7 +62,6 @@
                   </template>
                 </v-textarea>
               </v-col>
-              
             </v-row>
           </v-form>
         </v-container>
@@ -88,8 +87,8 @@ export default {
   data() {
     return {
       valid: true,
-      nameRules: [(v) => !!v || this.$t("Service name is required")],
-      form: {},
+      nameRules: [v => !!v || this.$t("Service name is required")],
+      form: {}
     };
   },
   computed: {
@@ -100,7 +99,7 @@ export default {
     },
     modaltype() {
       return this.$store.getters.modaltype;
-    },
+    }
   },
   async asyncData({ params, axios }) {},
   mounted() {},
@@ -112,26 +111,25 @@ export default {
       if (this.$refs.form.validate()) {
         await this.$axios
           .patch(`service/${this.form.id}`, this.form)
-          .then((res) => {
+          .then(res => {
             this.$refs.form.reset();
             let data = {
               alert: true,
-              message: "Service Updated Successfully",
+              message: "Service Updated Successfully"
             };
             this.$store.commit("SET_ALERT", data);
             this.$store.commit("SET_MODAL", false);
             this.$emit("refresh");
           });
       }
-    },
+    }
   },
   watch: {
     item(val) {
       this.form = val;
-    },
-  },
+    }
+  }
 };
 </script>
 
-<style>
-</style>
+<style></style>
