@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ServiceResource extends JsonResource
+class ColorResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,8 @@ class ServiceResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'category_id' => $this->category_id,
-            'category' => $this->category->name,
-            'selling_price' => $this->selling_price,
-            'status' => $this->status,
-            'description' => $this->description
+            'description' => $this->description,
+            'created_at' => $this->created_at ? $this->created_at->format('Y-m-d') : null,
         ];
     }
 }

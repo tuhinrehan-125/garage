@@ -14,6 +14,8 @@ class PurchasePayment extends Model
     protected $fillable = [
         'purchase_id',  'payment_amount', 'payment_type', 'payment_date',
     ];
+    //hide field to show
+    protected $hidden = array('updated_at');
 
     public static function savePurchasePayment($purchase_id, $payment_amount, $payment_type, $payment_date)
     {

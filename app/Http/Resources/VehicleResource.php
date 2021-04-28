@@ -16,12 +16,15 @@ class VehicleResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'owner' => $this->owner->first_name. ' '. $this->owner->last_name,
-            'brand' => $this->brand_id? $this->brand->name : $this->brand_name,
+            'contact_id' => $this->contact? $this->contact->name : '',
+            'brand_id' => $this->brand_id? $this->brand->name : $this->brand_name,
             'reg_no' => $this->reg_no,
             'chassis_no' => $this->chassis_no,
+            'mileage' => $this->mileage,
             'model' => $this->model,
-            'type' => $this->vehicleType? $this->vehicleType->name : ''
+            'color_id' => $this->color? $this->color->name : '',
+            'type_id' => $this->vehicleType? $this->vehicleType->name : '',
+            'description' => $this->description,
         ];
     }
 }

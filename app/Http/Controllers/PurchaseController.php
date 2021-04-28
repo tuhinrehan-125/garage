@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
+use App\Http\Resources\PurchaseItemsResource;
 use App\Http\Resources\PurchaseResource;
 use App\Models\BusinessLocation;
-use App\Models\Contact;
-use App\Models\Product;
+use App\Models\LocationProductStock;
 use Illuminate\Http\Request;
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
 use App\Models\PurchasePayment;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +25,8 @@ class PurchaseController extends Controller
 
     public function index()
     {
-        $purchase = Purchase::where('deleted_at', null)->get();
+        $business_location = Auth::user()->Business->Location->pluck('id');
+        $purchase = Purchase::whereIn('business_location_id', $business_location)->get();
         return response(PurchaseResource::collection($purchase), Response::HTTP_OK);
     }
 
@@ -60,13 +63,19 @@ class PurchaseController extends Controller
             $purchase->updated_by = auth()->user()->id;
             $purchase->save();
 
+            if (!empty($request->purchase_doc)) {
+                $purchase_doc = $request->purchase_doc;
+                Helper::uploadFile($purchase_doc, $purchase, $business_location->business_id);
+            }
+
             $item_purchase_quantity = 0;
             $item_subtotal_price = 0;
-            $afterDiscount=0;
-            $afterTax=0;
+            $afterTax = 0;
 
-            foreach ($request->purchase_items as $store_items) {
-                $purchase_item = PurchaseItem::savePurchaseItem($purchase->id, $store_items);
+
+            foreach ($request->purchase_items as $item) {
+                $purchase_item = PurchaseItem::savePurchaseItem($purchase->id, $item);
+                $stockProduct = LocationProductStock::saveProductInStock($item, $business_location->id, $business_location->business_id);
                 $item_purchase_quantity += $purchase_item->purchase_quantity;
                 $item_subtotal_price += $purchase_item->total_price;
             }
@@ -74,21 +83,22 @@ class PurchaseController extends Controller
             $purchase->total_purchase_quantity = $item_purchase_quantity;
             $purchase->subtotal_cost = $item_subtotal_price;
 
-            if($purchase->purchase_discount>0){
-                $discountInPercentage = ($purchase->purchase_discount / 100);
-                $afterDiscount = $item_subtotal_price - ($item_subtotal_price * $discountInPercentage);
-            }
-            if($purchase->purchase_tax>0){
+            if ($purchase->purchase_tax > 0) {
                 $taxInPercentage = ($purchase->purchase_tax / 100);
-                $afterTax = $item_subtotal_price + ($item_subtotal_price * $taxInPercentage);
+                $afterTax = $item_subtotal_price * $taxInPercentage;
             }
 
-            $purchase->total_cost = $item_subtotal_price - ($afterDiscount + $afterTax);
+            $purchase->total_cost = ($item_subtotal_price + $afterTax + $purchase->shipping_charge) - $purchase->purchase_discount;
 
             $purchase->save();
 
             if ($request->payment_amount != null) {
-                PurchasePayment::savePurchasePayment($purchase->id, $request->payment_amount, $request->payment_type, $request->payment_date);
+                $purchase->payments()->create([
+                    'payment_amount' => $request->payment_amount,
+                    'payment_method' => $request->payment_method,
+                    'payment_date' =>  date("Y-m-d", strtotime($request->payment_date ? $request->payment_date : now()))
+                ]);
+                //PurchasePayment::savePurchasePayment($purchase->id, $request->payment_amount, $request->payment_type, $request->payment_date);
             }
         } catch (\Exception $e) {
             DB::rollback();
@@ -195,16 +205,16 @@ class PurchaseController extends Controller
     //For payment
     public function addPayment(Request $request, $id)
     {
+        $purchase = Purchase::findOrFail($id);
 
-        $purchase = Purchase::find($id);
-
-        // return $purchase;
-        $sum = PurchasePayment::where('purchase_id', $id);
-        $previousPayment = $sum->sum("payment_amount");
-        // $previousPayment = $purchase->PurchasePayment->sum("payment_amount");
+        $previousPayment = $purchase->payments->sum('payment_amount');
 
         if ($purchase->total_cost >= ($previousPayment + $request->payment_amount)) {
-            PurchasePayment::savePurchasePayment($purchase->id, $request->payment_amount, $request->payment_type, $request->payment_date);
+            $newPayment = $purchase->payments()->create([
+                'payment_amount' => $request->payment_amount,
+                'payment_method' => $request->payment_method,
+                'payment_date' =>  date("Y-m-d", strtotime($request->payment_date ? $request->payment_date : now()))
+            ]);
 
             $purchase->payment_status = "partial";
             if ($purchase->total_cost == ($previousPayment + $request->payment_amount)) {
@@ -212,15 +222,31 @@ class PurchaseController extends Controller
             }
             $purchase->save();
 
-            return response(new PurchaseResource($purchase), Response::HTTP_CREATED);
+            return response(new PurchaseResource($purchase), Response::HTTP_OK);
         } elseif ($purchase->total_cost < ($previousPayment + $request->payment_amount)) {
-            return response()->json(['unsuccessful' => true, 'message' => 'You can not pay more than the original amount!'], 400);
+            return response()->json(['success' => false, 'message' => 'You can not pay more than the original amount!'], 400);
         }
+    }
+
+    public function viewPayment(Request $request)
+    {
+        $purchaseid = $request->id;
+        $purchase = Purchase::findOrFail($purchaseid);
+        $all_payments = $purchase->payments;
+        return response()->json(['data' => $all_payments], 200);
+    }
+
+    public function purchaseItemsList(Request $request)
+    {
+        $purchaseid = $request->purchase_id;
+        $purchase = Purchase::findOrFail($purchaseid);
+        $all_items = $purchase->purchaseItems;
+        return response(PurchaseItemsResource::collection($all_items), Response::HTTP_OK);
     }
 
     public function returnPurchase(Request $request, $id)
     {
-        $purchase = Purchase::find($id);
+        $purchase = Purchase::findOrFail($id);
 
         // $sum = PurchasePayment::where('purchase_id', $id);
         // $previousPayment = $sum->sum("payment_amount");
@@ -244,7 +270,7 @@ class PurchaseController extends Controller
     public function getProducts(Request $request)
     {
         $name = $request->name;
-        $products = Product::where('name', 'LIKE', "%$name%")->get();
+        $products = Products::where('name', 'LIKE', "%$name%")->get();
         return \response()->json($products);
     }
 

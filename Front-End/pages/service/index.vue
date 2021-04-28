@@ -1,8 +1,9 @@
 <template>
-  <v-container grid-list-sm>
+  <v-container fluid grid-list-sm class="mt-5">
     <v-row justify="center">
-      <add-supplier @refresh="getsupplier()" />
-      <edit-supplier :item="singleItem" @refresh="getsupplier()" />
+      <add-service :items="items" @refresh="getServices()" />
+      <edit-service :item="singleItem" :items="items" @refresh="getServices()" />
+
       <v-dialog v-model="confirmation" max-width="300">
         <v-card>
           <v-card-title>
@@ -13,7 +14,7 @@
             </v-icon>
           </v-card-title>
           <v-card-text class="pb-6 pt-12 text-center">
-            <v-btn class="mr-3" text @click="confirmation = false"> NO </v-btn>
+            <v-btn class="mr-3" text @click="confirmation = false"> No </v-btn>
             <v-btn color="success" text @click="confirmDelete()"> Yes </v-btn>
           </v-card-text>
         </v-card>
@@ -28,7 +29,7 @@
           @click="opendialog('add')"
         >
           <v-icon left> mdi-plus </v-icon>
-          {{ $t("add_supplier") }}
+          {{ $t("Add Service") }}
         </v-btn>
       </v-col>
     </v-row>
@@ -37,9 +38,9 @@
         <v-card v-if="isLoading">
           <v-skeleton-loader class="mx-auto" type="table"></v-skeleton-loader>
         </v-card>
-        <v-card v-else>
+        <v-card class="mb-70" v-else>
           <v-card-title>
-            {{ $t("supplier_list") }}
+            {{ $t("Service List") }}
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
@@ -50,14 +51,14 @@
             ></v-text-field>
           </v-card-title>
           <v-card-text>
-            <v-data-table :headers="headers" :items="supplier" :search="search">
+            <v-data-table :headers="headers" :items="items">
               <template v-slot:item.actions="{ item }">
                 <v-btn
                   class="mx-2"
                   dark
                   small
                   color="cyan"
-                  @click="editSupplier(item)"
+                  @click="editService(item)"
                 >
                   <v-icon dark> mdi-pencil </v-icon>
                 </v-btn>
@@ -66,7 +67,7 @@
                   dark
                   small
                   color="red"
-                  @click="deleteClient(item)"
+                  @click="deleteService(item)"
                 >
                   <v-icon dark> mdi-delete </v-icon>
                 </v-btn>
@@ -80,24 +81,28 @@
 </template>
 
 <script>
-import addSupplier from "../../components/contacts/addSupplier.vue";
-import editSupplier from "../../components/contacts/editSupplier.vue";
+import addService from "../../components/service/addService.vue";
+import editService from "../../components/service/editService.vue";
 export default {
-  name: "supplier",
+  name: "AddService",
   middleware: "auth",
   head: {
-    title: "supplier",
+    title: "Add Service",
   },
-  components: { addSupplier, editSupplier },
+  components: { addService, editService },
   data() {
     return {
       search: "",
       isLoading: false,
-      headline: this.$t("add_supplier"),
-      update: false,
-      clienttid: "",
       confirmation: false,
-      supplier: [],
+      update: false,
+      headline: this.$t("Add Service"),
+      alert: false,
+      message: "",
+      dialog: false,
+      catid: "",
+      categories: [],
+      items: [],
       singleItem: {},
     };
   },
@@ -106,29 +111,29 @@ export default {
       return [
         {
           sortable: false,
-          text: this.$t("supplier_name"),
+          text: this.$t("name"),
           value: "name",
         },
         {
           sortable: false,
-          text: this.$t("mobile"),
-          value: "mobile",
+          text: this.$t("Category"),
+          value: "category_id",
         },
         {
           sortable: false,
-          text: this.$t("email"),
-          value: "email",
+          text: this.$t("Selling Price"),
+          value: "selling_price",
         },
         {
           sortable: false,
-          text: this.$t("address"),
-          value: "address",
+          text: this.$t("Status"),
+          value: "status",
         },
-        // {
-        //   sortable: false,
-        //   text: this.$t("company_name"),
-        //   value: "supplier_business_name",
-        // },
+        {
+          sortable: false,
+          text: this.$t("description"),
+          value: "description",
+        },
         {
           sortable: false,
           text: this.$t("action"),
@@ -139,46 +144,34 @@ export default {
   },
   async asyncData({ params, axios }) {},
   mounted() {
-    this.getsupplier();
+    this.getServices();
   },
   methods: {
     opendialog(type) {
       this.$store.commit("SET_MODAL", { type: type, status: true });
     },
-    async getsupplier() {
+    async getServices() {
       this.isLoading = true;
-      await this.$axios
-        .get("/contact?type=supplier")
-        .then((response) => {
-          this.$store.commit("SET_ALERT", {alert:false,message:""});
-          this.isLoading = false;
-          this.supplier = response.data;
-        })
-        .catch((err) => {
-          console.log("error");
-        });
-    },
-    deleteClient(item) {
-      this.confirmation = true;
-      this.supplierid = item.id;
-    },
-    editSupplier(item) {
-      this.$store.commit("SET_MODAL", { type: "edit", status: true });
-      this.singleItem = item;
-    },
-    async confirmDelete() {
-      await this.$axios.delete(`contact/${this.supplierid}`).then((res) => {
-        let data = { alert: true, message: "Supplier Deleted Successfully",type:'success'};
-        this.$store.commit("SET_ALERT", data);
-        this.$store.commit("SET_MODAL", false);
-        this.confirmation = false;
-        this.getsupplier();
+      await this.$axios.get("/service").then((response) => {
+        this.items = response.data;
+        this.isLoading = false;
       });
     },
-  },
-  watch: {
-    supplier(val) {
-      this.supplier = val;
+    deleteService(item) {
+      this.confirmation = true;
+      this.catid = item.id;
+    },
+    async confirmDelete() {
+      await this.$axios.delete(`service/${this.catid}`).then((res) => {
+        this.alert = true;
+        this.message = "Vehicle Color Deleted Successfully";
+        this.confirmation = false;
+        this.getServices();
+      });
+    },
+    editService(item) {
+      this.$store.commit("SET_MODAL", { type: "edit", status: true });
+      this.singleItem = item;
     },
   },
 };
