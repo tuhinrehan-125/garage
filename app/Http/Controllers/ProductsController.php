@@ -41,39 +41,39 @@ class ProductsController extends Controller
             [
                 'name' => 'required|unique:products',
                 'category_id' => 'required',
-                'buying_price'=>'required|numeric',
-                'selling_price'=>'required|numeric',
+                'buying_price' => 'required|numeric',
+                'selling_price' => 'required|numeric',
                 'quantity' => 'required|numeric',
-                'image'=>'image|mimes:jpeg,jpg,png|max:300'
+                'image' => 'image|mimes:jpeg,jpg,png|max:300'
             ]
         );
 
         if ($validator->fails()) {
             return response()->json(['success' => false, 'error' => $validator->errors()], 422);
         }
-        $product =new Product();
+        $product = new Product();
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->getClientOriginalExtension();
             $product->image = "images/products/{$imageName}";
             $request->image->move(public_path('images/products/'), $imageName);
-            $product->name=$request->name;
-            $product->category_id=$request->category_id;
-            $product->brand=$request->brand;
-            $product->buying_price=$request->buying_price;
-            $product->selling_price=$request->selling_price;
-            $product->quantity=$request->quantity;
-            $product->status=$request->status;
+            $product->name = $request->name;
+            $product->category_id = $request->category_id;
+            $product->brand = $request->brand;
+            $product->buying_price = $request->buying_price;
+            $product->selling_price = $request->selling_price;
+            $product->quantity = $request->quantity;
+            $product->status = $request->status;
 //            $product->created_by = auth()->user()->id;
             $product->save();
             return response(new ProductResource($product), Response::HTTP_CREATED);
         }
-        $product->name=$request->name;
-        $product->category_id=$request->category_id;
-        $product->brand=$request->brand;
-        $product->buying_price=$request->buying_price;
-        $product->selling_price=$request->selling_price;
-        $product->quantity=$request->quantity;
-        $product->status=$request->status;
+        $product->name = $request->name;
+        $product->category_id = $request->category_id;
+        $product->brand = $request->brand;
+        $product->buying_price = $request->buying_price;
+        $product->selling_price = $request->selling_price;
+        $product->quantity = $request->quantity;
+        $product->status = $request->status;
         //            $product->created_by = auth()->user()->id;
 
         $product->save();
@@ -94,31 +94,30 @@ class ProductsController extends Controller
             $request->all(),
             [
                 'name' => "unique:products,name,$product->id,id",
-                'buying_price'=>'numeric',
-                'selling_price'=>'numeric',
+                'buying_price' => 'numeric',
+                'selling_price' => 'numeric',
                 'quantity' => 'numeric',
-                'image'=>'image|mimes:jpeg,jpg,png|max:300'
+                'image' => 'image|mimes:jpeg,jpg,png|max:300'
             ]
         );
 
         if ($validator->fails()) {
             return response()->json(['success' => false, 'error' => $validator->errors()], 422);
         }
-        if ($request->hasFile('image'))
-        {
-            if($product->image){
+        if ($request->hasFile('image')) {
+            if ($product->image) {
                 unlink($product->image);
             }
-            $imageName=time().'.'.$request->image->getClientOriginalExtension();
+            $imageName = time() . '.' . $request->image->getClientOriginalExtension();
 
-            $product->image="images/products/{$imageName}";
-            $product->name= $request->name;
-            $product->category_id=$request->category_id;
-            $product->brand=$request->brand;
-            $product->buying_price=$request->buying_price;
-            $product->selling_price=$request->selling_price;
-            $product->quantity=$request->quantity;
-            $product->status=$request->status;
+            $product->image = "images/products/{$imageName}";
+            $product->name = $request->name;
+            $product->category_id = $request->category_id;
+            $product->brand = $request->brand;
+            $product->buying_price = $request->buying_price;
+            $product->selling_price = $request->selling_price;
+            $product->quantity = $request->quantity;
+            $product->status = $request->status;
 //            $product->updated_by = auth()->user()->id;
             $product->save();
             $request->image->move(public_path('images/products/'), $imageName);
@@ -126,19 +125,15 @@ class ProductsController extends Controller
             return response(new ProductResource($product), Response::HTTP_CREATED);
         }
 
-//        dd($request->all());
         $product->name = $request->name;
-        $product->category_id=$request->category_id;
-        $product->brand=$request->brand;
-        $product->buying_price=$request->buying_price;
-        $product->selling_price=$request->selling_price;
-        $product->quantity=$request->quantity;
-        $product->status=$request->status;
+        $product->category_id = $request->category_id;
+        $product->brand = $request->brand;
+        $product->buying_price = $request->buying_price;
+        $product->selling_price = $request->selling_price;
+        $product->quantity = $request->quantity;
+        $product->status = $request->status;
 //            $product->updated_by = auth()->user()->id;
-//        dd($product);
         $product->save();
-
-
         return response(new ProductResource($product), Response::HTTP_CREATED);
     }
 
@@ -191,7 +186,7 @@ class ProductsController extends Controller
             foreach ($products as $key => $value) {
                 if ($value->type == 'single') {
                     $result[] = [
-                        'product_id' =>  $value->product_id,
+                        'product_id' => $value->product_id,
                         'product_sku' => $value->product_sku,
                         'product' => $value->name . '-' . $value->product_sku,
                         'variation_id' => $value->variation_id,
@@ -200,9 +195,9 @@ class ProductsController extends Controller
                     ];
                 } else {
                     $result[] = [
-                        'product_id' =>  $value->product_id,
+                        'product_id' => $value->product_id,
                         'variation_id' => $value->variation_id,
-                        'product' => $value->name.'('.$value->variation_name.')' . '-' . $value->sub_sku,
+                        'product' => $value->name . '(' . $value->variation_name . ')' . '-' . $value->sub_sku,
                         'purchase_price' => $value->purchase_price,
                         'tax' => $value->tax
                     ];
@@ -210,5 +205,13 @@ class ProductsController extends Controller
             }
         }
         return json_encode($result);
+    }
+
+    public function getAllCategories()
+    {
+        $categories = Category::get();
+
+        return response()->json($categories);
+
     }
 }

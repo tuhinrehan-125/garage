@@ -21,24 +21,24 @@
                 <v-col cols="12" md="4" sm="12" xl="4">
                   <v-select
                     label="Select Customer"
-                    v-model="form.customer_id"
-                    :items="customer"
+                    v-model="form.contact_id"
+                    :items="contacts"
                     item-text="name"
                     item-value="id"
                     dense
-                    :rules="[v => !!v || 'Customer is required']"
+                    :rules="[v => !!v || 'Contact is required']"
                     outlined
                   ></v-select>
                 </v-col>
                 <v-col cols="12" md="4" sm="12" xl="4">
                   <v-select
-                    label="Select business location"
-                    v-model="form.business_location_id"
-                    :items="user_business_location"
+                    label="Select Category"
+                    v-model="form.category_id"
+                    :items="categories"
                     item-text="name"
                     item-value="id"
                     dense
-                    :rules="[v => !!v || 'Business location is required']"
+                    :rules="[v => !!v || 'Category is required']"
                     outlined
                   ></v-select>
                 </v-col>
@@ -232,6 +232,8 @@ export default {
       sell_statuses: ["Final", "Pending"],
       modal: false,
       units:[],
+      contacts:[],
+      categories: [],
       form: {
         business_location_id: "",
         customer_id: "",
@@ -242,7 +244,9 @@ export default {
         shipping_cost: "",
         payment_amount: "",
         payment_method: "",
-        payment_note: ""
+        payment_note: "",
+        contact_id:"",
+        category_id:"",
       },
       methods: ["Cash", "Card", "Bank Transfer"]
     };
@@ -263,6 +267,7 @@ export default {
   async asyncData({ params, axios }) {},
   mounted() {
     this.getCustomers();
+    this.getCategories();
     this.getUnits();
   },
   watch: {},
@@ -286,8 +291,14 @@ export default {
       });
     },
     async getCustomers() {
-      await this.$axios.get("/contact?type=customer").then(response => {
-        this.customer = response.data;
+      await this.$axios.get("/get-clients").then(response => {
+        this.contacts = response.data;
+      });
+    },
+    async getCategories() {
+      await this.$axios.get("/get-categories").then(response => {
+        this.categories = response.data;
+        console.log(this.categories)
       });
     },
     async getUnits(){

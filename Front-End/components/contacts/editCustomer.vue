@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" persistent max-width="800px">
     <v-card>
       <v-card-title>
-        Edit customer<v-spacer />
+        Edit Client<v-spacer />
         <v-icon aria-label="Close" @click="closedialog"> mdi-close </v-icon>
       </v-card-title>
       <v-card-text>
@@ -27,14 +27,7 @@
                   dense
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  :label="$t('tax_number')"
-                  v-model="form.tax_number"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
+
 
               <v-col cols="12" md="6">
                 <v-text-field
@@ -44,39 +37,8 @@
                   dense
                 ></v-text-field>
               </v-col>
+
               <v-col cols="12" md="6">
-                <v-text-field
-                  :label="$t('country')"
-                  v-model="form.country"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  :label="$t('city')"
-                  v-model="form.city"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  :label="$t('state')"
-                  v-model="form.state"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  :label="$t('zip_code')"
-                  v-model="form.zip_code"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
                 <v-text-field
                   :label="$t('address')"
                   v-model="form.address"
@@ -87,7 +49,6 @@
             </v-row>
           </v-form>
         </v-container>
-        <small>{{ $t("indicates_required_field") }}</small>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -140,7 +101,7 @@ export default {
             this.$refs.form.reset();
             let data = {
               alert: true,
-              message: "customer updated Successfully",
+              message: "Client updated Successfully",
             };
             this.$store.commit("SET_ALERT", data);
             this.$store.commit("SET_MODAL", false);

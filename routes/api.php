@@ -73,6 +73,7 @@ Route::get('customer-search', [CustomerController::class, 'customerSearch']);
 Route::post('contact-search', [ContactController::class, 'contactSearch']);
 
 Route::resource('category', CategoryController::class);
+Route::get('/getAllCategories',[ProductsController::class,'getAllCategories']);
 Route::get('get-subcategories/{category}', [CategoryController::class, 'getSubcategories']);
 Route::get('get-subunits/{unit}', [UnitController::class, 'getSubUnits']);
 
@@ -150,3 +151,8 @@ Route::resource('permission', PermissionController::class);
 
 Route::resource('vehicle', \App\Http\Controllers\VehicleController::class);
 Route::resource('service', \App\Http\Controllers\ServiceController::class);
+Route::resource('invoice', \App\Http\Controllers\InvoiceController::class);
+
+Route::get('get-clients',[SaleController::class,'getClients']);
+Route::get('get-categories',[SaleController::class,'getCategories']);
+

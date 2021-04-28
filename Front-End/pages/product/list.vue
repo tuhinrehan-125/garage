@@ -118,11 +118,11 @@ export default {
   computed: {
     headers() {
       return [
-        {
-          sortable: false,
-          text: this.$t("image"),
-          value: "image",
-        },
+        // {
+        //   sortable: false,
+        //   text: this.$t("image"),
+        //   value: "image",
+        // },
         {
           sortable: false,
           text: this.$t("product_name"),
@@ -130,28 +130,29 @@ export default {
         },
         {
           sortable: false,
-          text: this.$t("sku"),
-          value: "sku",
+          text: this.$t("Brand"),
+          value: "brand",
         },
         {
           sortable: false,
           text: this.$t("category"),
           value: "category",
         },
+
         {
           sortable: false,
-          text: this.$t("unit"),
-          value: "unit_name",
+          text: this.$t("Buying Price"),
+          value: "buying_price",
         },
         {
           sortable: false,
-          text: this.$t("Purchase Price"),
-          value: "purchase_price",
+          text: this.$t("Selling Price"),
+          value: "selling_price",
         },
-         {
+        {
           sortable: false,
-          text: this.$t("Sell Price"),
-          value: "sell_price",
+          text: this.$t("Quantity"),
+          value: "quantity",
         },
         {
           sortable: false,
@@ -211,11 +212,11 @@ export default {
       });
     },
   },
-  watch: {
-    "form.category_id": function (val) {
-      this.getChildOfCategory(val);
-    },
-  },
+  // watch: {
+  //   "form.category_id": function (val) {
+  //     this.getChildOfCategory(val);
+  //   },
+  // },
 };
 </script>
 
@@ -225,4 +226,3 @@ export default {
   border-radius: 5px;
 }
 </style>
-

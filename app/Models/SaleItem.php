@@ -14,20 +14,45 @@ class SaleItem extends Model
         'sale_id',  'product_id', 'variation_id', 'sale_quantity', 'sale_price', 'total_price'
     ];
 
-    public static function saveSaleItems($sale_id, $store_items)
+    public static function saveSellItems($sell_id, $item, $categoryId)
     {
         $sale_item = SaleItem::create([
-            'sale_id' => $sale_id,
-            'product_id' => $store_items['product_id'],
-            'variation_id' => $store_items['variation_id'],
-            'sale_quantity' => $store_items['sale_quantity'],
-            'sale_price' => $store_items['sale_price'],
-            'total_price' => $store_items['sale_quantity'] * $store_items['sale_price'],
+            'sell_id' => $sell_id,
+//            'product_id' => $item['product_id'],
+//            'variation_id' => $item['variation_id'],
+//            'sale_quantity' => $item['sell_quantity'],
+//            'sale_price' => $item['sell_price'],
+            'total_price' => $item['subtotal']
         ]);
 
+        if($sale_item)
+        {
+            if($categoryId=='1'){
+                SaleItem::create([
+                    'product_id' => $item['product_id'],
+
+                    'product_rate' => $item['product_rate'],
+//                    'product_total_price' => $item['product_subtotal']
+
+                ]);
+            }
+            else{
+                SaleItem::create([
+                    'service_id' => $item['service_id'],
+//                    'service_quantity' => $item['service_quantity'],
+////                    'sale_price' => $item['sell_price'],
+                    'service_rate' => $item['service_rate'],
+//                    'service_total_price' => $item['service_subtotal']
+
+                ]);
+            }
+
+        }
+
         return $sale_item;
+
     }
-    public function sale()
+        public function sale()
     {
         return $this->belongsTo(Sale::class);
     }

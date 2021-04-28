@@ -8,7 +8,7 @@
     <v-list dense nav>
       <NuxtLink to="/dashboard">
         <v-list-item>
-<!--          <img src="~/assets/image/e-shop.png" style="width: 100%" />-->
+          <!--          <img src="~/assets/image/e-shop.png" style="width: 100%" />-->
           <h1 class="text-center">Vehicle Management</h1>
         </v-list-item>
       </NuxtLink>
@@ -134,16 +134,16 @@ export default {
               title: this.$t("Brand"),
               to: "/brand"
             },
-            {
-              icon: "mdi-shape",
-              title: this.$t("Unit"),
-              to: "/unit"
-            },
-            {
-              icon: "mdi-shape",
-              title: this.$t("variation"),
-              to: "/variation"
-            }
+            // {
+            //   icon: "mdi-shape",
+            //   title: this.$t("Unit"),
+            //   to: "/unit"
+            // },
+            // {
+            //   icon: "mdi-shape",
+            //   title: this.$t("variation"),
+            //   to: "/variation"
+            // }
           ]
         },
         {
@@ -158,15 +158,27 @@ export default {
             },
             {
               icon: "mdi-account-arrow-right-outline",
-              title: this.$t("customers"),
+              title: this.$t("clients"),
               to: "/customers"
             },
-            {
-              icon: "mdi-account-group-outline",
-              title: this.$t("customer_group"),
-              to: "/customer-groups"
-            }
+            // {
+            //   icon: "mdi-account-group-outline",
+            //   title: this.$t("customer_group"),
+            //   to: "/customer-groups"
+            // }
           ]
+        },
+
+        {
+          icon: "mdi-car",
+          title: this.$t("Vehicles"),
+
+        },
+
+        {
+          icon: "mdi-link",
+          title: this.$t("Services"),
+
         },
         {
           icon: "mdi-cart",
@@ -187,114 +199,22 @@ export default {
         },
         {
           icon: "mdi-cart-arrow-right",
-          title: this.$t("Sell"),
+          title: this.$t("Invoice"),
           to: "/sell",
           children: [
             {
               icon: "mdi-format-list-bulleted",
-              title: this.$t("All Sales"),
+              title: this.$t("All Invoices"),
               to: "/list"
             },
             {
               icon: "mdi-plus-circle-outline",
-              title: this.$t("Add Sell"),
+              title: this.$t("Add Invoice"),
               to: "/create"
             }
           ]
         },
-        {
-          title: this.$t("advance"),
-          icon: "mdi-bank-transfer",
-          to: "/advance"
-        },
-        {
-          icon: "mdi-inbox-arrow-up",
-          title: this.$t("Stock Transfer"),
-          to: "/stockTransfer",
-          children: [
-            {
-              icon: "mdi-inbox-arrow-up",
-              title: this.$t("Stock Transfer List"),
-              to: "/list"
-            },
-            {
-              icon: "mdi-shape",
-              title: this.$t("Add Stock Transfer"),
-              to: "/add"
-            }
-          ]
-        },
-        {
-          icon: "mdi-inbox-arrow-up",
-          title: this.$t("expense"),
-          to: "/expense",
-          children: [
-            {
-              icon: "mdi-inbox-arrow-up",
-              title: this.$t("expense_list"),
-              to: "/list"
-            },
-            {
-              icon: "mdi-inbox-arrow-up",
-              title: this.$t("add_expense"),
-              to: "/add",
-            },
-            {
-              icon: "mdi-shape",
-              title: this.$t("expense_category"),
-              to: "/category"
-            }
-          ]
-        },
-        {
-          title: this.$t("reports"),
-          icon: "mdi-file-chart",
-          to: "/reports",
-          children: [
-            {
-              icon: "mdi-cart-arrow-right",
-              title: this.$t("sales_report"),
-              to: "/sales"
-            },
-            {
-              icon: "mdi-inbox-arrow-up",
-              title: this.$t("expense_report"),
-              to: "/expense"
-            },
-            {
-              icon: "mdi-inbox-arrow-down",
-              title: this.$t("collection_report"),
-              to: "/collection"
-            },
-            {
-              icon: "mdi-shape",
-              title: this.$t("payment_report"),
-              to: "/payment"
-            }
-          ]
-        },
-        {
-          title: this.$t("User"),
-          icon: "mdi-account-box",
-          to: "/user",
-          children: [
-            {
-              icon: "mdi-account-box",
-              title: this.$t("Profile"),
-              to: "/profile"
-            },
-            {
-              icon: "mdi-inbox-arrow-up",
-              title: this.$t("User List"),
-              to: "/user-list"
-            },
-            {
-              icon: "mdi-inbox-arrow-up",
-              title: this.$t("Role"),
-              to: "/role"
-            }
-          ]
-        },
+
         {
           title: this.$t("settings"),
           icon: "mdi-cog-outline",
@@ -302,12 +222,12 @@ export default {
           children: [
             {
               icon: "mdi-cart-arrow-right",
-              title: this.$t("Business Settings"),
+              title: this.$t("Colors"),
               to: "/business"
             },
             {
               icon: "mdi-inbox-arrow-up",
-              title: this.$t("Business Locations"),
+              title: this.$t("Types"),
               to: "/location"
             }
           ]

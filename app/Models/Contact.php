@@ -18,24 +18,16 @@ class Contact extends Model
     protected $filable = [
         'name',
         'type',
-        "supplier_business_name",
+        "owner_id",
         'email',
-        'tax_number',
-        'city',
         'address',
-        'state',
-        'country',
-        'zip_code',
         'mobile',
-        'alternate_number',
-        'customer_group_id',
-        'is_active',
         'deleted_at',
     ];
 
     public function scopeActive($query, $type)
     {
-        return $query->where('business_id', Auth::user()->business_id)->where('type', $type);
+        return $query->where('type', $type);
     }
 
     public function vehicle()
