@@ -40,22 +40,22 @@ export default {
         this.$store.dispatch("product/addItemToSell", {
           product: val.product,
           product_id: val.product_id,
-          variation_id: val.variation_id,
+          // variation_id: val.variation_id,
           sell_quantity: 1,
           sell_price: val.sell_price,
           unit: val.unit,
-          discount: 0,
-          tax: val.tax
+          // discount: 0,
+          // tax: val.tax
         });
       } else if (this.type == "purchase") {
         this.$store.dispatch("product/addItemToPurchase", {
           product: val.product,
           product_id: val.product_id,
-          variation_id: val.variation_id,
+          // variation_id: val.variation_id,
           purchase_quantity: 1,
           purchase_price: val.purchase_price,
-          discount: 0,
-          tax: val.tax
+          // discount: 0,
+          // tax: val.tax
         });
       }
       else if (this.type == "transfer") {
@@ -63,10 +63,10 @@ export default {
           product: val.product,
           product_id: val.product_id,
           qty_available: val.qty_available,
-          variation_id: val.variation_id,
+          // variation_id: val.variation_id,
           quantity: 1,
-          unit: val.unit,
-          purchase_price: val.purchase_price,
+          // unit: val.unit,
+          // purchase_price: val.purchase_price,
         });
       }
     },

@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
 use App\Models\PurchasePayment;
+use App\Models\User;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -35,7 +37,8 @@ class PurchaseController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'business_location_id' => 'required',
+                // 'business_location_id' => 'required',
+                // 'owner_id' => 'required',
                 'supplier_id' => 'required',
                 'purchase_date' => 'required',
                 'purchase_status' => 'required',
@@ -50,13 +53,17 @@ class PurchaseController extends Controller
 
             $purchase = new Purchase();
 
-            $business_location = BusinessLocation::findOrFail($request->business_location_id);
-            $purchase->business_location_id = $business_location->id;
+            //$business_location = BusinessLocation::findOrFail($request->business_location_id);
+            
+            $owner = User::findOrFail($request->owner_id);
+            
+            //$purchase->business_location_id = $business_location->id;
+            $purchase->owner_id = $owner->id;
             $purchase->contact_id = $request->supplier_id;
             $purchase->purchase_status = $request->purchase_status;
             $purchase->purchase_date = date("Y-m-d", strtotime($request->purchase_date));
-            $purchase->purchase_discount = $request->purchase_discount;
-            $purchase->purchase_tax = $request->purchase_tax;
+            // $purchase->purchase_discount = $request->purchase_discount;
+            // $purchase->purchase_tax = $request->purchase_tax;
             $purchase->shipping_charge = $request->shipping_cost;
             $purchase->shipping_details = $request->shipping_details;
             $purchase->created_by = auth()->user()->id;
@@ -75,21 +82,21 @@ class PurchaseController extends Controller
 
             foreach ($request->purchase_items as $item) {
                 $purchase_item = PurchaseItem::savePurchaseItem($purchase->id, $item);
-                $stockProduct = LocationProductStock::saveProductInStock($item, $business_location->id, $business_location->business_id);
+                //$stockProduct = LocationProductStock::saveProductInStock($item, $business_location->id, $business_location->business_id);
                 $item_purchase_quantity += $purchase_item->purchase_quantity;
                 $item_subtotal_price += $purchase_item->total_price;
             }
 
             $purchase->total_purchase_quantity = $item_purchase_quantity;
-            $purchase->subtotal_cost = $item_subtotal_price;
+            //$purchase->subtotal_cost = $item_subtotal_price;
 
-            if ($purchase->purchase_tax > 0) {
-                $taxInPercentage = ($purchase->purchase_tax / 100);
-                $afterTax = $item_subtotal_price * $taxInPercentage;
-            }
+            // if ($purchase->purchase_tax > 0) {
+            //     $taxInPercentage = ($purchase->purchase_tax / 100);
+            //     $afterTax = $item_subtotal_price * $taxInPercentage;
+            // }
 
-            $purchase->total_cost = ($item_subtotal_price + $afterTax + $purchase->shipping_charge) - $purchase->purchase_discount;
-
+            //$purchase->total_cost = ($item_subtotal_price + $afterTax + $purchase->shipping_charge) - $purchase->purchase_discount;
+            $purchase->total_cost = $item_subtotal_price;
             $purchase->save();
 
             if ($request->payment_amount != null) {

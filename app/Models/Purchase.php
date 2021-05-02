@@ -32,6 +32,10 @@ class Purchase extends Model
     {
         return $this->belongsTo(BusinessLocation::class, 'business_location_id');
     }
+    public function User()
+    {
+        return $this->belongsTo(BusinessLocation::class, 'owner_id');
+    }
     
     public function return()
     {

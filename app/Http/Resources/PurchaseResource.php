@@ -30,7 +30,8 @@ class PurchaseResource extends JsonResource
         
         return [
             'id' => $this->id,
-            'business_location' => $this->Location->name,
+            //'business_location' => $this->Location->name,
+            'owner' => $this->User->name,
             'supplier' => $this->Supplier->name,
             'payment_status' => $payment_status,
             'purchase_status' => $this->purchase_status,

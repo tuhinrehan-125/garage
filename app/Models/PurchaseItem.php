@@ -52,13 +52,13 @@ class PurchaseItem extends Model
         return $this->belongsTo(Products::class,'product_id');
     }
 
-    public function productVariation()
-    {
-        return $this->belongsTo(ProductVariation::class,'product_variation_id');
-    }
+    // public function productVariation()
+    // {
+    //     return $this->belongsTo(ProductVariation::class,'product_variation_id');
+    // }
 
-    public function SalePurchaseReturn()
-    {
-        return $this->belongsTo(SalePurchaseReturn::class);
-    }
+    // public function SalePurchaseReturn()
+    // {
+    //     return $this->belongsTo(SalePurchaseReturn::class);
+    // }
 }

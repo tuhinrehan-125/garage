@@ -27,10 +27,10 @@
                     outlined
                   ></v-select>
                 </v-col>
-                <v-col cols="12" md="4" sm="12" xl="4">
+                <!-- <v-col cols="12" md="4" sm="12" xl="4">
                   <v-select
-                    label="Select business location"
-                    v-model="form.business_location_id"
+                    label="Select Owner"
+                    v-model="form.owner_id"
                     :items="user_business_location"
                     item-text="name"
                     item-value="id"
@@ -38,7 +38,7 @@
                     :rules="[v => !!v || 'Business location is required']"
                     outlined
                   ></v-select>
-                </v-col>
+                </v-col> -->
                 <v-col cols="12" md="4" sm="12" xl="4">
                   <v-dialog
                     ref="dialog"
@@ -105,9 +105,11 @@
               <h2 class="overline variation-title mb-2 text-center">
                 Purchase Items
               </h2>
+
               <purchase-table />
+
               <v-row no-gutters>
-                <v-col cols="12" md="4" sm="12" xl="4">
+                <!-- <v-col cols="12" md="4" sm="12" xl="4">
                   <v-text-field
                     label="Tax"
                     outlined
@@ -126,8 +128,8 @@
                     v-model="form.purchase_discount"
                     @keyup="addDiscount($event.target.value)"
                   ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="4" sm="12" xl="4">
+                </v-col> -->
+                <v-col cols="12" md="6" sm="12" xl="4">
                   <v-text-field
                     label="Shipping cost"
                     outlined
@@ -137,9 +139,9 @@
                     @keyup="addShippingCost($event.target.value)"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="4" sm="12" xl="4">
+                <v-col cols="12" md="6" sm="12" xl="4">
                   <v-textarea
-                    rows="2"
+                    rows="3"
                     label="Note"
                     outlined
                     dense
@@ -228,12 +230,12 @@ export default {
       purchase_statuses: ["Received", "Pending", "Ordered", "Draft", "Final"],
       modal: false,
       form: {
-        business_location_id: "",
+        owner_id: "",
         supplier_id: "",
         purchase_status: "",
         purchase_date: new Date().toISOString().substr(0, 10),
-        purchase_tax: "",
-        purchase_discount: "",
+        // purchase_tax: "",
+        // purchase_discount: "",
         shipping_cost: "",
         payment_amount: "",
         payment_method: "",
@@ -302,13 +304,13 @@ export default {
         await this.$axios
           .post("/purchase", {
             purchase_items: this.purchaseItems,
-            business_location_id: this.form.business_location_id,
+            // owner_id: this.form.owner_id,
             supplier_id: this.form.supplier_id,
             purchase_status: this.form.purchase_status,
             purchase_date: this.form.purchase_date,
             purchase_status: this.form.purchase_status,
-            purchase_tax: this.form.purchase_tax,
-            purchase_discount: this.form.purchase_discount,
+            // purchase_tax: this.form.purchase_tax,
+            // purchase_discount: this.form.purchase_discount,
             shipping_cost: this.form.shipping_cost,
             payment_amount: this.form.payment_amount,
             payment_method: this.form.payment_method,
