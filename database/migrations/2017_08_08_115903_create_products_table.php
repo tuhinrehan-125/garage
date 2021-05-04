@@ -21,7 +21,7 @@ class CreateProductsTable extends Migration
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
 //            $table->unsignedBigInteger('brand_id')->nullable();
 //            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
-            $table->string('brand');
+//            $table->string('brand');
             $table->double('buying_price');
             $table->double('selling_price')->nullable();
             $table->string('image')->nullable();
