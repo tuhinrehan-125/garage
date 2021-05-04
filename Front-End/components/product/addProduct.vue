@@ -1,16 +1,16 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <base-material-snackbar
-        v-model="alert"
-        type="success"
-        v-bind="{
-          [parsedDirection[0]]: true,
-          [parsedDirection[1]]: true,
-        }"
-      >
-        {{ message }}
-      </base-material-snackbar>
+<!--      <base-material-snackbar-->
+<!--        v-model="alert"-->
+<!--        type="success"-->
+<!--        v-bind="{-->
+<!--          [parsedDirection[0]]: true,-->
+<!--          [parsedDirection[1]]: true,-->
+<!--        }"-->
+<!--      >-->
+<!--        {{ message }}-->
+<!--      </base-material-snackbar>-->
 
       <v-col cols="12" sm="12" md="12">
         <v-card>
@@ -37,7 +37,33 @@
                   ></v-text-field>
                     <p  v-if="error" class="text-danger" style="color: red">{{error}}</p>
                 </v-col>
+                <v-col cols="12" md="4" sm="12" xl="4">
+                  <v-select
+                    label="Category"
+                    :items="categories"
+                    item-text="name"
+                    item-value="id"
+                    outlined
+                    dense
+                    required
+                    :rules="[v => !!v || 'Category is required']"
+                    v-model="form.category_id"
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" md="4" sm="12" xl="4">
+                  <v-select
+                    label="Brand"
+                    :items="brands"
+                    item-text="name"
+                    item-value="id"
+                    outlined
+                    dense
+                    required
+                    v-model="form.brand_id"
+                  ></v-select>
 
+
+                </v-col>
                 <v-col cols="12" md="4" sm="12" xl="4">
                   <v-text-field
                     label="Buying price"
@@ -60,15 +86,7 @@
                     :rules="[v => !!v || 'Selling price is required']"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="4" sm="12" xl="4">
-                  <v-text-field
-                    label="Brand"
-                    outlined
-                    dense
-                    required
-                    v-model="form.brand"
-                  ></v-text-field>
-                </v-col>
+
                 <v-col cols="12" md="4" sm="12" xl="4">
                   <v-text-field
                     label="Quantity"
@@ -82,27 +100,6 @@
                 </v-col>
 
                 <v-col cols="12" md="4" sm="12" xl="4">
-                  <v-file-input
-                    label="Image"
-                    type="file"
-                    id="file"
-                    v-model="form.image"
-                  ></v-file-input>
-                </v-col>
-                <v-col cols="12" md="4" sm="12" xl="4">
-                  <v-select
-                    label="Category"
-                    :items="categories"
-                    item-text="name"
-                    item-value="id"
-                    outlined
-                    dense
-                    required
-                    :rules="[v => !!v || 'Category is required']"
-                    v-model="form.category_id"
-                  ></v-select>
-                </v-col>
-                <v-col cols="12" md="4" sm="12" xl="4">
                   <v-select
                     label="Status"
                     :items="statuses"
@@ -114,6 +111,17 @@
                     v-model="form.status"
                   ></v-select>
                 </v-col>
+
+                <v-col cols="12" md="4" sm="12" xl="4">
+                  <v-file-input
+                    label="Image"
+                    type="file"
+                    id="file"
+                    v-model="form.image"
+                  ></v-file-input>
+                </v-col>
+
+
               </v-row>
               <v-row>
                 <v-col cols="12" class="">
@@ -154,7 +162,8 @@ export default {
     dialog: false,
     confirmation: false,
     message: "",
-    statuses: ["active", "inactive"],
+
+    statuses: ["Active", "Inactive"],
     error:null,
     form: {
       name: "",
@@ -164,10 +173,12 @@ export default {
       quantity: "",
       category_id: "",
       image: "",
-      status:""
+      status:"",
+      brand_id:"",
     },
     direction: "top right",
     categories: [],
+    brands: [],
   }),
   computed: {
 
@@ -179,6 +190,7 @@ export default {
   },
   mounted() {
     this.getCategories();
+    this.getBrands();
   },
   methods: {
     reserve() {
@@ -192,6 +204,13 @@ export default {
           this.categories = response.data;
       });
     },
+    async getBrands()
+    {
+      await this.$axios.get("/getAllBrands").then((response) => {
+        this.brands = response.data;
+      });
+    },
+
     async submitForm() {
       this.error = null;
       if (this.$refs.form.validate()) {

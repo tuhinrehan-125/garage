@@ -28,10 +28,10 @@ class Product extends Model
         return $this->belongsTo(Unit::class, 'unit_id');
     }
 
-//    public function brand()
-//    {
-//        return $this->belongsTo(Brand::class, 'brand_id');
-//    }
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id','id');
+    }
 
     public function getImageAttribute($value)
     {
@@ -45,7 +45,7 @@ class Product extends Model
 
     public function scopeActive($query)
     {
-        return $query->latest();
+        return $query->where('owner_id',Auth::user()->id)->orderBy('created_at', 'desc');
     }
 
     public function media()

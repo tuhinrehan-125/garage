@@ -20,12 +20,18 @@ class Brand extends Model
 
     public function scopeActive($query)
     {
-        return $query->orderBy('created_at', 'desc');
+        return $query->where('owner_id', Auth::user()->id)->orderBy('created_at', 'desc');
     }
 
     public function vehicles()
     {
         return $this->hasMany(Vehicle::class, 'id', 'brand_id');
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'id', 'brand_id');
+
     }
 
 

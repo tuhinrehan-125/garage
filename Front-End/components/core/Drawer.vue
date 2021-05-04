@@ -134,16 +134,6 @@ export default {
               title: this.$t("Brand"),
               to: "/brand"
             }
-            // {
-            //   icon: "mdi-shape",
-            //   title: this.$t("Unit"),
-            //   to: "/unit"
-            // },
-            // {
-            //   icon: "mdi-shape",
-            //   title: this.$t("variation"),
-            //   to: "/variation"
-            // }
           ]
         },
         {
@@ -240,10 +230,27 @@ export default {
             }
           ]
         },
+        // {
+        //   icon: "mdi-cart-arrow-right",
+        //   title: this.$t("Invoice"),
+        //   to: "/sell",
+        //   children: [
+        //     {
+        //       icon: "mdi-format-list-bulleted",
+        //       title: this.$t("All Invoices"),
+        //       to: "/list"
+        //     },
+        //     {
+        //       icon: "mdi-plus-circle-outline",
+        //       title: this.$t("Add Invoice"),
+        //       to: "/create"
+        //     }
+        //   ]
+        // },
         {
           icon: "mdi-cart-arrow-right",
           title: this.$t("Invoice"),
-          to: "/sell",
+          to: "/invoice",
           children: [
             {
               icon: "mdi-format-list-bulleted",

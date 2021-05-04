@@ -27,7 +27,7 @@ class Contact extends Model
 
     public function scopeActive($query, $type)
     {
-        return $query->where('type', $type);
+        return $query->where('type', $type)->where('owner_id',Auth::user()->id);
     }
 
     public function vehicle()
