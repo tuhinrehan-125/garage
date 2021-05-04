@@ -69,7 +69,7 @@ export default {
       headers: [
         { text: "Name", value: "product" },
         { text: "Quantity", value: "purchase_quantity" },
-        { text: "Net Unit Cost", value: "purchase_price" },
+        { text: "Price", value: "purchase_price" },
         // { text: "Discount", value: "discount" },
         // { text: "Tax", value: "tax" },
         // { text: "Subtotal", value: "subtotal" },

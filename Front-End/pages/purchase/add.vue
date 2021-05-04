@@ -129,7 +129,7 @@
                     @keyup="addDiscount($event.target.value)"
                   ></v-text-field>
                 </v-col> -->
-                <v-col cols="12" md="6" sm="12" xl="4">
+                <!-- <v-col cols="12" md="6" sm="12" xl="4">
                   <v-text-field
                     label="Shipping cost"
                     outlined
@@ -138,10 +138,10 @@
                     v-model="form.shipping_cost"
                     @keyup="addShippingCost($event.target.value)"
                   ></v-text-field>
-                </v-col>
+                </v-col> -->
                 <v-col cols="12" md="6" sm="12" xl="4">
                   <v-textarea
-                    rows="3"
+                    rows="4"
                     label="Note"
                     outlined
                     dense
@@ -149,8 +149,46 @@
                     v-model="form.note"
                   ></v-textarea>
                 </v-col>
-                <v-col cols="12">
-                  <h2 class="text-right">Total: {{ grandTotal }}</h2>
+                <v-col cols="12" md="6" sm="12" xl="4" class="text-right">
+                  <v-row>
+                    <v-col cols="12" md="6" sm="12" xl="4">
+                      <h3>Sub Total Amount</h3>
+                    </v-col>
+                    <v-col cols="12" md="6" sm="12" xl="4">
+                      <v-text-field
+                        label="Sub Total Amount"
+                        outlined
+                        dense
+                        required
+                        v-model="form.payment_amount"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6" sm="12" xl="4">
+                      <h3>Discount</h3>
+                    </v-col>
+                    <v-col cols="12" md="6" sm="12" xl="6">
+                      <v-text-field
+                        label="Discount"
+                        outlined
+                        dense
+                        required
+                        v-model="form.payment_amount"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6" sm="12" xl="4">
+                      <h3>Total Amount</h3>
+                    </v-col>
+                    <v-col cols="12" md="6" sm="12" xl="6">
+                      <v-text-field
+                        label="Total Amount"
+                        outlined
+                        dense
+                        required
+                        v-model="form.payment_amount"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <!-- <h2 class="text-right">Total: {{ grandTotal }}</h2> -->
                 </v-col>
               </v-row>
 
@@ -329,4 +367,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+
+.theme--light.v-input, .theme--light.v-input input, .theme--light.v-input textarea{
+  height:30px;
+}
+
+</style>
