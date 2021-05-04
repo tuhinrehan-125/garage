@@ -218,7 +218,7 @@ class ProductsController extends Controller
         $result = [];
         if (!empty($products)) {
             foreach ($products as $key => $value) {
-                if ($type == 1) {
+                if ($type == "Product") {
                     $result[] = [
                         'id' => $value->id,
                         'name' => $value->name,
