@@ -87,10 +87,9 @@ export const getters = {
     let invoice_after_tax = price + invoice_discount_percentage;
     let invoice_after_discount = invoice_after_tax - invoice_discount;
     let invoice_total_amount = parseInt(invoice_after_discount);
-    let final_amount = invoice_after_discount.toFixed(2);
-
-    // return invoice_total_amount;
-    return final_amount;
+    // let final_amount = parseFloat(invoice_after_discount.toFixed(2));
+    return invoice_total_amount;
+    // return final_amount;
   },
 
   sellSubTotalPrice(state, getters) {

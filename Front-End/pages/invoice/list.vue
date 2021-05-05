@@ -102,7 +102,8 @@ export default {
       message: "",
       valid: true,
       sellsList: [],
-      invoiceList:[]
+      invoiceList:[],
+      invoiceId:'',
     };
   },
   computed: {
@@ -154,7 +155,8 @@ export default {
   },
   async asyncData({ params, axios }) {},
   mounted() {
-    this.getSellsList();
+    // this.getSellsList();
+    this.getInvoiceList();
   },
   methods: {
     openAddPayment(item) {
@@ -171,17 +173,17 @@ export default {
     },
     deleteProduct(item) {
       this.confirmation = true;
-      this.sellid = item.id;
+      this.invoiceId = item.id;
     },
     async confirmDelete() {
-      await this.$axios.delete(`sell/${this.sellid}`).then(res => {
+      await this.$axios.delete(`invoice/${this.invoiceId}`).then(res => {
         this.alert = true;
-        this.message = "Sell Deleted Successfully";
+        this.message = "Invoice Deleted Successfully";
         this.confirmation = false;
-        this.getSellsList();
+        this.getInvoiceList();
       });
     },
-    async getSellsList() {
+    async getInvoiceList() {
       this.isLoading = true;
       await this.$axios.get("/invoice").then(response => {
         this.isLoading = false;

@@ -60,7 +60,7 @@ class InvoiceController extends Controller
                 $invoiceItem = new InvoiceItem();
                 $invoiceItem->invoice_id = $invoice->id;
                 $invoiceItem->vehicle_id = $request->vehicle_id;
-                if ( $item['category_type'] == "Product") {
+                if ($item['category_type'] == "Product") {
 //                if ( $request->category_type == "Product") {
                     $invoiceItem->product_id = $item['id'];
                     $invoiceItem->product_rate = $item['price'];
@@ -77,8 +77,7 @@ class InvoiceController extends Controller
                         $product->save();
                     }
                     $invoiceItem->save();
-                }
-                else if ($item['category_type'] == "Service") {
+                } else if ($item['category_type'] == "Service") {
 
                     $invoiceItem->service_id = $item['id'];
                     $invoiceItem->service_rate = $item['price'];
@@ -91,80 +90,41 @@ class InvoiceController extends Controller
             }
             if ($invoice->vat > 0) {
                 $taxInPercentage = ($invoice->vat / 100);
-                $afterTax = $item_subtotal_price * $taxInPercentage;
+//                $afterTax = $item_subtotal_price * $taxInPercentage;
+                $afterTax = round($item_subtotal_price * $taxInPercentage);
             }
 
             $invoice->total_cost = ($item_subtotal_price + $afterTax) - $invoice->discount;
             $invoice->due_price = $invoice->total_cost - $invoice->paid_price;
-            $invoice->status = $invoice->due_price ==0 ?"Paid":"Due";
+            $invoice->status = $invoice->due_price == 0 ? "Paid" : "Due";
             $invoice->save();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['success' => false,    'errmsg' => $e->getMessage()], 500);
+            return response()->json(['success' => false, 'errmsg' => $e->getMessage()], 500);
         }
         DB::commit();
 
         return response(new InvoiceResource($invoice), Response::HTTP_CREATED);
 
-//        $test = $request->invoice_items;
-//
-//        return response()->json($test);
 
     }
 
+    public function destroy($id)
+    {
+        $invoice = Invoice::where('id', $id)->first();
+
+        $invoice->delete();
+
+        return response()->json(['success' => true, 'message' => 'Deleted successfully'], 204);
+    }
 
     public function getVehicles(Request $request)
     {
-//         $vehicles = Vehicle::where('owner_id',1)->where('contact_id',$request->contact_id)->get();
-        $vehicles = Vehicle::where('contact_id', $request->contact_id)->get();
+        $vehicles = Vehicle::where('owner_id', 1)->where('contact_id', $request->contact_id)->get();
 
         return response()->json($vehicles);
     }
 
-    public function invoiceProductSearch(Request $request)
-    {
-        $type = $request->type;
-
-//        dd($type);
-
-//        return response()->json($type);
-        $keyword = $request->name;
-
-        if ($type == 1) {
-//            $searchQ = Product::where('name', 'like', '%' . $keyword . '%')->where('owner_id', auth()->user()->id)->get();
-            $searchQ = Product::where('name', 'like', '%' . $keyword . '%')->where('owner_id', auth()->user()->id);
-
-        }
-        else {
-//            $searchQ = Service::where('name', 'like', '%' . $keyword . '%')->where('owner_id', auth()->user()->id)->get();
-            $searchQ = Service::where('name', 'like', '%' . $keyword . '%')->where('owner_id', auth()->user()->id);
-        }
-
-        $products = $searchQ->get();
-        $result = [];
-        if (!empty($products)) {
-            foreach ($products as $key => $value) {
-                if ($type == 1) {
-                    $result[] = [
-                        'id' => $value->id,
-                        'name' => $value->name,
-//                        'buying_price' => $value->buying_price,
-                        'price' => $value->selling_price,
-                    ];
-                } else {
-                    $result[] = [
-                        'id' => $value->id,
-                        'name' => $value->name,
-                        'price' => $value->selling_price,
-                    ];
-                }
-            }
-        }
-//        return json_encode($searchQ);
-        return json_encode($result);
-//        return response()->json($result);
-    }
 
     public function getInvoiceItems(Request $request)
     {
