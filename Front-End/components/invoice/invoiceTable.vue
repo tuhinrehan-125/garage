@@ -26,7 +26,7 @@
             class="shrink"
             type="number"
             :value="item.price"
-            @keyup="qtyChange($event.target.value, invoiceItems.indexOf(item))"
+            @keyup="priceChange($event.target.value, invoiceItems.indexOf(item))"
           ></v-text-field>
         </template>
 
@@ -103,36 +103,38 @@ export default {
   async asyncData({ params, axios }) {},
   methods: {
     qtyChange(val, index) {
-      this.$store.dispatch("product/updateSellItem", {
+      this.$store.dispatch("product/updateInvoiceItem", {
         // sell_quantity: val,
-        sell_quantity: val,
+        invoice_quantity: val,
         index: index,
         type: "qtychange"
       });
     },
     priceChange(val, index) {
-      this.$store.dispatch("product/updateSellItem", {
-        purchase_price: parseInt(val),
+      this.$store.dispatch("product/updateInvoiceItem", {
+        // purchase_price: parseInt(val),
+        // invoice_price: parseInt(val),
+        price: parseInt(val),
         index: index,
         type: "pricechange"
       });
     },
-    discountChange(val, index) {
-      this.$store.dispatch("product/updateSellItem", {
-        discount: parseInt(val),
-        index: index,
-        type: "discountchange"
-      });
-    },
-    taxChange(val, index) {
-      this.$store.dispatch("product/updateSellItem", {
-        tax: parseInt(val),
-        index: index,
-        type: "taxchange"
-      });
-    },
+    // discountChange(val, index) {
+    //   this.$store.dispatch("product/updateSellItem", {
+    //     discount: parseInt(val),
+    //     index: index,
+    //     type: "discountchange"
+    //   });
+    // },
+    // taxChange(val, index) {
+    //   this.$store.dispatch("product/updateSellItem", {
+    //     tax: parseInt(val),
+    //     index: index,
+    //     type: "taxchange"
+    //   });
+    // },
     removeItem(val,index){
-      this.$store.commit("product/REMOVE_SELL_PRODUCT", {
+      this.$store.commit("product/REMOVE_INVOICE_PRODUCT", {
       // this.$store.commit("product/REMOVE_PRODUCT", {
         id: val.id,
         index: index,

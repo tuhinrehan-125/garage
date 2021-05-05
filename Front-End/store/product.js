@@ -81,23 +81,16 @@ export const getters = {
 
   invoiceTotalPrice(state, getters) {
     let price = getters.invoiceSubTotalPrice;
-    // let sell_discount = state.sell_discount;
     let invoice_discount = state.invoice_discount;
-    // let sell_tax = state.sell_tax;
     let invoice_tax = state.invoice_tax;
-    // let sell_shipping_cost = state.sell_shipping_cost;
-    // let sell_discount_percentage = (price * sell_tax) / 100;
     let invoice_discount_percentage = (price * invoice_tax) / 100;
-    // let sell_after_tax = price + sell_discount_percentage;
     let invoice_after_tax = price + invoice_discount_percentage;
-    // let sell_after_discount = sell_after_tax - sell_discount;
     let invoice_after_discount = invoice_after_tax - invoice_discount;
-    // let sell_after_discount = sell_after_tax - invoice_discount;
-    // let sell_total_amount = parseInt(sell_after_discount) + parseInt(sell_shipping_cost);
     let invoice_total_amount = parseInt(invoice_after_discount);
+    let final_amount = invoice_after_discount.toFixed(2);
 
-    // console.log(price,invoice_total_amount)
-    return invoice_total_amount;
+    // return invoice_total_amount;
+    return final_amount;
   },
 
   sellSubTotalPrice(state, getters) {
@@ -191,8 +184,19 @@ export const mutations = {
     }
   },
 
+  REMOVE_INVOICE_PRODUCT(state, payload) {
+    let items = state.invoiceItems;
+    if (items) {
+      let product = items.find(product => {
+        return product.id == payload.id;
+      });
 
-
+      if (product) {
+        let index = items.indexOf(product);
+        items = items.splice(index, 1);
+      }
+    }
+  },
   SET_PURCHASE_DISCOUNT(state, payload) {
     state.purchase_discount = payload;
   },
@@ -290,7 +294,8 @@ export const actions = {
       invoice_quantity,
       price,
       discount,
-      tax
+      tax,
+      category_type
     }
   )
   {
@@ -301,6 +306,7 @@ export const actions = {
       price: price,
       discount: discount,
       tax: tax,
+      category_type: category_type,
 
       // subtotal: parseInt(price) + parseInt(tax * price) / 100
       subtotal: parseInt(price) + parseInt(tax * price) / 100
@@ -390,56 +396,39 @@ export const actions = {
     if (payload.type == "qtychange") {
       if (invoiceItems) {
         let index = payload.index;
-        let newtax = sellItems[index].tax * payload.sell_quantity;
+        // let newtax = invoiceItems[index].tax * payload.invoice_quantity;
         invoiceItems[index].invoice_quantity = payload.invoice_quantity;
-        // sellItems[index].tax = newtax;
-        // sellItems[index].subtotal =
-        //   payload.sell_quantity * sellItems[index].sell_price +
-        //   parseInt(
-        //     newtax * payload.sell_quantity * sellItems[index].sell_price
-        //   ) /
-        //   100 -
-        //   sellItems[index].discount;
 
         invoiceItems[index].subtotal =
           payload.invoice_quantity * invoiceItems[index].price
 
-        commit("SET_SELL_PRODUCTS", sellItems);
+        commit("SET_INVOICE_PRODUCTS", invoiceItems);
       }
     }
-    if (payload.type == "discountchange") {
-      if (sellItems) {
+    if (payload.type == "pricechange") {
+      if (invoiceItems) {
+
         let index = payload.index;
-        sellItems[index].discount = payload.discount;
-        sellItems[index].subtotal =
-          sellItems[index].sell_quantity * sellItems[index].sell_price +
-          parseInt(
-            sellItems[index].tax *
-            sellItems[index].sell_price *
-            sellItems[index].sell_quantity
-          ) /
-          100 -
-          payload.discount;
+        // invoiceItems[index].invoice_quantity = payload.invoice_quantity;
+        // invoiceItems[index].invoice_price = payload.price;
+        invoiceItems[index].price = payload.price;
 
-        commit("SET_SELL_PRODUCTS", sellItems);
+        // invoiceItems[index].subtotal = payload.invoice_quantity * payload.price
+        invoiceItems[index].subtotal = payload.price * invoiceItems[index].invoice_quantity
+        commit("SET_INVOICE_PRODUCTS", invoiceItems);
       }
     }
-    if (payload.type == "selltax") {
-      if (sellItems) {
-        commit("SET_SELL_TAX", payload.tax);
+    if (payload.type == "invoiceTax") {
+      if (invoiceItems) {
+        commit("SET_INVOICE_TAX", payload.invoice_tax);
       }
     }
-    if (payload.type == "selldiscount") {
-      if (sellItems) {
-        commit("SET_SELL_DISCOUNT", payload.discount);
+    if (payload.type == "invoiceDiscount") {
+      if (invoiceItems) {
+        commit("SET_INVOICE_DISCOUNT", payload.invoice_discount);
       }
     }
 
-    if (payload.type == "shippingcost") {
-      if (sellItems) {
-        commit("SET_SELL_SHIPPING_COST", payload.shipping_cost);
-      }
-    }
   },
 
 
@@ -586,5 +575,16 @@ export const actions = {
       purchaseItems.splice(index, 1);
       commit("REMOVE_PRODUCT", purchaseItems);
     }
+  },
+
+
+  removeInvoiceCartItem({ commit, getters }, { product, index }) {
+    let invoiceItems = getters.getInvoiceItems;
+    if (invoiceItems) {
+      invoiceItems.splice(index, 1);
+      commit("REMOVE_INVOICE_PRODUCT", invoiceItems);
+    }
   }
+
+
 };

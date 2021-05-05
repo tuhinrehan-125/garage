@@ -43,7 +43,8 @@ export default {
           invoice_quantity: 1,
           price: val.price,
           discount: 0,
-          tax: 0
+          tax: 0,
+          category_type: val.category_type
         });
       } else if (this.type == "purchase") {
         this.$store.dispatch("product/addItemToPurchase", {

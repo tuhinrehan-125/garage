@@ -153,3 +153,5 @@ Route::get('purchase-payment', [PurchaseController::class, 'viewPayment']);
 Route::get('purchase-items', [PurchaseController::class, 'purchaseItemsList']);
 // Route::get('purchase-return-list', [SellPurchaseReturnController::class, 'purchaseReturnList']);
 // Route::patch('purchase-return/{id}', [SellPurchaseReturnController::class, 'returnPurchase']);
+
+Route::resource('invoice', \App\Http\Controllers\InvoiceController::class);

@@ -223,12 +223,14 @@ class ProductsController extends Controller
                         'id' => $value->id,
                         'name' => $value->name,
                         'price' => $value->selling_price,
+                        "category_type" => "Product"
                     ];
                 } else {
                     $result[] = [
                         'id' => $value->id,
                         'name' => $value->name,
                         'price' => $value->selling_price,
+                        "category_type" => "Service"
                     ];
                 }
             }

@@ -35,4 +35,9 @@ class Contact extends Model
         return $this->belongsTo(Vehicle::class);
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class,'contact_id','id');
+    }
+
 }

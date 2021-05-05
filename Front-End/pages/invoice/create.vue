@@ -125,26 +125,25 @@
                     @keyup="addDiscount($event.target.value)"
                   ></v-text-field>
                 </v-col>
-<!--                <v-col cols="12" md="4" sm="12" xl="4">-->
-<!--                  <v-text-field-->
-<!--                    label="Shipping cost"-->
-<!--                    outlined-->
-<!--                    dense-->
-<!--                    required-->
-<!--                    v-model="form.shipping_cost"-->
-<!--                    @keyup="addShippingCost($event.target.value)"-->
-<!--                  ></v-text-field>-->
-<!--                </v-col>-->
                 <v-col cols="12" md="4" sm="12" xl="4">
-                  <v-textarea
-                    rows="2"
-                    label="Note"
+                  <v-text-field
+                    label="Paid Amount"
                     outlined
                     dense
                     required
-                    v-model="form.note"
-                  ></v-textarea>
+                    v-model="form.paid_amount"
+                  ></v-text-field>
                 </v-col>
+<!--                <v-col cols="12" md="4" sm="12" xl="4">-->
+<!--                  <v-textarea-->
+<!--                    rows="2"-->
+<!--                    label="Note"-->
+<!--                    outlined-->
+<!--                    dense-->
+<!--                    required-->
+<!--                    v-model="form.note"-->
+<!--                  ></v-textarea>-->
+<!--                </v-col>-->
                 <v-col cols="12">
                   <h2 class="text-right">Total: {{ grandTotal }}</h2>
                 </v-col>
@@ -216,6 +215,7 @@ export default {
         category_id: "",
         vehicle_id: "",
         product_id:"",
+        paid_amount:""
       },
       methods: ["Cash", "Card", "Bank Transfer"]
     };
@@ -247,23 +247,27 @@ export default {
   watch: {},
   methods: {
     addTax(val) {
-      this.$store.dispatch("product/updateSellItem", {
-        tax: val,
-        type: "selltax"
+      this.$store.dispatch("product/updateInvoiceItem", {
+        // tax: val,
+        invoice_tax: val,
+        // type: "selltax"
+        type: "invoiceTax"
       });
     },
     addDiscount(val) {
-      this.$store.dispatch("product/updateSellItem", {
-        discount: val,
-        type: "selldiscount"
+      this.$store.dispatch("product/updateInvoiceItem", {
+        // discount: val,
+        invoice_discount: val,
+        // type: "selldiscount"
+        type: "invoiceDiscount"
       });
     },
-    addShippingCost(val) {
-      this.$store.dispatch("product/updateSellItem", {
-        shipping_cost: val,
-        type: "shippingcost"
-      });
-    },
+    // addShippingCost(val) {
+    //   this.$store.dispatch("product/updateInvoiceItem", {
+    //     shipping_cost: val,
+    //     type: "shippingcost"
+    //   });
+    // },
     async getCustomers() {
       await this.$axios.get("/get-clients").then(response => {
         this.contacts = response.data;
@@ -291,7 +295,7 @@ export default {
 
     async submitForm() {
       if (this.$refs.form.validate()) {
-        if (this.sellItems.length < 1) {
+        if (this.invoiceItems.length < 1) {
           this.type = "error";
           this.alert = true;
           this.message = {msg: ["Please Select Product"]};
@@ -305,29 +309,26 @@ export default {
         }
         this.full_loading = true
         await this.$axios
-          .post("/sell", {
-            sell_items: this.sellItems,
-            business_location_id: this.form.business_location_id,
-            customer_id: this.form.customer_id,
-            sell_status: this.form.sell_status,
-            sell_date: this.form.sell_date,
-            sell_status: this.form.sell_status,
-            sell_tax: this.form.sell_tax,
+          .post("/invoice", {
+            invoice_items: this.invoiceItems,
+            contact_id: this.form.contact_id,
+            vehicle_id: this.form.vehicle_id,
+            // sell_status: this.form.sell_status,
+            invoice_date: this.form.invoice_date,
             invoice_tax: this.form.invoice_tax,
-            sell_discount: this.form.sell_discount,
             invoice_discount: this.form.invoice_discount,
-            shipping_cost: this.form.shipping_cost,
-            payment_amount: this.form.payment_amount,
-            payment_method: this.form.payment_method,
-            payment_note: this.form.payment_note
+            paid_amount : this.form.paid_amount,
+            type: this.form.category_id
           })
           .then(response => {
             this.isLoading = false;
-            let data = {alert: true, message: "sell Addedd Successfully", type: "success"};
+            let data = {alert: true, message: "Invoice Added Successfully", type: "success"};
             this.$store.commit("SET_ALERT", data);
             this.$store.commit("SET_MODAL", true);
             this.full_loading = false
-            this.$router.push({name: "sell-list"});
+            console.log(response);
+            this.$router.push({name: "invoice-list"});
+
           });
       }
     }

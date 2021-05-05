@@ -3,8 +3,7 @@
     <v-overlay :value="full_loading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <add-payment :item="singleitem" type="sell" />
-    <view-payment :data="paymentinfo" />
+
     <v-row justify="center">
       <v-dialog v-model="confirmation" max-width="300">
         <v-card>
@@ -24,9 +23,9 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-btn tile color="indigo" class="float-right" to="/sell/create" >
+        <v-btn tile color="indigo" class="float-right" to="/invoice/create" >
           <v-icon left> mdi-plus </v-icon>
-          {{ $t("add_sell") }}
+          {{ $t("Add Invoice") }}
         </v-btn>
       </v-col>
     </v-row>
@@ -37,7 +36,7 @@
         </v-card>
         <v-card v-else>
           <v-card-title>
-            {{ $t("Sells List") }}
+            {{ $t("Invoice List") }}
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
@@ -50,17 +49,9 @@
           <v-card-text>
             <v-data-table
               :headers="headers"
-              :items="sellsList"
+              :items="invoiceList"
               :search="search"
             >
-              <template v-slot:item.image="{ item }">
-                <img
-                  class="product-img"
-                  :src="item.image"
-                  style="width: 50px; height: 50px"
-                />
-              </template>
-
               <template v-slot:item.actions="{ item }">
                 <v-menu open-on-hover top offset-y>
                   <template v-slot:activator="{ on, attrs }">
@@ -69,12 +60,7 @@
                     </v-btn>
                   </template>
                   <v-list>
-                    <v-list-item link @click="openAddPayment(item)" v-if="item.total_due!=0">
-                      <v-list-item-title>Add Payment</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link @click="openViewPayment(item)">
-                      <v-list-item-title>View Payment</v-list-item-title>
-                    </v-list-item>
+
                     <v-list-item link @click="editProduct(item)">
                       <v-list-item-title>Edit</v-list-item-title>
                     </v-list-item>
@@ -96,10 +82,10 @@
 import addPayment from "../../components/payment/addPayment";
 import viewPayment from "../../components/payment/viewPayment";
 export default {
-  name: "Sell",
+  name: "Invoice",
   middleware: "auth",
   head: {
-    title: "Sell List"
+    title: "Invoice List"
   },
  components: { addPayment, viewPayment },
   data() {
@@ -115,7 +101,8 @@ export default {
       confirmation: false,
       message: "",
       valid: true,
-      sellsList: []
+      sellsList: [],
+      invoiceList:[]
     };
   },
   computed: {
@@ -123,43 +110,38 @@ export default {
       return [
         {
           sortable: false,
+          text: this.$t("Invoice Number"),
+          value: "invoice_number"
+        },
+        {
+          sortable: false,
+          text: this.$t("Cline name"),
+          value: "client_name"
+        },
+        {
+          sortable: false,
           text: this.$t("Date"),
-          value: "sell_date"
+          value: "date"
         },
         {
           sortable: false,
-          text: this.$t("location"),
-          value: "business_location"
+          text: this.$t("Total Amount"),
+          value: "total_amount"
         },
         {
           sortable: false,
-          text: this.$t("customer"),
-          value: "customer"
+          text: this.$t("Paid Amount"),
+          value: "paid_amount"
         },
         {
           sortable: false,
-          text: this.$t("Sell Status"),
-          value: "sell_status"
+          text: this.$t("Due Amount"),
+          value: "due_amount"
         },
         {
           sortable: false,
-          text: this.$t("Payment Status"),
-          value: "payment_status"
-        },
-        {
-          sortable: false,
-          text: this.$t("Grand Total"),
-          value: "total_cost"
-        },
-        {
-          sortable: false,
-          text: this.$t("Paid"),
-          value: "total_paid"
-        },
-        {
-          sortable: false,
-          text: this.$t("Due"),
-          value: "total_due"
+          text: this.$t("Vat"),
+          value: "vat"
         },
 
         {
@@ -201,9 +183,9 @@ export default {
     },
     async getSellsList() {
       this.isLoading = true;
-      await this.$axios.get("/sell").then(response => {
+      await this.$axios.get("/invoice").then(response => {
         this.isLoading = false;
-        this.sellsList = response.data;
+        this.invoiceList = response.data;
       });
     },
   }

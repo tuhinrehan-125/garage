@@ -11,6 +11,7 @@ use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class InvoiceController extends Controller
 {
@@ -27,48 +28,61 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
-//        $validator = Validator::make(
-//            $request->all(),
-//            [
-////                'business_location_id' => 'required',
-////                'supplier_id' => 'required',
-//            ]
-//        );
-//
-//        if ($validator->fails()) {
-//            return response()->json(['success' => false, 'error' => $validator->errors()], 422);
-//        }
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'contact_id' => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'error' => $validator->errors()], 422);
+        }
         DB::beginTransaction();
         try {
             $invoice = new Invoice();
             $invoice->invoice_number = (time() + rand(10, 1000));;
+            $type = $request->type;
             $invoice->contact_id = $request->contact_id;
             $invoice->owner_id = auth()->user()->id;
 //            $sale->sale_status = $request->sale_status;
-            $invoice->date = date("Y-m-d", strtotime($request->date));
-            $invoice->discount = $request->discount;
-            $invoice->vat = $request->vat;
-
+            $invoice->paid_price = $request->paid_amount;
+            $invoice->date = date("Y-m-d", strtotime($request->invoice_date));
+            $invoice->discount = $request->invoice_discount;
+            $invoice->vat = $request->invoice_tax;
+            $invoice->created_by = auth()->user()->id;
 
             $invoice->save();
-            $item_sale_quantity = 0;
             $item_subtotal_price = 0;
             $afterTax = 0;
-
             foreach ($request->invoice_items as $item) {
 
                 $invoiceItem = new InvoiceItem();
                 $invoiceItem->invoice_id = $invoice->id;
-                $invoice->vehicle_id = $request->vehicle_id;
-                if ($item['category_id'] == 1) {
-                    $invoiceItem->product_id = $item['product_id'];
-                    $invoiceItem->product_rate = $item['product_rate'];
+                $invoiceItem->vehicle_id = $request->vehicle_id;
+                if ( $item['category_type'] == "Product") {
+//                if ( $request->category_type == "Product") {
+                    $invoiceItem->product_id = $item['id'];
+                    $invoiceItem->product_rate = $item['price'];
+                    $invoiceItem->product_quantity = $item['invoice_quantity'];
                     $invoiceItem->total_price = $item['subtotal'];
-                    $invoiceItem->save();
-                } else if ($item['category_id'] == 2) {
 
-                    $invoiceItem->service_id = $item['service_id'];
-                    $invoiceItem->service_rate = $item['service_rate'];
+                    // Subtracting quantity from products
+                    $productID = $item['id'];
+                    $invoice_quantity = $item['invoice_quantity'];
+                    $product = Product::find($productID);
+                    $old_quantity = $product->quantity;
+                    if ($old_quantity >= $invoice_quantity) {
+                        $product->quantity = $old_quantity - $invoice_quantity;
+                        $product->save();
+                    }
+                    $invoiceItem->save();
+                }
+                else if ($item['category_type'] == "Service") {
+
+                    $invoiceItem->service_id = $item['id'];
+                    $invoiceItem->service_rate = $item['price'];
+                    $invoiceItem->service_quantity = $item['invoice_quantity'];
                     $invoiceItem->total_price = $item['subtotal'];
                     $invoiceItem->save();
                 }
@@ -81,17 +95,22 @@ class InvoiceController extends Controller
             }
 
             $invoice->total_cost = ($item_subtotal_price + $afterTax) - $invoice->discount;
-
+            $invoice->due_price = $invoice->total_cost - $invoice->paid_price;
+            $invoice->status = $invoice->due_price ==0 ?"Paid":"Due";
             $invoice->save();
-
-
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['success' => false, 'errmsg' => $e->getMessage()], 500);
+            return response()->json(['success' => false,    'errmsg' => $e->getMessage()], 500);
         }
         DB::commit();
 
         return response(new InvoiceResource($invoice), Response::HTTP_CREATED);
+
+//        $test = $request->invoice_items;
+//
+//        return response()->json($test);
+
     }
 
 
