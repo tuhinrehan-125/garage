@@ -48,7 +48,7 @@
                     v-model="form.contact_id"
                   ></v-text-field>
                 </v-col>
-                
+
                 <v-col cols="12" md="4" sm="12" xl="4">
                     <v-select
                               label="Select Brand"
@@ -90,7 +90,7 @@
                     v-model="form.chassis_no"
                   ></v-text-field>
                 </v-col>
-                
+
                 <v-col cols="12" md="4" sm="12" xl="4">
                   <v-text-field
                     label="Mileage"
@@ -136,8 +136,8 @@
                     v-model="form.description"
                   ></v-text-field>
                 </v-col>
-               
-                
+
+
               </v-row>
               <v-row>
                 <v-col cols="12" class="">

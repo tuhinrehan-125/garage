@@ -39,8 +39,7 @@ class Category extends Model
 
     public function scopeActive($query)
     {
-//        return $query->where('business_id', Auth::user()->business_id)->orderBy('created_at', 'desc');
-        return $query->orderBy('created_at', 'desc');
+        return $query->where('owner_id',Auth::user()->id)->orderBy('created_at', 'desc');
     }
 
     public function services()

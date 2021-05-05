@@ -1,11 +1,14 @@
 export const state = () => ({
   purchaseItems: [],
   sellItems: [],
+  invoiceItems: [],
   transferItems: [],
   purchase_discount: 0,
   sell_discount: 0,
+  invoice_discount: 0,
   purchase_tax: 0,
   sell_tax: 0,
+  invoice_tax: 0,
   shipping_cost: 0,
   sell_shipping_cost: 0,
   transfer_shipping_cost:0
@@ -17,6 +20,11 @@ export const getters = {
   getSellItems(state) {
     return state.sellItems;
   },
+  getInvoiceItems(state) {
+    return state.invoiceItems;
+  },
+
+
   getTransferItems(state) {
     return state.transferItems;
   },
@@ -69,6 +77,22 @@ export const getters = {
       parseInt(sell_after_discount) + parseInt(sell_shipping_cost);
     return sell_total_amount;
   },
+
+
+  invoiceTotalPrice(state, getters) {
+    let price = getters.invoiceSubTotalPrice;
+    let invoice_discount = state.invoice_discount;
+    let invoice_tax = state.invoice_tax;
+    let invoice_discount_percentage = (price * invoice_tax) / 100;
+    let invoice_after_tax = price + invoice_discount_percentage;
+    let invoice_after_discount = invoice_after_tax - invoice_discount;
+    let invoice_total_amount = parseInt(invoice_after_discount);
+    let final_amount = invoice_after_discount.toFixed(2);
+
+    // return invoice_total_amount;
+    return final_amount;
+  },
+
   sellSubTotalPrice(state, getters) {
     let sitems = getters.getSellItems;
     let sprice = 0;
@@ -78,8 +102,20 @@ export const getters = {
       });
     }
     return sprice;
+  },
+
+  invoiceSubTotalPrice(state, getters) {
+    let sitems = getters.getInvoiceItems;
+    let sprice = 0;
+    if (sitems && sitems.length) {
+      sitems.forEach(item => {
+        sprice += Number(item.subtotal);
+      });
+    }
+    return sprice;
   }
 };
+
 export const mutations = {
   SET_PURCHASE_PRODUCTS(state, payload) {
     state.purchaseItems = payload;
@@ -90,6 +126,11 @@ export const mutations = {
   SET_SELL_PRODUCTS(state, payload) {
     state.sellItems = payload;
   },
+  SET_INVOICE_PRODUCTS(state, payload) {
+    state.invoiceItems = payload;
+  },
+
+
   SET_ADVANCE(state, payload) {
     state.advance = payload;
   },
@@ -112,6 +153,15 @@ export const mutations = {
       state.sellItems = [payload];
     }
   },
+
+  ADD_INVOICE_ITEMS(state, payload) {
+    let items = state.invoiceItems;
+    if (items) {
+      items.push(payload);
+    } else {
+      state.invoiceItems = [payload];
+    }
+  },
   ADD_TRANSFER_ITEMS(state, payload) {
     let items = state.transferItems;
     if (items) {
@@ -122,6 +172,20 @@ export const mutations = {
   },
   REMOVE_PRODUCT(state, payload) {
     let items = state.purchaseItems;
+    if (items) {
+      let product = items.find(product => {
+        return product.id == payload.id;
+      });
+
+      if (product) {
+        let index = items.indexOf(product);
+        items = items.splice(index, 1);
+      }
+    }
+  },
+
+  REMOVE_INVOICE_PRODUCT(state, payload) {
+    let items = state.invoiceItems;
     if (items) {
       let product = items.find(product => {
         return product.id == payload.id;
@@ -148,9 +212,19 @@ export const mutations = {
   SET_SELL_DISCOUNT(state, payload) {
     state.sell_discount = payload;
   },
+
+  SET_INVOICE_DISCOUNT(state, payload) {
+    state.invoice_discount = payload;
+  },
+
   SET_SELL_TAX(state, payload) {
     state.sell_tax = payload;
   },
+
+  SET_INVOICE_TAX(state, payload) {
+    state.invoice_tax = payload;
+  },
+
   SET_SELL_SHIPPING_COST(state, payload) {
     state.sell_shipping_cost = payload;
   }
@@ -168,7 +242,8 @@ export const actions = {
       discount,
       tax
     }
-  ) {
+  )
+  {
     let item = {
       product: product,
       product_id: product_id,
@@ -193,7 +268,9 @@ export const actions = {
       discount,
       tax
     }
-  ) {
+  )
+
+  {
     let item = {
       product: product,
       product_id: product_id,
@@ -207,6 +284,39 @@ export const actions = {
     };
     commit("ADD_SELL_ITEMS", item);
   },
+
+  // adding invoice item start from here
+  addItemToInvoice(
+    { commit },
+    {
+      name,
+      id,
+      invoice_quantity,
+      price,
+      discount,
+      tax,
+      category_type
+    }
+  )
+  {
+    let item = {
+      name: name,
+      id: id,
+      invoice_quantity: invoice_quantity,
+      price: price,
+      discount: discount,
+      tax: tax,
+      category_type: category_type,
+
+      // subtotal: parseInt(price) + parseInt(tax * price) / 100
+      subtotal: parseInt(price) + parseInt(tax * price) / 100
+    };
+    // commit("ADD_SELL_ITEMS", item);
+    commit("ADD_INVOICE_ITEMS", item);
+  },
+  // adding invoice item end here
+
+
   addItemToTransfer(
     { commit },
     { product, product_id,qty_available,variation_id, quantity, unit, purchase_price }
@@ -270,12 +380,57 @@ export const actions = {
         commit("SET_SELL_DISCOUNT", payload.discount);
       }
     }
+
     if (payload.type == "shippingcost") {
       if (sellItems) {
         commit("SET_SELL_SHIPPING_COST", payload.shipping_cost);
       }
     }
   },
+  //sell ends here
+
+
+  updateInvoiceItem({ commit, getters }, payload) {
+    // let sellItems = getters.getSellItems;
+    let invoiceItems = getters.getInvoiceItems;
+    if (payload.type == "qtychange") {
+      if (invoiceItems) {
+        let index = payload.index;
+        // let newtax = invoiceItems[index].tax * payload.invoice_quantity;
+        invoiceItems[index].invoice_quantity = payload.invoice_quantity;
+
+        invoiceItems[index].subtotal =
+          payload.invoice_quantity * invoiceItems[index].price
+
+        commit("SET_INVOICE_PRODUCTS", invoiceItems);
+      }
+    }
+    if (payload.type == "pricechange") {
+      if (invoiceItems) {
+
+        let index = payload.index;
+        // invoiceItems[index].invoice_quantity = payload.invoice_quantity;
+        // invoiceItems[index].invoice_price = payload.price;
+        invoiceItems[index].price = payload.price;
+
+        // invoiceItems[index].subtotal = payload.invoice_quantity * payload.price
+        invoiceItems[index].subtotal = payload.price * invoiceItems[index].invoice_quantity
+        commit("SET_INVOICE_PRODUCTS", invoiceItems);
+      }
+    }
+    if (payload.type == "invoiceTax") {
+      if (invoiceItems) {
+        commit("SET_INVOICE_TAX", payload.invoice_tax);
+      }
+    }
+    if (payload.type == "invoiceDiscount") {
+      if (invoiceItems) {
+        commit("SET_INVOICE_DISCOUNT", payload.invoice_discount);
+      }
+    }
+
+  },
+
 
   //purchase
 
@@ -420,5 +575,16 @@ export const actions = {
       purchaseItems.splice(index, 1);
       commit("REMOVE_PRODUCT", purchaseItems);
     }
+  },
+
+
+  removeInvoiceCartItem({ commit, getters }, { product, index }) {
+    let invoiceItems = getters.getInvoiceItems;
+    if (invoiceItems) {
+      invoiceItems.splice(index, 1);
+      commit("REMOVE_INVOICE_PRODUCT", invoiceItems);
+    }
   }
+
+
 };

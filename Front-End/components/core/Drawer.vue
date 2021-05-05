@@ -172,17 +172,6 @@ export default {
         {
           icon: "mdi-car",
           title: this.$t("Vehicles"),
-
-        },
-
-        {
-          icon: "mdi-link",
-          title: this.$t("Services"),
-
-        },
-        {
-          icon: "mdi-car",
-          title: this.$t("Vehicles"),
           to: "/vehicle",
           children: [
             {
@@ -252,14 +241,31 @@ export default {
             }
           ]
         },
+        // {
+        //   icon: "mdi-cart-arrow-right",
+        //   title: this.$t("Invoice"),
+        //   to: "/sell",
+        //   children: [
+        //     {
+        //       icon: "mdi-format-list-bulleted",
+        //       title: this.$t("All Invoices"),
+        //       to: "/list"
+        //     },
+        //     {
+        //       icon: "mdi-plus-circle-outline",
+        //       title: this.$t("Add Invoice"),
+        //       to: "/create"
+        //     }
+        //   ]
+        // },
         {
           icon: "mdi-cart-arrow-right",
           title: this.$t("Invoice"),
-          to: "/sell",
+          to: "/invoice",
           children: [
             {
               icon: "mdi-format-list-bulleted",
-              title: this.$t("All Invoices"),
+              title: this.$t("invoice_list"),
               to: "/list"
             },
             {

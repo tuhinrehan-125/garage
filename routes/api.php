@@ -59,14 +59,18 @@ Route::group(
 
 Route::resource('product', ProductsController::class);
 Route::post('product/search', [ProductsController::class, 'productSearch']);
+//Route::post('invoice-product/search', [\App\Http\Controllers\InvoiceController::class, 'invoiceProductSearch']);
 Route::get('customer-search', [CustomerController::class, 'customerSearch']);
 //Route::get('client-search', [ClientController::class, 'clientSearch']);
 Route::post('contact-search', [ContactController::class, 'contactSearch']);
 
 Route::resource('category', CategoryController::class);
-Route::get('getAllCategories',[ProductsController::class,'getAllCategories']);
+Route::get('get-categories',[ProductsController::class,'getAllCategories']);
+Route::get('getAllBrands',[ProductsController::class,'getAllBrands']);
 Route::get('get-subcategories/{category}', [CategoryController::class, 'getSubcategories']);
 Route::get('get-subunits/{unit}', [UnitController::class, 'getSubUnits']);
+Route::get('get-clients', [ContactController::class, 'getClients']);
+Route::get('get-vehicles', [\App\Http\Controllers\InvoiceController::class, 'getVehicles']);
 
 
 Route::resource('advance', AdvanceController::class);
@@ -149,3 +153,5 @@ Route::get('purchase-payment', [PurchaseController::class, 'viewPayment']);
 Route::get('purchase-items', [PurchaseController::class, 'purchaseItemsList']);
 // Route::get('purchase-return-list', [SellPurchaseReturnController::class, 'purchaseReturnList']);
 // Route::patch('purchase-return/{id}', [SellPurchaseReturnController::class, 'returnPurchase']);
+
+Route::resource('invoice', \App\Http\Controllers\InvoiceController::class);

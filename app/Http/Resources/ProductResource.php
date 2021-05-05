@@ -22,8 +22,9 @@ class ProductResource extends JsonResource
             'buying_price' => $this->buying_price,
             'selling_price' => $this->selling_price,
             'quantity' => $this->quantity,
-            'brand' => $this->brand,
-            'status' => $this->status,
+//            'brand' => $this->brand,
+            'brand' => $this->brand? $this->brand->name:'',
+            'status' => $this->status == 0 ? "Active" : 'Inactive',
 
         ];
     }

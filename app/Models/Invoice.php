@@ -11,7 +11,15 @@ class Invoice extends Model
 
     protected $table ='invoices';
 
+
+
     public function invoiceItems(){
         return $this->hasMany(InvoiceItem::class);
     }
+
+    public function client(){
+        return $this->belongsTo(Contact::class,'contact_id','id');
+    }
+
+
 }

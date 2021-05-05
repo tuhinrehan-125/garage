@@ -17,10 +17,10 @@ class ContactController extends Controller
 
     public function index(Request $request)
     {
-        $type= $request->type;
+        $type = $request->type;
         $contacts = Contact::Active($type)->get();
 
-        return response()->json(ContactResource::collection($contacts),Response::HTTP_OK);
+        return response()->json(ContactResource::collection($contacts), Response::HTTP_OK);
     }
 
     public function store(Request $request)
@@ -28,11 +28,11 @@ class ContactController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'type'     => 'required',
-                'name'     => 'required',
-                'email'     => 'required',
-                'address'     => 'required',
-                'mobile'     => 'required',
+                'type' => 'required',
+                'name' => 'required',
+                'email' => 'required',
+                'address' => 'required',
+                'mobile' => 'required',
             ]
         );
         if ($validator->fails()) {
@@ -110,4 +110,14 @@ class ContactController extends Controller
             return response()->json(['success' => true, 'message' => 'Contact not found'], 200);
         }
     }
+
+    public function getClients()
+    {
+        $contacts = Contact::where('owner_id',1)->where('type','customer')->get();
+
+        return response()->json($contacts);
+
+    }
+
+
 }
