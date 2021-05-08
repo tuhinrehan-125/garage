@@ -265,7 +265,7 @@ export default {
           children: [
             {
               icon: "mdi-format-list-bulleted",
-              title: this.$t("invoice_list"),
+              title: this.$t("Invoice List"),
               to: "/list"
             },
             {

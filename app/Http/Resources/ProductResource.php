@@ -22,9 +22,11 @@ class ProductResource extends JsonResource
             'buying_price' => $this->buying_price,
             'selling_price' => $this->selling_price,
             'quantity' => $this->quantity,
-//            'brand' => $this->brand,
             'brand' => $this->brand? $this->brand->name:'',
+            'brand_id' => $this->brand_id? $this->brand_id:'',
             'status' => $this->status == 0 ? "Active" : 'Inactive',
+            'image' => $this->image,
+
 
         ];
     }
