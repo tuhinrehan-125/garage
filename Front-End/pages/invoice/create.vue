@@ -134,16 +134,6 @@
                     v-model="form.paid_amount"
                   ></v-text-field>
                 </v-col>
-<!--                <v-col cols="12" md="4" sm="12" xl="4">-->
-<!--                  <v-textarea-->
-<!--                    rows="2"-->
-<!--                    label="Note"-->
-<!--                    outlined-->
-<!--                    dense-->
-<!--                    required-->
-<!--                    v-model="form.note"-->
-<!--                  ></v-textarea>-->
-<!--                </v-col>-->
                 <v-col cols="12">
                   <h2 class="text-right">Total: {{ grandTotal }}</h2>
                 </v-col>
@@ -173,7 +163,6 @@
 <script>
 import searchProduct from "../../components/product/searchProduct";
 import searchInvoiceProduct from "~/components/product/searchInvoiceProduct";
-import sellTable from "../../components/sell/sellTable";
 import invoiceTable from "~/components/invoice/invoiceTable";
 
 export default {
@@ -226,13 +215,9 @@ export default {
     },
     grandTotal() {
       let grandtotal = this.$store.getters["product/invoiceTotalPrice"];
-      // alert(grandtotal)
       return Math.round(grandtotal);
     },
-    sellItems() {
-      let products = this.$store.getters["product/getSellItems"];
-      return products;
-    },
+
     invoiceItems() {
       let products = this.$store.getters["product/getInvoiceItems"];
       return products;
@@ -248,26 +233,17 @@ export default {
   methods: {
     addTax(val) {
       this.$store.dispatch("product/updateInvoiceItem", {
-        // tax: val,
         invoice_tax: val,
-        // type: "selltax"
         type: "invoiceTax"
       });
     },
     addDiscount(val) {
       this.$store.dispatch("product/updateInvoiceItem", {
-        // discount: val,
         invoice_discount: val,
-        // type: "selldiscount"
         type: "invoiceDiscount"
       });
     },
-    // addShippingCost(val) {
-    //   this.$store.dispatch("product/updateInvoiceItem", {
-    //     shipping_cost: val,
-    //     type: "shippingcost"
-    //   });
-    // },
+
     async getCustomers() {
       await this.$axios.get("/get-clients").then(response => {
         this.contacts = response.data;
@@ -313,7 +289,6 @@ export default {
             invoice_items: this.invoiceItems,
             contact_id: this.form.contact_id,
             vehicle_id: this.form.vehicle_id,
-            // sell_status: this.form.sell_status,
             invoice_date: this.form.invoice_date,
             invoice_tax: this.form.invoice_tax,
             invoice_discount: this.form.invoice_discount,
@@ -326,7 +301,6 @@ export default {
             this.$store.commit("SET_ALERT", data);
             this.$store.commit("SET_MODAL", true);
             this.full_loading = false
-            console.log(response);
             this.$router.push({name: "invoice-list"});
 
           });

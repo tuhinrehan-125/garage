@@ -45,7 +45,6 @@ class InvoiceController extends Controller
             $type = $request->type;
             $invoice->contact_id = $request->contact_id;
             $invoice->owner_id = auth()->user()->id;
-//            $sale->sale_status = $request->sale_status;
             $invoice->paid_price = $request->paid_amount;
             $invoice->date = date("Y-m-d", strtotime($request->invoice_date));
             $invoice->discount = $request->invoice_discount;
@@ -61,7 +60,6 @@ class InvoiceController extends Controller
                 $invoiceItem->invoice_id = $invoice->id;
                 $invoiceItem->vehicle_id = $request->vehicle_id;
                 if ($item['category_type'] == "Product") {
-//                if ( $request->category_type == "Product") {
                     $invoiceItem->product_id = $item['id'];
                     $invoiceItem->product_rate = $item['price'];
                     $invoiceItem->product_quantity = $item['invoice_quantity'];
@@ -85,7 +83,6 @@ class InvoiceController extends Controller
                     $invoiceItem->total_price = $item['subtotal'];
                     $invoiceItem->save();
                 }
-//                $invoiceItem->total_price = $item['subtotal'];
                 $item_subtotal_price += $invoiceItem->total_price;
             }
             if ($invoice->vat > 0) {
@@ -96,7 +93,7 @@ class InvoiceController extends Controller
 
             $invoice->total_cost = ($item_subtotal_price + $afterTax) - $invoice->discount;
             $invoice->due_price = $invoice->total_cost - $invoice->paid_price;
-            $invoice->status = $invoice->due_price == 0 ? "Paid" : "Due";
+            $invoice->payment_status = $invoice->due_price == 0 ? "Paid" : "Due";
             $invoice->save();
         } catch (\Exception $e) {
             DB::rollback();
