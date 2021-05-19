@@ -39,7 +39,7 @@
         </v-card>
         <v-card v-else>
           <v-card-title>
-            {{ $t("supplier_list") }}
+            {{ $t("Supplier list") }}
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"

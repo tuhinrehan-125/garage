@@ -13,6 +13,11 @@ class Service extends Model
         'name', 'category_id', 'selling_price', 'status', 'description'
     ];
 
+
+    public function invoiceItems(){
+        return $this->hasMany(InvoiceItem::class);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

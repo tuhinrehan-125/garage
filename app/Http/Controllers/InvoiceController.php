@@ -22,7 +22,8 @@ class InvoiceController extends Controller
 
     public function index()
     {
-        $invoices = Invoice::all();
+//        $invoices = Invoice::with('invoiceItems')->where('owner_id',auth()->user()->id)->get();
+        $invoices = Invoice::where('owner_id', auth()->user()->id)->get();
         return response(InvoiceResource::collection($invoices), Response::HTTP_OK);
     }
 
@@ -132,6 +133,31 @@ class InvoiceController extends Controller
             $items = Service::where('category_id', 2)->where('owner_id', auth()->user()->id)->get();
         }
         return response()->json($items);
+    }
+
+    public function getInvoiceDetails(Request $request)
+    {
+//        dd($request->all());
+        $items = InvoiceItem::where('invoice_id', $request->id)->get();
+        $lists = '';
+
+        if (!empty($items)) {
+            $lists = $items->map(function ($value) {
+                return [
+                    'id' => $value->id,
+                    'vehicle_name' => $value->vehicle? $value->vehicle->model:'N/A',
+                    'reg_no' => $value->vehicle? $value->vehicle->reg_no:'N/A',
+                    'chassis_no' => $value->vehicle? $value->vehicle->chassis_no:'N/A',
+                    'item_name' =>$value->product? $value->product->name: $value->service->name,
+                    'item_quantity' => $value->product_quantity ? $value->product_quantity : $value->service_quantity,
+                    'item_price' => $value->product_rate ? $value->product_rate : $value->service_rate,
+                    'total_price' => $value->total_price ? $value->total_price : 'N/A',
+                ];
+            });
+        }
+
+        return response()->json( $lists);
+
     }
 
 

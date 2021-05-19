@@ -71,6 +71,7 @@ Route::get('get-subcategories/{category}', [CategoryController::class, 'getSubca
 Route::get('get-subunits/{unit}', [UnitController::class, 'getSubUnits']);
 Route::get('get-clients', [ContactController::class, 'getClients']);
 Route::get('get-vehicles', [\App\Http\Controllers\InvoiceController::class, 'getVehicles']);
+Route::post('get-invoice-details', [\App\Http\Controllers\InvoiceController::class, 'getInvoiceDetails']);
 
 
 Route::resource('advance', AdvanceController::class);

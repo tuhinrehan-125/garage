@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-sm class="mt-5">
+  <v-container grid-list-sm class="mt-5" v-if="invoiceItemId ==''">
     <v-overlay :value="full_loading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
@@ -9,22 +9,24 @@
         <v-card>
           <v-card-title>
             Are you sure?
-            <v-spacer />
+            <v-spacer/>
             <v-icon aria-label="Close" @click="confirmation = false">
               mdi-close
             </v-icon>
           </v-card-title>
           <v-card-text class="pb-6 pt-12 text-center">
-            <v-btn class="mr-3" text @click="confirmation = false"> No </v-btn>
-            <v-btn color="success" text @click="confirmDelete()"> Yes </v-btn>
+            <v-btn class="mr-3" text @click="confirmation = false"> No</v-btn>
+            <v-btn color="success" text @click="confirmDelete()"> Yes</v-btn>
           </v-card-text>
         </v-card>
       </v-dialog>
     </v-row>
+
+
     <v-row>
       <v-col>
-        <v-btn tile color="indigo" class="float-right" to="/invoice/create" >
-          <v-icon left> mdi-plus </v-icon>
+        <v-btn tile color="indigo" class="float-right" to="/invoice/create">
+          <v-icon left> mdi-plus</v-icon>
           {{ $t("Add Invoice") }}
         </v-btn>
       </v-col>
@@ -56,11 +58,13 @@
                 <v-menu open-on-hover top offset-y>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn color="primary" dark small v-bind="attrs" v-on="on">
-                       <v-icon dark> mdi-dots-horizontal </v-icon>
+                      <v-icon dark> mdi-dots-horizontal</v-icon>
                     </v-btn>
                   </template>
                   <v-list>
-
+                    <v-list-item link @click="invoiceDetail(item)">
+                      <v-list-item-title>Detail</v-list-item-title>
+                    </v-list-item>
                     <v-list-item link @click="editProduct(item)">
                       <v-list-item-title>Edit</v-list-item-title>
                     </v-list-item>
@@ -75,19 +79,25 @@
         </v-card>
       </v-col>
     </v-row>
+
   </v-container>
+  <div v-else>
+    <invoice-detail @clicked="onClickChild" :invoiceId="invoiceItemId"/>
+  </div>
 </template>
 
 <script>
 import addPayment from "../../components/payment/addPayment";
 import viewPayment from "../../components/payment/viewPayment";
+import invoiceDetail from '../../components/invoice/invoiceDetail';
+
 export default {
   name: "Invoice",
   middleware: "auth",
   head: {
     title: "Invoice List"
   },
- components: { addPayment, viewPayment },
+  components: {addPayment, viewPayment, invoiceDetail},
   data() {
     return {
       full_loading: false,
@@ -102,8 +112,9 @@ export default {
       message: "",
       valid: true,
       sellsList: [],
-      invoiceList:[],
-      invoiceId:'',
+      invoiceList: [],
+      invoiceId: '',
+      invoiceItemId: '',
     };
   },
   computed: {
@@ -153,21 +164,30 @@ export default {
       ];
     }
   },
-  async asyncData({ params, axios }) {},
+  async asyncData({params, axios}) {
+  },
   mounted() {
     // this.getSellsList();
     this.getInvoiceList();
   },
   methods: {
+    onClickChild (value) {
+      this.invoiceItemId = value;
+      this.getInvoiceList();
+    },
+    invoiceDetail(val) {
+      this.invoiceItemId = val;
+    },
+
     openAddPayment(item) {
       this.singleitem = item;
-      this.$store.commit("SET_MODAL", { type: "addpayment", status: true });
+      this.$store.commit("SET_MODAL", {type: "addpayment", status: true});
     },
     async openViewPayment(item) {
       this.full_loading = true;
       await this.$axios.get("sell-payment?id=" + item.id).then(res => {
         this.paymentinfo = res.data.data;
-        this.$store.commit("SET_MODAL", { type: "viewpayment", status: true });
+        this.$store.commit("SET_MODAL", {type: "viewpayment", status: true});
         this.full_loading = false;
       });
     },

@@ -36,6 +36,7 @@
         </v-btn>
       </v-col>
     </v-row>
+
     <v-row>
       <v-col cols="12" md="12">
         <v-card v-if="isLoading">
@@ -54,7 +55,7 @@
             ></v-text-field>
           </v-card-title>
           <v-card-text>
-            <v-data-table :headers="headers" :items="items">
+            <v-data-table :headers="headers" :items="items" :hide-default-footer="true">
               <template v-slot:item.actions="{ item }">
                 <v-btn
                   class="mx-2"
@@ -76,6 +77,14 @@
                 </v-btn>
               </template>
             </v-data-table>
+
+          <v-pagination
+              class="pt-5"
+              v-model="pagination.current"
+              :length="pagination.total"
+              @input="onPageChange"
+            ></v-pagination>
+
           </v-card-text>
         </v-card>
       </v-col>
@@ -86,6 +95,8 @@
 <script>
 import addCategory from "../../components/product/addCategory.vue";
 import editCategory from "../../components/product/editCategory.vue";
+
+
 export default {
   name: "Category",
   middleware: "auth",
@@ -104,7 +115,11 @@ export default {
       catid: "",
       categories: [],
       items: [],
-      singleItem: {}
+      singleItem: {},
+      pagination: {
+        current: 1,
+        total: 0
+      },
     };
   },
   computed: {
@@ -138,16 +153,34 @@ export default {
     this.getCategories();
   },
   methods: {
+
+   onPageChange() {
+      this.getCategories();
+    },
+
     opendialog(type) {
       this.$store.commit("SET_MODAL", { type: type, status: true });
     },
+    // async getCategories() {
+    //   this.isLoading = true;
+    //   await this.$axios.get("/category").then(response => {
+    //     this.items = response.data;
+    //     this.isLoading = false;
+    //   });
+    // },
+
+
     async getCategories() {
       this.isLoading = true;
-      await this.$axios.get("/category").then(response => {
-        this.items = response.data;
+      await this.$axios.get('/category?page=' + this.pagination.current).then(response => {
+        this.items = response.data.data;
         this.isLoading = false;
+        this.pagination.current = response.data.meta.current_page;
+        this.pagination.total = response.data.meta.last_page;
       });
     },
+
+
     deleteCategory(item) {
       this.confirmation = true;
       this.catid = item.id;

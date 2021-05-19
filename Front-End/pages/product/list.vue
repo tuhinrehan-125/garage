@@ -39,7 +39,9 @@
               :headers="headers"
               :items="productslist"
               :search="search"
+              :hide-default-footer="true"
             >
+
               <template v-slot:item.image="{ item }">
                 <img
                   class="product-img"
@@ -70,6 +72,12 @@
                 </v-btn>
               </template>
             </v-data-table>
+            <v-pagination
+              class="pt-5"
+              v-model="pagination.current"
+              :length="pagination.total"
+              @input="onPageChange"
+            ></v-pagination>
           </v-card-text>
         </v-card>
       </v-col>
@@ -110,6 +118,10 @@ export default {
         weight: "",
         price: "",
         image: null,
+      },
+      pagination: {
+        current: 1,
+        total: 0
       },
       singleItem: {},
       singleProductId:"",
@@ -192,9 +204,21 @@ export default {
     this.getProducts();
   },
 
-
-
   methods: {
+    onPageChange() {
+      this.getProducts();
+    },
+
+    async getProducts() {
+      this.isLoading = true;
+      await this.$axios.get('/product?page=' + this.pagination.current).then((response) => {
+        this.isLoading = false;
+        this.productslist = response.data.data;
+        this.pagination.current = response.data.meta.current_page;
+        this.pagination.total = response.data.meta.last_page;
+      });
+    },
+
     opendialog(type) {
       this.$store.commit("SET_MODAL", {type: type, status: true});
     },
@@ -221,13 +245,18 @@ export default {
         this.getProducts();
       });
     },
-    async getProducts() {
-      this.isLoading = true;
-      await this.$axios.get("/product").then((response) => {
-        this.isLoading = false;
-        this.productslist = response.data;
-      });
-    },
+    // async getProducts() {
+    //   this.isLoading = true;
+    //   await this.$axios.get("/product").then((response) => {
+    //     this.isLoading = false;
+    //     this.productslist = response.data;
+    //   });
+    // },
+
+
+
+
+
   },
 
 };

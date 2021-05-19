@@ -29,6 +29,11 @@ class Vehicle extends Model
         return $this->belongsTo(VehicleType::class,'type_id','id');
     }
 
+
+    public function invoiceitems(){
+        return $this->hasMany(InvoiceItem::class);
+    }
+
     public function scopeActive($query)
     {
         return $query->latest();

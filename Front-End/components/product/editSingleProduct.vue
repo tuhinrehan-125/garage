@@ -190,7 +190,6 @@ export default {
     async getBrands() {
       await this.$axios.get("/getAllBrands").then((response) => {
         this.brands = response.data;
-        console.log(this.brands)
       });
     },
 
@@ -205,7 +204,6 @@ export default {
           }
 
           formData.append("_method", "PATCH");
-          console.log(this.productId);
           await this.$axios
             .post(`product/${this.form.id}`, formData, {
               headers: {
