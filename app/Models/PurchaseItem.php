@@ -33,7 +33,6 @@ class PurchaseItem extends Model
         $pi = PurchaseItem::create([
             'purchase_id' => $purchase_id,
             'product_id' => $return_items['product_id'],
-            'product_variation_id' => $return_items['variation_id'],
             'purchase_quantity' => $return_items['purchase_quantity'],
             'purchase_price' => $return_items['purchase_price'],
             'total_price' => $return_items['purchase_quantity'] * $return_items['purchase_price'],

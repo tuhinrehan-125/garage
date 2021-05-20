@@ -55,25 +55,26 @@ class PurchaseController extends Controller
 
             //$business_location = BusinessLocation::findOrFail($request->business_location_id);
             
-            $owner = User::findOrFail($request->owner_id);
+            //$owner = User::findOrFail($request->owner_id);
             
             //$purchase->business_location_id = $business_location->id;
-            $purchase->owner_id = $owner->id;
+            //$purchase->owner_id = $owner->id;
+            $purchase->owner_id = 1;
             $purchase->contact_id = $request->supplier_id;
             $purchase->purchase_status = $request->purchase_status;
             $purchase->purchase_date = date("Y-m-d", strtotime($request->purchase_date));
             // $purchase->purchase_discount = $request->purchase_discount;
             // $purchase->purchase_tax = $request->purchase_tax;
-            $purchase->shipping_charge = $request->shipping_cost;
-            $purchase->shipping_details = $request->shipping_details;
+            //$purchase->shipping_charge = $request->shipping_cost;
+            //$purchase->shipping_details = $request->shipping_details;
             $purchase->created_by = auth()->user()->id;
             $purchase->updated_by = auth()->user()->id;
             $purchase->save();
 
-            if (!empty($request->purchase_doc)) {
-                $purchase_doc = $request->purchase_doc;
-                Helper::uploadFile($purchase_doc, $purchase, $business_location->business_id);
-            }
+            // if (!empty($request->purchase_doc)) {
+            //     $purchase_doc = $request->purchase_doc;
+            //     Helper::uploadFile($purchase_doc, $purchase, $business_location->business_id);
+            // }
 
             $item_purchase_quantity = 0;
             $item_subtotal_price = 0;

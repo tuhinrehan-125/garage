@@ -97,11 +97,13 @@
               <h2 class="overline variation-title mb-2 text-center">
                 Search Items
               </h2>
+
               <v-row no-gutters>
                 <v-col>
-                  <search-product type="purchase"/>
+                  <search-product :type="purchase"/>
                 </v-col>
               </v-row>
+
               <h2 class="overline variation-title mb-2 text-center">
                 Purchase Items
               </h2>
@@ -118,17 +120,8 @@
                     v-model="form.purchase_tax"
                     @keyup="addTax($event.target.value)"
                   ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="4" sm="12" xl="4">
-                  <v-text-field
-                    label="Discount"
-                    outlined
-                    dense
-                    required
-                    v-model="form.purchase_discount"
-                    @keyup="addDiscount($event.target.value)"
-                  ></v-text-field>
                 </v-col> -->
+                
                 <!-- <v-col cols="12" md="6" sm="12" xl="4">
                   <v-text-field
                     label="Shipping cost"
@@ -155,13 +148,7 @@
                       <h3>Sub Total Amount</h3>
                     </v-col>
                     <v-col cols="12" md="6" sm="12" xl="4">
-                      <v-text-field
-                        label="Sub Total Amount"
-                        outlined
-                        dense
-                        required
-                        v-model="form.payment_amount"
-                      ></v-text-field>
+                      <h2 class="text-left">{{ subTotal }}</h2>
                     </v-col>
                     <v-col cols="12" md="6" sm="12" xl="4">
                       <h3>Discount</h3>
@@ -172,27 +159,22 @@
                         outlined
                         dense
                         required
-                        v-model="form.payment_amount"
+                        v-model="form.purchase_discount"
+                        @keyup="addDiscount($event.target.value)"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" sm="12" xl="4">
                       <h3>Total Amount</h3>
                     </v-col>
                     <v-col cols="12" md="6" sm="12" xl="6">
-                      <v-text-field
-                        label="Total Amount"
-                        outlined
-                        dense
-                        required
-                        v-model="form.payment_amount"
-                      ></v-text-field>
+                      <h2 class="text-left">{{ grandTotal }}</h2>
                     </v-col>
                   </v-row>
                   <!-- <h2 class="text-right">Total: {{ grandTotal }}</h2> -->
                 </v-col>
               </v-row>
 
-              <h2 class="overline variation-title mb-2 text-center">
+              <!-- <h2 class="overline variation-title mb-2 text-center">
                 Make Payment
               </h2>
               <v-row no-gutters>
@@ -226,7 +208,7 @@
                     v-model="form.payment_note"
                   ></v-textarea>
                 </v-col>
-              </v-row>
+              </v-row> -->
               <v-row>
                 <v-col cols="12">
                   <v-btn
@@ -265,6 +247,7 @@ export default {
       valid: false,
       isLoading: false,
       supplier: [],
+      purchase: "purchase",
       purchase_statuses: ["Received", "Pending", "Ordered", "Draft", "Final"],
       modal: false,
       form: {
@@ -272,8 +255,8 @@ export default {
         supplier_id: "",
         purchase_status: "",
         purchase_date: new Date().toISOString().substr(0, 10),
-        // purchase_tax: "",
-        // purchase_discount: "",
+        purchase_tax: "",
+        purchase_discount: "",
         shipping_cost: "",
         payment_amount: "",
         payment_method: "",
@@ -286,6 +269,10 @@ export default {
   computed: {
     user_business_location() {
       return this.$auth.user.data.user_business_location;
+    },
+    subTotal() {
+      let subtotal = this.$store.getters["product/subTotalPrice"];
+      return Math.round(subtotal);
     },
     grandTotal() {
       let grandtotal = this.$store.getters["product/totalPrice"];
@@ -314,12 +301,12 @@ export default {
         type: "purchasediscount"
       });
     },
-    addShippingCost(val) {
-      this.$store.dispatch("product/updateCartItem", {
-        shipping_cost: val,
-        type: "shippingcost"
-      });
-    },
+    // addShippingCost(val) {
+    //   this.$store.dispatch("product/updateCartItem", {
+    //     shipping_cost: val,
+    //     type: "shippingcost"
+    //   });
+    // },
     async getSuppliers() {
       await this.$axios.get("/contact?type=supplier").then(response => {
         this.supplier = response.data;
@@ -346,13 +333,13 @@ export default {
             supplier_id: this.form.supplier_id,
             purchase_status: this.form.purchase_status,
             purchase_date: this.form.purchase_date,
-            purchase_status: this.form.purchase_status,
+            //purchase_status: this.form.purchase_status,
             // purchase_tax: this.form.purchase_tax,
-            // purchase_discount: this.form.purchase_discount,
-            shipping_cost: this.form.shipping_cost,
-            payment_amount: this.form.payment_amount,
-            payment_method: this.form.payment_method,
-            payment_note: this.form.payment_note
+            purchase_discount: this.form.purchase_discount,
+            //shipping_cost: this.form.shipping_cost,
+            //payment_amount: this.form.payment_amount,
+            //payment_method: this.form.payment_method,
+            //payment_note: this.form.payment_note
           })
           .then(response => {
             this.isLoading = false;

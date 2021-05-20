@@ -48,11 +48,11 @@ export const getters = {
     let price = getters.subTotalPrice;
     let purchase_discount = state.purchase_discount;
     let purchase_tax = state.purchase_tax;
-    let shipping_cost = state.shipping_cost;
+    // let shipping_cost = state.shipping_cost;
     let discount_percentage = (price * purchase_tax) / 100;
     let after_tax = price + discount_percentage;
     let after_discount = after_tax - purchase_discount;
-    let totalamount = parseInt(after_discount) + parseInt(shipping_cost);
+    let totalamount = parseInt(after_discount);
     return totalamount;
   },
   subTotalPrice(state, getters) {
@@ -230,25 +230,26 @@ export const actions = {
   addItemToPurchase(
     { commit },
     {
-      product,
-      product_id,
-      variation_id,
+      name,
+      id,
       purchase_quantity,
-      purchase_price,
+      price,
       discount,
       tax
     }
   )
   {
     let item = {
-      product: product,
-      product_id: product_id,
-      variation_id: variation_id,
+      name: name,
+      id: id,
       purchase_quantity: purchase_quantity,
-      purchase_price: purchase_price,
+      price: price,
       discount: discount,
       tax: tax,
-      subtotal: parseInt(purchase_price) + parseInt(tax * purchase_price) / 100
+
+      //subtotal: parseInt(purchase_price) + parseInt(tax * purchase_price) / 100
+      
+      subtotal: parseInt(price) + parseInt(tax * price) / 100
     };
     commit("ADD_PURCHASE_ITEMS", item);
   },

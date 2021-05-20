@@ -18,13 +18,13 @@
             @keyup="qtyChange($event.target.value, purchaseItems.indexOf(item))"
           ></v-text-field>
         </template>
-        <template v-slot:[`item.purchase_price`]="{ item }">
+        <template v-slot:[`item.price`]="{ item }">
           <v-text-field
             dense
             outlined
             class="shrink"
             type="number"
-            :value="item.purchase_price"
+            :value="item.price"
             @keyup="
               priceChange($event.target.value, purchaseItems.indexOf(item))
             "
@@ -67,12 +67,12 @@ export default {
   data() {
     return {
       headers: [
-        { text: "Name", value: "product" },
+        { text: "Name", value: "name" },
         { text: "Quantity", value: "purchase_quantity" },
-        { text: "Price", value: "purchase_price" },
+        { text: "Price", value: "price" },
         // { text: "Discount", value: "discount" },
         // { text: "Tax", value: "tax" },
-        // { text: "Subtotal", value: "subtotal" },
+        { text: "Subtotal", value: "subtotal" },
         { text: "Action", value: "action" }
       ]
     };
