@@ -120,6 +120,17 @@
                     <v-icon dark> mdi-plus</v-icon>
                     Submit
                   </v-btn>
+
+
+                  <v-btn
+                    class="float-right"
+                    dark
+                    @click="goBack"
+                    :loading="isLoading"
+                  >
+                    Cancel
+                  </v-btn>
+
                 </v-col>
               </v-row>
             </v-form>
@@ -181,7 +192,11 @@ export default {
       setTimeout(() => (this.loading = false), 2000);
     },
 
-
+    async goBack()
+    {
+      this.productId = '';
+      this.$emit('clicked', this.productId)
+    },
     async getCategories() {
       await this.$axios.get("/get-categories").then(response => {
         this.categories = response.data;
@@ -212,7 +227,8 @@ export default {
             })
             .then(response => {
               this.isLoading = false;
-              let data = {alert: true, message: "Product updated Successfully", type: 'success'};
+              // let data = {alert: true, message: "Product updated Successfully", type: 'success'};
+              let data = {alert: true, message: "Product updated Successfully"};
               this.$store.commit("SET_ALERT", data);
               this.$store.commit("SET_MODAL", true);
               this.productId = '';

@@ -148,20 +148,9 @@ export default {
       this.getBrands();
     },
 
-
     opendialog(type) {
       this.$store.commit("SET_MODAL", { type: type, status: true });
     },
-
-
-    // async getBrands() {
-    //   this.isLoading = true;
-    //   await this.$axios.get("/brand").then((response) => {
-    //     this.items = response.data;
-    //     this.isLoading = false;
-    //   });
-    // },
-
 
 
     async getBrands() {

@@ -53,6 +53,7 @@
               :headers="headers"
               :items="invoiceList"
               :search="search"
+              :hide-default-footer="true"
             >
               <template v-slot:item.actions="{ item }">
                 <v-menu open-on-hover top offset-y>
@@ -65,9 +66,9 @@
                     <v-list-item link @click="invoiceDetail(item)">
                       <v-list-item-title>Detail</v-list-item-title>
                     </v-list-item>
-                    <v-list-item link @click="editProduct(item)">
-                      <v-list-item-title>Edit</v-list-item-title>
-                    </v-list-item>
+<!--                    <v-list-item link @click="editProduct(item)">-->
+<!--                      <v-list-item-title>Edit</v-list-item-title>-->
+<!--                    </v-list-item>-->
                     <v-list-item link @click="deleteProduct(item)">
                       <v-list-item-title>Delete</v-list-item-title>
                     </v-list-item>
@@ -75,6 +76,14 @@
                 </v-menu>
               </template>
             </v-data-table>
+
+            <v-pagination
+              class="pt-5"
+              v-model="pagination.current"
+              :length="pagination.total"
+              @input="onPageChange"
+            ></v-pagination>
+
           </v-card-text>
         </v-card>
       </v-col>
@@ -115,6 +124,10 @@ export default {
       invoiceList: [],
       invoiceId: '',
       invoiceItemId: '',
+      pagination: {
+        current: 1,
+        total: 0
+      },
     };
   },
   computed: {
@@ -171,6 +184,10 @@ export default {
     this.getInvoiceList();
   },
   methods: {
+    onPageChange() {
+      this.getInvoiceList();
+    },
+
     onClickChild (value) {
       this.invoiceItemId = value;
       this.getInvoiceList();
@@ -203,13 +220,24 @@ export default {
         this.getInvoiceList();
       });
     },
+
+    // async getInvoiceList() {
+    //   this.isLoading = true;
+    //   await this.$axios.get("/invoice").then(response => {
+    //     this.isLoading = false;
+    //     this.invoiceList = response.data;
+    //   });
+    // },
     async getInvoiceList() {
       this.isLoading = true;
-      await this.$axios.get("/invoice").then(response => {
+      await this.$axios.get('/invoice?page=' + this.pagination.current).then(response => {
         this.isLoading = false;
-        this.invoiceList = response.data;
+        this.invoiceList = response.data.data;
+        this.pagination.current = response.data.meta.current_page;
+        this.pagination.total = response.data.meta.last_page;
       });
     },
+
   }
 };
 </script>

@@ -1,23 +1,38 @@
 <template>
   <v-container fluid style="min-height:700px" v-if="invoiceId !==''">
-
     <v-row>
 
       <v-col>
         <v-btn tile color="indigo" class="float-right" @click="goBack">
           {{ $t("Back") }}
         </v-btn>
+
+<!--        <v-btn tile color="indigo" class="float-right ml-3" @click="printIt">-->
+<!--          {{ $t("Print") }}-->
+<!--        </v-btn>-->
       </v-col>
     </v-row>
 
-    <v-row justify="center" class="pt-5">
+
+
+    <v-row justify="center" class="">
       <v-col cols="12" sm="12" md="12">
-        <v-card>
+        <v-card height="100%">
           <v-card-title class="justify-center">
             {{ $t("Invoice Details") }}
           </v-card-title>
 
           <v-card-text>
+
+<!--              &lt;!&ndash; SOURCE &ndash;&gt;-->
+<!--              <div id="printMe">-->
+<!--                <h1>Print me!</h1>-->
+
+<!--              &lt;!&ndash; OUTPUT &ndash;&gt;-->
+<!--&lt;!&ndash;              <button class="btn-block" @click="print"></button>&ndash;&gt;-->
+
+<!--              <v-btn   tile color="indigo" @click="print">Button</v-btn>-->
+<!--              </div>-->
 
             <v-row>
               <v-col cols="12" sm="12" md="4">
@@ -53,26 +68,30 @@
                   :headers="headers"
                   :items="invoiceItems"
                   hide-default-footer
-                  class="elevation-1"
+                  class="elevation-1 pb-4"
                 ></v-data-table>
 
               </v-col>
             </v-row>
 
 
-            <v-row class="pt-4">
-              <v-col cols="12" sm="12" md="6">
-                <h4 class="text-center">Customer's Signature</h4>
-              </v-col>
-              <v-col cols="12" sm="12" md="6">
-                <h4 class="text-center">Cashier's Signature</h4>
-              </v-col>
-            </v-row>
+<!--            <v-row class="pt-4">-->
+<!--              <v-col cols="12" sm="12" md="6">-->
+<!--                <h4 class="text-center">Customer's Signature</h4>-->
+<!--              </v-col>-->
+<!--              <v-col cols="12" sm="12" md="6">-->
+<!--                <h4 class="text-center">Cashier's Signature</h4>-->
+<!--              </v-col>-->
+<!--            </v-row>-->
+
+
 
           </v-card-text>
         </v-card>
       </v-col>
     </v-row>
+
+
   </v-container>
 </template>
 <script>
@@ -154,6 +173,12 @@ export default {
     {
       this.invoiceId = '';
       this.$emit('clicked', this.invoiceId)
+    },
+
+
+    async print () {
+      // Pass the element id here
+      await this.$htmlToPaper('printMe');
     },
     async getInvoiceInfos() {
 

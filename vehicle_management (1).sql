@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 05, 2021 at 01:38 PM
+-- Generation Time: May 20, 2021 at 11:54 AM
 -- Server version: 10.4.16-MariaDB
 -- PHP Version: 7.4.12
 
@@ -48,7 +48,9 @@ INSERT INTO `brands` (`id`, `owner_id`, `name`, `description`, `deleted_at`, `cr
 (6, 3, 'brand_3_updated', 'description_3_updated', NULL, '2021-04-18 22:40:32', '2021-04-27 06:36:45'),
 (7, 1, 'brand_1', 'description', '2021-04-27 06:36:28', '2021-04-27 06:33:02', '2021-04-27 06:36:28'),
 (8, 1, 'brand_5', 'asdsad', NULL, '2021-04-28 03:29:11', '2021-04-28 03:29:11'),
-(9, 1, 'brand_4', NULL, NULL, '2021-04-28 03:29:55', '2021-04-28 03:29:55');
+(9, 1, 'brand_4', 'test_description', NULL, '2021-04-28 03:29:55', '2021-05-09 02:15:08'),
+(10, 1, 'brand_6_updated', 'brand_6  description', NULL, '2021-05-20 00:21:40', '2021-05-20 00:21:55'),
+(11, 1, 'asdsaddsa', NULL, '2021-05-20 00:22:04', '2021-05-20 00:22:00', '2021-05-20 00:22:04');
 
 -- --------------------------------------------------------
 
@@ -72,13 +74,13 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `owner_id`, `short_code`, `parent_id`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 'Product', 1, 'cat-1', 0, NULL, '2021-04-15 08:21:41', '2021-04-21 03:11:04'),
-(2, 'Service', 1, 'N/A', 0, NULL, '2021-04-15 08:21:41', '2021-04-21 03:11:11'),
+(1, 'Product', 1, 'cat-1', 0, NULL, '2021-04-15 08:21:41', '2021-05-20 00:18:51'),
+(2, 'Service', 1, 'service-1', 0, NULL, '2021-04-15 08:21:41', '2021-05-20 00:59:40'),
 (4, 'sub_cat_1', 3, 'sub-cat-20', 1, NULL, '2021-04-18 05:05:42', '2021-04-18 05:05:42'),
 (5, 'sub_cat_2', 3, 'sub-20', NULL, '2021-04-18 05:07:26', '2021-04-18 05:06:48', '2021-04-18 05:07:26'),
 (6, 'asdsad', 1, 'sad', 0, '2021-04-27 06:37:25', '2021-04-21 03:12:28', '2021-04-27 06:37:25'),
-(7, 'test_updated', 1, 'N/A', 4, NULL, '2021-04-27 06:37:12', '2021-04-27 06:37:21'),
-(8, 'sdsadsad', 1, NULL, 0, NULL, '2021-04-28 03:26:50', '2021-04-28 03:26:50');
+(7, 'test_updated', 1, 'N/A', 4, '2021-05-20 00:17:14', '2021-04-27 06:37:12', '2021-05-20 00:17:14'),
+(8, 'sdsadsad', 1, NULL, 0, '2021-05-20 00:17:17', '2021-04-28 03:26:50', '2021-05-20 00:17:17');
 
 -- --------------------------------------------------------
 
@@ -113,17 +115,10 @@ CREATE TABLE `contacts` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `owner_id` bigint(20) UNSIGNED NOT NULL,
   `type` enum('supplier','customer','both') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `supplier_business_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `mobile` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `tax_number` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `city` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `state` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `country` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `zip_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `alternate_number` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_by` bigint(20) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -134,20 +129,15 @@ CREATE TABLE `contacts` (
 -- Dumping data for table `contacts`
 --
 
-INSERT INTO `contacts` (`id`, `owner_id`, `type`, `supplier_business_name`, `name`, `email`, `mobile`, `address`, `tax_number`, `city`, `state`, `country`, `zip_code`, `alternate_number`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 1, 'supplier', 'sadsad', 'supplier_1', 'supplier_1@test.com', '01683135964', 'dhaka', '1212', 'dhaa', 'sadsa', 'bangladesh', '1219', NULL, 1, NULL, '2021-04-19 23:53:23', '2021-04-20 01:10:39'),
-(2, 1, 'customer', 'sadsad', 'sadsad', 'asdsa@test.com', '01683135964', 'sadsad', '1212', 'dhaa', 'sadsa', 'bangladesh', '1219', NULL, 1, '2021-04-20 01:18:22', '2021-04-19 23:53:23', '2021-04-20 01:18:22'),
-(3, 1, 'supplier', NULL, 'supplier_2', 'supplier_2@test.com', '01683136547`', 'dhaka', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2021-04-20 01:13:17', '2021-04-20 01:13:17'),
-(4, 1, 'supplier', NULL, 'updated', 'asda@gmail.com', '0168312564', 'updated', NULL, NULL, NULL, NULL, NULL, NULL, 1, '2021-04-20 01:16:19', '2021-04-20 01:13:45', '2021-04-20 01:16:19'),
-(5, 1, 'customer', NULL, 'customer_1', 'customer_1@test.com', '01683136545', 'dhaka', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2021-04-20 01:18:45', '2021-04-20 01:18:45'),
-(6, 1, 'customer', NULL, 'customer_2_updated', 'customer_2@test.com', '0168545455', 'dhaka', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2021-04-20 01:22:33', '2021-04-20 01:24:49'),
-(7, 1, 'customer', NULL, 'asdasd', 'asdsad@test.com', '016831325645', 'asdsadsaddsa', NULL, NULL, NULL, NULL, NULL, NULL, 1, '2021-04-20 01:25:22', '2021-04-20 01:25:09', '2021-04-20 01:25:22'),
-(8, 1, 'supplier', NULL, 'asdsda', 'asdxv@test.com', '0168542354', 'asjasdhhasd', NULL, NULL, NULL, NULL, NULL, NULL, 1, '2021-04-20 01:26:06', '2021-04-20 01:26:02', '2021-04-20 01:26:06'),
-(9, 1, 'customer', NULL, '', 'maheeb@test.com', 'sd', 'asdsad', NULL, NULL, NULL, NULL, NULL, NULL, 1, '2021-04-27 07:13:15', '2021-04-27 07:08:08', '2021-04-27 07:13:15'),
-(10, 1, 'supplier', NULL, 'Azmaeen_updated', 'azmaeen@test.com', '01683135647', 'sadasd', NULL, NULL, NULL, NULL, NULL, NULL, 1, '2021-04-27 07:34:29', '2021-04-27 07:33:29', '2021-04-27 07:34:29'),
-(11, 1, 'customer', NULL, 'client_3', 'client@test.ocm', '01683135964', 'dhaka', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2021-04-28 01:09:09', '2021-04-28 01:09:09'),
-(12, 1, 'supplier', NULL, 'sadsd', 'xzz@test.com', '01683135698', 'dhaka', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2021-04-28 03:28:02', '2021-04-28 03:28:02'),
-(13, 1, 'customer', NULL, 'xzccx', 'maheeb@sasdas.com', '01683135964', 'dasda', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2021-04-28 03:28:31', '2021-04-28 03:28:31');
+INSERT INTO `contacts` (`id`, `owner_id`, `type`, `name`, `email`, `mobile`, `address`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 1, 'supplier', 'supplier_1', 'supplier_1@gmail.com', '01683135864', 'Dhaka', 1, NULL, '2021-05-20 00:29:12', '2021-05-20 00:29:12'),
+(2, 1, 'supplier', 'supplier_2', 'supplier_2@gmail.com', '01683135647', 'dhaka', 1, NULL, '2021-05-20 00:29:38', '2021-05-20 00:29:38'),
+(3, 1, 'supplier', 'supplier_3', 'supplier_3@gmail.com', '01683135425', 'dhaka', 1, NULL, '2021-05-20 00:30:04', '2021-05-20 00:30:04'),
+(4, 1, 'supplier', 'vxcv', 'sadsd@test.com', '016844578', 'dhaka', 1, NULL, '2021-05-20 00:31:49', '2021-05-20 00:31:58'),
+(5, 1, 'customer', 'client_1', 'client_1@gmail.com', '01683135647', 'dhaka', 1, NULL, '2021-05-20 00:55:59', '2021-05-20 00:55:59'),
+(6, 1, 'customer', 'client_2', 'client_2@gmail.com', '01683135647', 'dhaka', 1, NULL, '2021-05-20 00:56:20', '2021-05-20 00:56:20'),
+(7, 1, 'customer', 'client_3', 'client_3@gmail.com', '0168564789', 'dhaka', 1, NULL, '2021-05-20 00:56:42', '2021-05-20 00:56:42'),
+(8, 1, 'customer', 'test', 'sadsad@test.com', '016845987456', 'dhaka', 1, NULL, '2021-05-20 00:57:16', '2021-05-20 00:57:27');
 
 -- --------------------------------------------------------
 
@@ -228,21 +218,20 @@ CREATE TABLE `invoices` (
   `vat_parcentage` double DEFAULT NULL,
   `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `invoices`
 --
 
-INSERT INTO `invoices` (`id`, `owner_id`, `invoice_number`, `date`, `contact_id`, `client_name`, `client_phone`, `total_cost`, `paid_price`, `due_price`, `payment_status`, `created_by`, `discount`, `vat`, `vat_parcentage`, `status`, `created_at`, `updated_at`) VALUES
-(47, 1, 1619118619, '1970-01-01', 1, NULL, NULL, 10.2, NULL, NULL, NULL, NULL, 1, 2, NULL, NULL, '2021-04-22 13:00:55', '2021-04-22 13:00:55'),
-(63, 1, 1620202274, '2021-05-05', 5, NULL, NULL, 41, 41, NULL, NULL, NULL, 1, 5, NULL, NULL, '2021-05-05 02:04:29', '2021-05-05 02:04:29'),
-(64, 1, 1620202295, '2021-05-05', 5, NULL, NULL, 92.84, 92, NULL, NULL, NULL, 1, 2, NULL, NULL, '2021-05-05 02:10:38', '2021-05-05 02:10:38'),
-(65, 1, 1620205123, '2021-05-05', 5, NULL, NULL, 30.5, 20, 10.5, NULL, NULL, 1, 5, NULL, NULL, '2021-05-05 02:42:48', '2021-05-05 02:42:48'),
-(66, 1, 1620211000, '2021-05-05', 5, NULL, NULL, 14.3, 14, 0.3, NULL, '1', 1, 2, NULL, 'Due', '2021-05-05 04:31:17', '2021-05-05 04:31:17'),
-(67, 1, 1620211601, '2021-05-05', 5, NULL, NULL, 181.5, 181, 0.5, NULL, '1', 21, 575, NULL, 'Due', '2021-05-05 04:35:13', '2021-05-05 04:35:13'),
-(68, 1, 1620211814, '2021-05-05', 5, NULL, NULL, 31, 31, 0, NULL, '1', 2, 10, NULL, 'Paid', '2021-05-05 04:38:15', '2021-05-05 04:38:15');
+INSERT INTO `invoices` (`id`, `owner_id`, `invoice_number`, `date`, `contact_id`, `client_name`, `client_phone`, `total_cost`, `paid_price`, `due_price`, `payment_status`, `created_by`, `discount`, `vat`, `vat_parcentage`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(4, 1, 1621359561, '2021-05-18', 5, NULL, NULL, 376, 376, 0, 'Paid', '1', 20, 50, NULL, NULL, '2021-05-18 11:24:05', '2021-05-18 11:24:05', NULL),
+(5, 1, 1621359581, '2021-05-18', 5, NULL, NULL, 105, 105, 0, 'Paid', '1', 3, 20, NULL, NULL, '2021-05-18 11:25:40', '2021-05-18 11:25:40', NULL),
+(6, 1, 1621360914, '2021-05-18', 5, NULL, NULL, 378, 377, 1, 'Due', '1', 50, 50, NULL, NULL, '2021-05-18 11:55:03', '2021-05-18 11:55:03', NULL),
+(7, 1, 1621496496, '2021-05-20', 5, NULL, NULL, 86, 86, 0, 'Paid', '1', 2, 10, NULL, NULL, '2021-05-20 01:31:50', '2021-05-20 01:31:50', NULL),
+(8, 1, 1621500932, '2021-05-20', 5, NULL, NULL, 24, 24, 0, 'Paid', '1', 2, 30, NULL, NULL, '2021-05-20 02:51:50', '2021-05-20 02:52:10', '2021-05-20 02:52:10');
 
 -- --------------------------------------------------------
 
@@ -252,9 +241,7 @@ INSERT INTO `invoices` (`id`, `owner_id`, `invoice_number`, `date`, `contact_id`
 
 CREATE TABLE `invoice_items` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `owner_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `invoice_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `invoice_number` int(11) DEFAULT NULL,
+  `invoice_id` bigint(20) UNSIGNED NOT NULL,
   `vehicle_id` bigint(20) UNSIGNED DEFAULT NULL,
   `product_id` bigint(20) UNSIGNED DEFAULT NULL,
   `product_quantity` int(11) DEFAULT NULL,
@@ -266,23 +253,22 @@ CREATE TABLE `invoice_items` (
   `service_rate` double DEFAULT NULL,
   `total_price` double DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `invoice_items`
 --
 
-INSERT INTO `invoice_items` (`id`, `owner_id`, `invoice_id`, `invoice_number`, `vehicle_id`, `product_id`, `product_quantity`, `product_rate`, `product_total_price`, `service_id`, `service_quantity`, `service_total_price`, `service_rate`, `total_price`, `created_at`, `updated_at`) VALUES
-(23, NULL, 47, NULL, NULL, 1, NULL, 10, NULL, NULL, NULL, NULL, NULL, 10, '2021-04-22 13:00:55', '2021-04-22 13:00:55'),
-(41, NULL, 63, NULL, 1, 5, 1, 30, NULL, NULL, NULL, NULL, NULL, 30, '2021-05-05 02:04:29', '2021-05-05 02:04:29'),
-(42, NULL, 63, NULL, 1, NULL, NULL, NULL, NULL, 1, 1, NULL, 10, 10, '2021-05-05 02:04:29', '2021-05-05 02:04:29'),
-(43, NULL, 64, NULL, 1, 5, 2, 31, NULL, NULL, NULL, NULL, NULL, 62, '2021-05-05 02:10:38', '2021-05-05 02:10:38'),
-(44, NULL, 64, NULL, 1, NULL, NULL, NULL, NULL, 2, 2, NULL, 15, 30, '2021-05-05 02:10:38', '2021-05-05 02:10:38'),
-(45, NULL, 65, NULL, 1, 5, 1, 30, NULL, NULL, NULL, NULL, NULL, 30, '2021-05-05 02:42:48', '2021-05-05 02:42:48'),
-(46, NULL, 66, NULL, 1, NULL, NULL, NULL, NULL, 2, 1, NULL, 15, 15, '2021-05-05 04:31:17', '2021-05-05 04:31:17'),
-(47, NULL, 67, NULL, 1, 5, 1, 30, NULL, NULL, NULL, NULL, NULL, 30, '2021-05-05 04:35:13', '2021-05-05 04:35:13'),
-(48, NULL, 68, NULL, NULL, 5, 1, 30, NULL, NULL, NULL, NULL, NULL, 30, '2021-05-05 04:38:15', '2021-05-05 04:38:15');
+INSERT INTO `invoice_items` (`id`, `invoice_id`, `vehicle_id`, `product_id`, `product_quantity`, `product_rate`, `product_total_price`, `service_id`, `service_quantity`, `service_total_price`, `service_rate`, `total_price`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(5, 4, 1, 5, 6, 30, NULL, NULL, NULL, NULL, NULL, 180, '2021-05-18 11:24:05', '2021-05-18 11:24:05', NULL),
+(6, 4, 1, 6, 7, 12, NULL, NULL, NULL, NULL, NULL, 84, '2021-05-18 11:24:05', '2021-05-18 11:24:05', NULL),
+(7, 5, 1, NULL, NULL, NULL, NULL, 1, 9, NULL, 10, 90, '2021-05-18 11:25:40', '2021-05-18 11:25:40', NULL),
+(8, 6, 1, 5, 6, 30, NULL, NULL, NULL, NULL, NULL, 180, '2021-05-18 11:55:03', '2021-05-18 11:55:03', NULL),
+(9, 6, 1, NULL, NULL, NULL, NULL, 2, 7, NULL, 15, 105, '2021-05-18 11:55:03', '2021-05-18 11:55:03', NULL),
+(10, 7, 2, NULL, NULL, NULL, NULL, 3, 4, NULL, 20, 80, '2021-05-20 01:31:50', '2021-05-20 01:31:50', NULL),
+(11, 8, 2, NULL, NULL, NULL, NULL, 3, 1, NULL, 20, 20, '2021-05-20 02:51:50', '2021-05-20 02:51:50', NULL);
 
 -- --------------------------------------------------------
 
@@ -320,7 +306,6 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (2, '2014_10_12_100000_create_password_resets_table', 1),
 (3, '2017_07_23_113209_create_brands_table', 1),
 (4, '2017_07_26_122313_create_units_table', 1),
-(5, '2017_07_27_075706_create_contacts_table', 1),
 (6, '2017_07_27_104124_create_expense_categories_table', 1),
 (7, '2017_08_04_071038_create_categories_table', 1),
 (9, '2021_03_14_050409_create_expenses_table', 1),
@@ -335,13 +320,14 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (18, '2021_04_11_113808_create_voucher_items_table', 1),
 (19, '2021_04_11_114148_create_services_table', 1),
 (20, '2021_04_11_114356_create_job_cards_table', 1),
-(24, '2021_04_11_115014_create_invoices_table', 1),
-(25, '2021_04_11_115226_create_invoice_items_table', 1),
 (26, '2021_04_15_041114_add_brand_name_column_to_vehicles_table', 1),
 (27, '2021_04_11_114813_create_vehicle_types_table', 2),
 (28, '2021_04_11_114902_create_colors_table', 2),
 (29, '2021_04_11_114502_create_vehicles_table', 3),
-(30, '2017_08_08_115903_create_products_table', 4);
+(30, '2017_08_08_115903_create_products_table', 4),
+(35, '2021_04_11_115014_create_invoices_table', 5),
+(36, '2021_04_11_115226_create_invoice_items_table', 5),
+(37, '2017_07_27_075706_create_contacts_table', 6);
 
 -- --------------------------------------------------------
 
@@ -400,13 +386,19 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `owner_id`, `name`, `category_id`, `brand_id`, `buying_price`, `selling_price`, `image`, `quantity`, `status`, `created_by`, `updated_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'asd', 1, 8, 12, 10, 'images/products/1619604359.png', 1, '1', 1, NULL, '2021-04-28 04:05:59', '2021-04-28 04:05:59', NULL),
-(2, 1, 'zxczxc', 1, 9, 10, 20, NULL, 12, '1', 1, NULL, '2021-04-28 04:10:06', '2021-04-28 04:10:06', NULL),
-(3, 1, 'cxcvxvc', 1, 9, 10, 20, NULL, 12, '0', 1, NULL, '2021-04-28 04:12:06', '2021-04-28 04:12:06', NULL),
-(4, 1, 'maheeb', 1, 8, 100, 200, 'images/products/1619605091.png', 2, '0', 1, NULL, '2021-04-28 04:18:11', '2021-04-28 04:18:11', NULL),
-(5, 1, 'product_1', 1, 9, 20, 30, NULL, 25, '0', 1, NULL, '2021-04-28 04:19:10', '2021-05-05 04:38:15', NULL),
-(6, 1, 'product_2', 1, 9, 10, 12, NULL, 30, '0', 1, NULL, '2021-04-28 04:19:10', '2021-04-28 04:19:10', NULL),
-(7, 1, 'product_3', 1, 9, 14, 20, NULL, 30, '0', 1, NULL, '2021-04-28 04:19:10', '2021-04-28 04:19:10', NULL);
+(1, 1, 'test_9', 1, 8, 12, 15, 'images/products/1620293349.png', 20, '1', 1, 1, '2021-04-28 04:05:59', '2021-05-06 04:12:08', NULL),
+(2, 1, 'BMW', 1, 9, 25, 55, 'images/products/1620495596.jpg', 35, '1', 1, 1, '2021-04-28 04:10:06', '2021-05-20 00:21:09', NULL),
+(3, 1, 'Azmaeen', 1, 9, 10, 20, NULL, 12, 'Active', 1, 1, '2021-04-28 04:12:06', '2021-05-06 03:41:42', '2021-05-06 03:41:42'),
+(4, 1, 'maheeb', 1, 8, 100, 200, 'images/products/1619605091.png', 50, '0', 1, 1, '2021-04-28 04:18:11', '2021-05-20 00:20:45', NULL),
+(5, 1, 'product_1', 1, 9, 20, 30, 'images/products/1620495549.jpg', 7, '0', 1, 1, '2021-04-28 04:19:10', '2021-05-18 11:55:03', NULL),
+(6, 1, 'product_2', 1, 9, 10, 12, NULL, 22, '0', 1, 1, '2021-04-28 04:19:10', '2021-05-18 11:24:05', NULL),
+(7, 1, 'product_3', 1, 9, 14, 20, NULL, 24, '0', 1, 1, '2021-04-28 04:19:10', '2021-05-10 22:52:33', NULL),
+(8, 1, 'product_4', 8, 8, 30, 64, 'images/products/1620495506.png', 42, '1', 1, 1, '2021-05-06 00:46:12', '2021-05-10 22:54:04', NULL),
+(9, 1, 'asdsad', 1, 8, 12, 20, NULL, 5, '1', 1, 1, '2021-05-06 04:12:50', '2021-05-06 04:13:24', '2021-05-06 04:13:24'),
+(10, 1, 'heelo', 1, 8, 25, 55, NULL, 20, '1', 1, NULL, '2021-05-08 11:24:16', '2021-05-08 11:24:21', '2021-05-08 11:24:21'),
+(11, 1, 'cristiano', 1, 8, 25, 35, 'images/products/1620495380.png', 35, '1', 1, 1, '2021-05-08 11:27:53', '2021-05-08 11:36:39', '2021-05-08 11:36:39'),
+(12, 1, 'test_25', 1, 9, 100, 200, 'images/products/1620495663.png', 20, '1', 1, 1, '2021-05-08 11:40:47', '2021-05-08 11:41:08', '2021-05-08 11:41:08'),
+(13, 1, 'nbmb', 2, 10, 20, 155, NULL, 10, '1', 1, NULL, '2021-05-20 02:12:24', '2021-05-20 02:12:34', '2021-05-20 02:12:34');
 
 -- --------------------------------------------------------
 
@@ -756,7 +748,6 @@ ALTER TABLE `invoices`
 --
 ALTER TABLE `invoice_items`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `invoice_items_owner_id_foreign` (`owner_id`),
   ADD KEY `invoice_items_invoice_id_foreign` (`invoice_id`),
   ADD KEY `invoice_items_vehicle_id_foreign` (`vehicle_id`),
   ADD KEY `invoice_items_product_id_foreign` (`product_id`),
@@ -913,7 +904,7 @@ ALTER TABLE `voucher_items`
 -- AUTO_INCREMENT for table `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -931,7 +922,7 @@ ALTER TABLE `colors`
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -955,13 +946,13 @@ ALTER TABLE `files`
 -- AUTO_INCREMENT for table `invoices`
 --
 ALTER TABLE `invoices`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `invoice_items`
 --
 ALTER TABLE `invoice_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `job_cards`
@@ -973,7 +964,7 @@ ALTER TABLE `job_cards`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `opening_stock_qties`
@@ -985,7 +976,7 @@ ALTER TABLE `opening_stock_qties`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `purchases`
@@ -1119,7 +1110,6 @@ ALTER TABLE `invoices`
 --
 ALTER TABLE `invoice_items`
   ADD CONSTRAINT `invoice_items_invoice_id_foreign` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `invoice_items_owner_id_foreign` FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `invoice_items_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `invoice_items_service_id_foreign` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `invoice_items_vehicle_id_foreign` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicles` (`id`) ON DELETE CASCADE;

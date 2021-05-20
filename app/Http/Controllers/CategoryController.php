@@ -29,7 +29,7 @@ class CategoryController extends Controller
         // $categories = Category::Active()->get();
 
 
-        $categories = Category::Active()->paginate(5);
+        $categories = Category::Active()->paginate(8);
         return  CategoryResource::collection($categories);
 
 

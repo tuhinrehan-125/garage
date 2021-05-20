@@ -34,7 +34,7 @@ class ProductsController extends Controller
     public function index()
     {
 
-        $product = Product::Active()->paginate(6);
+        $product = Product::Active()->paginate(8);
         return  ProductResource::collection($product);
 //        return response(ProductResource::collection($product), Response::HTTP_OK);
     }

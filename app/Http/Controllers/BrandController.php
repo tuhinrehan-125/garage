@@ -20,7 +20,7 @@ class BrandController extends Controller
         // $brand = Brand::Active()->get();
         // return response(BrandResource::collection($brand), Response::HTTP_OK);
 
-        $brand = Brand::Active()->paginate(6);
+        $brand = Brand::Active()->paginate(8);
         return  BrandResource::collection($brand);
 
     }

@@ -18,9 +18,12 @@ class ContactController extends Controller
     public function index(Request $request)
     {
         $type = $request->type;
-        $contacts = Contact::Active($type)->get();
+//        $contacts = Contact::Active($type)->get();
 
-        return response()->json(ContactResource::collection($contacts), Response::HTTP_OK);
+        $contacts = Contact::Active($type)->paginate(8);
+        return  ContactResource::collection($contacts);
+
+//        return response()->json(ContactResource::collection($contacts), Response::HTTP_OK);
     }
 
     public function store(Request $request)

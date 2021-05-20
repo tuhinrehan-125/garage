@@ -22,9 +22,13 @@ class InvoiceController extends Controller
 
     public function index()
     {
-//        $invoices = Invoice::with('invoiceItems')->where('owner_id',auth()->user()->id)->get();
-        $invoices = Invoice::where('owner_id', auth()->user()->id)->get();
-        return response(InvoiceResource::collection($invoices), Response::HTTP_OK);
+
+//        $invoices = Invoice::where('owner_id', auth()->user()->id)->get();
+
+        $invoices = Invoice::where('owner_id', auth()->user()->id)->paginate(8);
+        return  InvoiceResource::collection($invoices);
+
+//        return response(InvoiceResource::collection($invoices), Response::HTTP_OK);
     }
 
     public function store(Request $request)
