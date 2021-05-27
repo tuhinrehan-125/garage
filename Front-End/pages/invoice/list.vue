@@ -69,6 +69,18 @@
 <!--                    <v-list-item link @click="editProduct(item)">-->
 <!--                      <v-list-item-title>Edit</v-list-item-title>-->
 <!--                    </v-list-item>-->
+
+                    <v-list-item
+                      link
+                      :to="{
+                        name: 'invoice-edit-id',
+                        params: { id: item.id }
+                      }"
+                    >
+                      <v-list-item-title>
+                        Edit</v-list-item-title
+                      >
+                    </v-list-item>
                     <v-list-item link @click="deleteProduct(item)">
                       <v-list-item-title>Delete</v-list-item-title>
                     </v-list-item>
@@ -156,12 +168,13 @@ export default {
         {
           sortable: false,
           text: this.$t("Paid Amount"),
-          value: "paid_amount"
+          value: "paid_price"
         },
         {
           sortable: false,
           text: this.$t("Due Amount"),
-          value: "due_amount"
+          // value: "due_amount"
+          value: "due_price"
         },
         {
           sortable: false,

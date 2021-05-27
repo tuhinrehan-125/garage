@@ -163,7 +163,8 @@ class PurchaseController extends Controller
                         $purchase_item_update->total_price = $store_items['purchase_quantity'] * $store_items['purchase_price'];
 
                         $purchase_item_update->save();
-                    } else {
+                    }
+                    else {
 
                         $purchase_item = PurchaseItem::savePurchaseItem($purchase->id, $store_items);
                         $item_purchase_quantity += $purchase_item->purchase_quantity;

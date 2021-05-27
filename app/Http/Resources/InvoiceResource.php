@@ -14,7 +14,7 @@ class InvoiceResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $data= [
             'id' => $this->id,
             'invoice_number' => $this->invoice_number,
             'contact_id' => $this->contact_id,
@@ -22,12 +22,20 @@ class InvoiceResource extends JsonResource
             'client_phone' => $this->client? $this->client->mobile : null,
             'date' => $this->date,
             'total_amount' => $this->total_cost,
-            'paid_amount' => $this->paid_price,
-            'due_amount' => $this->due_price,
+            'paid_price' => $this->paid_price,
+//            'due_amount' => $this->due_price,
+            'due_price' => $this->due_price,
             'discount' => $this->discount,
             'vat' => $this->vat,
             'status' => $this->status,
 
         ];
+        if ($request->route()->parameters()) {
+
+            $data['items'] = InvoiceItemResource::collection($this->invoiceItems);
+
+        }
+
+        return $data;
     }
 }

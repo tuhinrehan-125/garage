@@ -23,9 +23,7 @@ class InvoiceController extends Controller
     public function index()
     {
 
-//        $invoices = Invoice::where('owner_id', auth()->user()->id)->get();
-
-        $invoices = Invoice::where('owner_id', auth()->user()->id)->paginate(8);
+        $invoices = Invoice::where('owner_id', auth()->user()->id)->paginate(5);
         return  InvoiceResource::collection($invoices);
 
 //        return response(InvoiceResource::collection($invoices), Response::HTTP_OK);
@@ -50,12 +48,11 @@ class InvoiceController extends Controller
             $type = $request->type;
             $invoice->contact_id = $request->contact_id;
             $invoice->owner_id = auth()->user()->id;
-            $invoice->paid_price = $request->paid_amount;
-            $invoice->date = date("Y-m-d", strtotime($request->invoice_date));
-            $invoice->discount = $request->invoice_discount;
-            $invoice->vat = $request->invoice_tax;
+            $invoice->paid_price = $request->paid_price;
+            $invoice->date = date("Y-m-d", strtotime($request->date));
+            $invoice->discount = $request->discount;
+            $invoice->vat = $request->vat;
             $invoice->created_by = auth()->user()->id;
-
             $invoice->save();
             $item_subtotal_price = 0;
             $afterTax = 0;
@@ -92,12 +89,15 @@ class InvoiceController extends Controller
             }
             if ($invoice->vat > 0) {
                 $taxInPercentage = ($invoice->vat / 100);
-//                $afterTax = $item_subtotal_price * $taxInPercentage;
                 $afterTax = round($item_subtotal_price * $taxInPercentage);
             }
 
             $invoice->total_cost = ($item_subtotal_price + $afterTax) - $invoice->discount;
-            $invoice->due_price = $invoice->total_cost - $invoice->paid_price;
+//            if ($request->has('due_price')) {
+//                $invoice->due_price = $request->due_price;
+//            }
+//            $invoice->due_price = $request->due_price ? $request->due_price: $invoice->total_cost - $invoice->paid_price;
+            $invoice->due_price =  $invoice->total_cost - $invoice->paid_price;
             $invoice->payment_status = $invoice->due_price == 0 ? "Paid" : "Due";
             $invoice->save();
         } catch (\Exception $e) {
@@ -111,6 +111,138 @@ class InvoiceController extends Controller
 
     }
 
+
+    public function update(Request $request, $id)
+    {
+
+        DB::beginTransaction();
+        try {
+
+            $invoice = Invoice::findOrFail($id);
+
+            if ($request->has('contact_id')) {
+                $invoice->contact_id = $request->contact_id;
+            }
+            if ($request->has('paid_price')) {
+                $invoice->paid_price = $request->paid_price;
+            }
+            if ($request->has('date')) {
+                $invoice->date = date("Y-m-d", strtotime($request->date));
+            }
+            if ($request->has('discount')) {
+                $invoice->discount = $request->discount;
+            }
+            if ($request->has('vat')) {
+                $invoice->vat = $request->vat;
+            }
+            $invoice->save();
+
+            $item_subtotal_price = 0;
+            $afterTax = 0;
+            foreach ($request->invoice_items as $item) {
+
+                $product_id_exist = InvoiceItem::where('invoice_id',$invoice->id)->where('product_id',$item['id'])->first();
+                $service_id_exist = InvoiceItem::where('invoice_id',$invoice->id)->where('service_id',$item['id'])->first();
+
+//                $existed_invoice_item = InvoiceItem::where('invoice_id',$invoice->id)->where('product_id',$item['id'])->where('service_id',$item['id'])->first();
+
+//                $invoice_item_update = InvoiceItem::find($invoice->id);
+
+                if ($product_id_exist || $service_id_exist) {
+                    if ( $item['category_type'] == "Product" ) {
+                        $invoice_item_update_product= InvoiceItem::where('invoice_id',$invoice->id)->where('product_id',$item['id'])->first();
+
+                        $invoice_item_update_product->product_id = $item['id'];
+                        $invoice_item_update_product->product_rate = $item['price'];
+                        $invoice_item_update_product->product_quantity = $item['invoice_quantity'];
+                        $invoice_item_update_product->total_price = $item['subtotal'];
+
+                        // Subtracting quantity from products
+                        $productID = $item['id'];
+                        $invoice_quantity = $item['invoice_quantity'];
+                        $product = Product::find($productID);
+                        $old_quantity = $product->quantity;
+                        if ($old_quantity >= $invoice_quantity) {
+                            $product->quantity = $old_quantity - $invoice_quantity;
+                            $product->save();
+                        }
+                        $invoice_item_update_product->save();
+                        $item_subtotal_price += $invoice_item_update_product->total_price;
+                    }
+                    else if ($item['category_type'] == "Service") {
+
+                        $invoice_item_update_service= InvoiceItem::where('invoice_id',$invoice->id)->where('service_id',$item['id'])->first();
+                        $invoice_item_update_service->service_id =$item['id'];
+                        $invoice_item_update_service->service_rate = $item['price'];
+                        $invoice_item_update_service->service_quantity = $item['invoice_quantity'];
+                        $invoice_item_update_service->total_price = $item['subtotal'];
+                        $invoice_item_update_service->save();
+                        $item_subtotal_price += $invoice_item_update_service->total_price;
+                    }
+//                    $item_subtotal_price += $invoice_item_update_service->total_price;
+                }
+                else
+                {
+                    $invoiceItem = new InvoiceItem();
+                    $invoiceItem->invoice_id = $invoice->id;
+
+                    if ($request->has('vehicle_id')) {
+                        $invoiceItem->vehicle_id = $request->vehicle_id;
+                    }
+
+//                    $invoiceItem->vehicle_id = $request->vehicle_id;
+                    if ($item['category_type'] == "Product") {
+                        $invoiceItem->product_id = $item['id'];
+                        $invoiceItem->product_rate = $item['price'];
+                        $invoiceItem->product_quantity = $item['invoice_quantity'];
+                        $invoiceItem->total_price = $item['subtotal'];
+
+                        // Subtracting quantity from products
+                        $productID = $item['id'];
+                        $invoice_quantity = $item['invoice_quantity'];
+                        $product = Product::find($productID);
+                        $old_quantity = $product->quantity;
+                        if ($old_quantity >= $invoice_quantity) {
+                            $product->quantity = $old_quantity - $invoice_quantity;
+                            $product->save();
+                        }
+                        $invoiceItem->save();
+                    }
+                    else if ($item['category_type'] == "Service")
+                    {
+
+                        $invoiceItem->service_id = $item['id'];
+                        $invoiceItem->service_rate = $item['price'];
+                        $invoiceItem->service_quantity = $item['invoice_quantity'];
+                        $invoiceItem->total_price = $item['subtotal'];
+                        $invoiceItem->save();
+                    }
+                    $item_subtotal_price += $invoiceItem->total_price;
+                }
+
+            }
+            if ($invoice->vat > 0) {
+                $taxInPercentage = ($invoice->vat / 100);
+
+                $afterTax = round($item_subtotal_price * $taxInPercentage);
+            }
+
+            $invoice->total_cost = ($item_subtotal_price + $afterTax) - $invoice->discount;
+            $invoice->due_price = $invoice->total_cost - $invoice->paid_price;
+//            $invoice->due_price = $request->due_price ? $invoice->due_price: $invoice->total_cost - $invoice->paid_price;
+            $invoice->payment_status = $invoice->due_price == 0 ? "Paid" : "Due";
+            $invoice->save();
+
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['success' => false, 'errmsg' => $e->getMessage()], 500);
+        }
+        DB::commit();
+        return response(new InvoiceResource($invoice), Response::HTTP_CREATED);
+    }
+
+
     public function destroy($id)
     {
         $invoice = Invoice::where('id', $id)->first();
@@ -118,6 +250,12 @@ class InvoiceController extends Controller
         $invoice->delete();
 
         return response()->json(['success' => true, 'message' => 'Deleted successfully'], 204);
+    }
+
+    public function show(Invoice $invoice)
+    {
+        return new InvoiceResource($invoice);
+
     }
 
     public function getVehicles(Request $request)
@@ -141,7 +279,6 @@ class InvoiceController extends Controller
 
     public function getInvoiceDetails(Request $request)
     {
-//        dd($request->all());
         $items = InvoiceItem::where('invoice_id', $request->id)->get();
         $lists = '';
 

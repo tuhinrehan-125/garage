@@ -41,7 +41,7 @@
 <script>
 export default {
   name: "invoiceTable",
-  props:['units'],
+  // props:['units'],
   data() {
     return {
       headers: [

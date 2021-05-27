@@ -15,9 +15,14 @@ class Invoice extends Model
 
 
 
+//    public function invoiceItems(){
+//        return $this->hasMany(InvoiceItem::class,'id','invoice_id');
+//    }
+
     public function invoiceItems(){
-        return $this->hasMany(InvoiceItem::class,'id','invoice_id');
+        return $this->hasMany(InvoiceItem::class);
     }
+
 
     public function client(){
         return $this->belongsTo(Contact::class,'contact_id','id');

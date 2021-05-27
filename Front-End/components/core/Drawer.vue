@@ -219,28 +219,28 @@ export default {
             }
           ]
         },
-        {
-          icon: "mdi-inbox-arrow-up",
-          title: this.$t("expense"),
-          to: "/expense",
-          children: [
-            {
-              icon: "mdi-inbox-arrow-up",
-              title: this.$t("expense_list"),
-              to: "/list"
-            },
-            {
-              icon: "mdi-inbox-arrow-up",
-              title: this.$t("add_expense"),
-              to: "/add",
-            },
-            {
-              icon: "mdi-shape",
-              title: this.$t("expense_category"),
-              to: "/category"
-            }
-          ]
-        },
+        // {
+        //   icon: "mdi-inbox-arrow-up",
+        //   title: this.$t("expense"),
+        //   to: "/expense",
+        //   children: [
+        //     {
+        //       icon: "mdi-inbox-arrow-up",
+        //       title: this.$t("expense_list"),
+        //       to: "/list"
+        //     },
+        //     {
+        //       icon: "mdi-inbox-arrow-up",
+        //       title: this.$t("add_expense"),
+        //       to: "/add",
+        //     },
+        //     {
+        //       icon: "mdi-shape",
+        //       title: this.$t("expense_category"),
+        //       to: "/category"
+        //     }
+        //   ]
+        // },
         // {
         //   icon: "mdi-cart-arrow-right",
         //   title: this.$t("Invoice"),
