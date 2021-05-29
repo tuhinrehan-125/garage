@@ -20,15 +20,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PurchaseController extends Controller
 {
-//     public function __construct()
-//     {
-//         $this->middleware('jwt', ['except' => ['index']]);
-//     }
+    public function __construct()
+    {
+        $this->middleware('jwt', ['except' => ['index']]);
+    }
 
     public function index()
     {
-        $business_location = Auth::user()->Business->Location->pluck('id');
-        $purchase = Purchase::whereIn('business_location_id', $business_location)->get();
+        $purchase = Purchase::get();
         return response(PurchaseResource::collection($purchase), Response::HTTP_OK);
     }
 
@@ -54,11 +53,10 @@ class PurchaseController extends Controller
             $purchase = new Purchase();
 
             //$business_location = BusinessLocation::findOrFail($request->business_location_id);
-            
             //$owner = User::findOrFail($request->owner_id);
-            
             //$purchase->business_location_id = $business_location->id;
             //$purchase->owner_id = $owner->id;
+
             $purchase->owner_id = 1;
             $purchase->contact_id = $request->supplier_id;
             $purchase->purchase_status = $request->purchase_status;
@@ -100,14 +98,14 @@ class PurchaseController extends Controller
             $purchase->total_cost = $item_subtotal_price;
             $purchase->save();
 
-            if ($request->payment_amount != null) {
-                $purchase->payments()->create([
-                    'payment_amount' => $request->payment_amount,
-                    'payment_method' => $request->payment_method,
-                    'payment_date' =>  date("Y-m-d", strtotime($request->payment_date ? $request->payment_date : now()))
-                ]);
-                //PurchasePayment::savePurchasePayment($purchase->id, $request->payment_amount, $request->payment_type, $request->payment_date);
-            }
+            // if ($request->payment_amount != null) {
+            //     $purchase->payments()->create([
+            //         'payment_amount' => $request->payment_amount,
+            //         'payment_method' => $request->payment_method,
+            //         'payment_date' =>  date("Y-m-d", strtotime($request->payment_date ? $request->payment_date : now()))
+            //     ]);
+            //     //PurchasePayment::savePurchasePayment($purchase->id, $request->payment_amount, $request->payment_type, $request->payment_date);
+            // }
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['success' => false, 'errmsg' => $e->getMessage()], 500);
