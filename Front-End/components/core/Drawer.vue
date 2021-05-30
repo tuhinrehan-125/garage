@@ -277,6 +277,13 @@ export default {
         },
 
         {
+          icon: "mdi-link",
+          title: this.$t("Job Card"),
+          to: "/job-card",
+        },
+
+
+        {
           title: this.$t("settings"),
           icon: "mdi-cog-outline",
           to: "/settings",

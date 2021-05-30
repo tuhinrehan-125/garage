@@ -5,21 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51b75579-cbe1-4385-9b38-e58e93176a99" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/e-shop.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front-End/components/core/Drawer.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Front-End/components/core/Drawer.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Front-End/components/invoice/invoiceTable.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Front-End/components/invoice/invoiceTable.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Front-End/pages/invoice/create.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Front-End/pages/invoice/create.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Front-End/pages/invoice/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Front-End/pages/invoice/list.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/InvoiceController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/InvoiceController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PurchaseController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PurchaseController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Resources/InvoiceResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/InvoiceResource.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Invoice.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Invoice.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/InvoiceItem.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/InvoiceItem.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front-End/components/invoice/addOrUpdate.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Front-End/components/invoice/addOrUpdate.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +17,13 @@
   <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Vue Single File Component" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -168,6 +163,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -191,7 +187,9 @@
       <updated>1622012516155</updated>
       <workItem from="1622012519899" duration="1087000" />
       <workItem from="1622089893498" duration="259000" />
-      <workItem from="1622096405808" duration="1839000" />
+      <workItem from="1622096405808" duration="4981000" />
+      <workItem from="1622135908572" duration="2400000" />
+      <workItem from="1622350836718" duration="871000" />
     </task>
     <servers />
   </component>

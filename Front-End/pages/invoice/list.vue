@@ -193,7 +193,6 @@ export default {
   async asyncData({params, axios}) {
   },
   mounted() {
-    // this.getSellsList();
     this.getInvoiceList();
   },
   methods: {

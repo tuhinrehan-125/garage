@@ -293,7 +293,6 @@ export default {
         }
         this.full_loading = true
         if (this.isEdit !== true) {
-          console.log('post');
           await this.$axios
             .post("/invoice", {
               invoice_items: this.invoiceItems,
@@ -316,7 +315,6 @@ export default {
             });
         }
         else {
-          console.log('hello');
           await this.$axios
             .patch(`invoice/${this.form.id}`, {
               invoice_items: this.invoiceItems,
