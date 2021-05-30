@@ -276,11 +276,11 @@ export default {
           ]
         },
 
-        {
-          icon: "mdi-link",
-          title: this.$t("Job Card"),
-          to: "/job-card",
-        },
+        // {
+        //   icon: "mdi-link",
+        //   title: this.$t("Job Card"),
+        //   to: "/job-card",
+        // },
 
 
         {
