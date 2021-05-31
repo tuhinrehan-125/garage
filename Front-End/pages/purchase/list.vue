@@ -70,18 +70,8 @@
                     </v-btn>
                   </template>
                   <v-list>
-                    <v-list-item
-                      link
-                      @click="openAddPayment(item)"
-                      v-if="item.total_due != 0"
-                    >
-                      <v-list-item-title>Add Payment</v-list-item-title>
-                    </v-list-item>
                     <v-list-item link @click="openViewPayment(item)">
-                      <v-list-item-title>View Payment</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link @click="openReturnPurchase(item)">
-                      <v-list-item-title>Return Purchase</v-list-item-title>
+                      <v-list-item-title>View Details</v-list-item-title>
                     </v-list-item>
                     <v-list-item
                       link
