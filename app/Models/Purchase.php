@@ -15,7 +15,7 @@ class Purchase extends Model
     protected $table = "purchases";
 
     protected $fillable = [
-        'purchase_status',  'purchase_date', 'total_purchase_quantity', 'subtotal_cost', 'purchase_discount', 'purchase_tax', 'total_cost', 'shipping_charge', 'shipping_details', 'payment_status', 'note', 'purchase_return', 'deleted_at',
+        'purchase_status',  'purchase_date', 'total_purchase_quantity', 'subtotal_cost', 'purchase_discount', 'purchase_tax', 'total_cost',  'note', 'deleted_at',
     ];
 
     public function purchaseItems()

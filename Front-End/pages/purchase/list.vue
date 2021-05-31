@@ -5,7 +5,7 @@
     </v-overlay>
     <add-payment :item="singleitem" type="purchase" />
     <view-payment :data="paymentinfo" />
-    <return-purchase :item="singleitem"  :ItemList="purchaseItems"/>
+    <return-purchase :item="singleitem" :ItemList="purchaseItems" />
     <v-row justify="center">
       <v-dialog v-model="confirmation" max-width="300">
         <v-card>
@@ -90,9 +90,7 @@
                         params: { id: item.id }
                       }"
                     >
-                      <v-list-item-title>
-                        Edit</v-list-item-title
-                      >
+                      <v-list-item-title> Edit</v-list-item-title>
                     </v-list-item>
                     <v-list-item link @click="deleteProduct(item)">
                       <v-list-item-title>Delete</v-list-item-title>
@@ -111,18 +109,18 @@
 <script>
 import addPayment from "../../components/payment/addPayment";
 import viewPayment from "../../components/payment/viewPayment";
-import returnPurchase from '../../components/purchase/returnPurchase';
+import returnPurchase from "../../components/purchase/returnPurchase";
 export default {
   name: "Purchase",
   middleware: "auth",
   head: {
     title: "Purchase List"
   },
-  components: { addPayment, viewPayment,returnPurchase },
+  components: { addPayment, viewPayment, returnPurchase },
   data() {
     return {
       full_loading: false,
-      purchaseItems:[],
+      purchaseItems: [],
       singleitem: {},
       paymentinfo: [],
       search: "",
@@ -173,7 +171,7 @@ export default {
           text: this.$t("Purchase Stutas"),
           value: "purchase_status"
         },
-        
+
         {
           sortable: false,
           text: this.$t("Total Amount"),
@@ -219,14 +217,19 @@ export default {
         this.full_loading = false;
       });
     },
-    async openReturnPurchase(item){
+    async openReturnPurchase(item) {
       this.full_loading = true;
-       await this.$axios.get("purchase-items?purchase_id=" + item.id).then(res => {
-        this.purchaseItems=res.data
-        this.singleitem = item;
-        this.$store.commit("SET_MODAL", { type: "returnPurchase", status: true });
-         this.full_loading = false;
-       })
+      await this.$axios
+        .get("purchase-items?purchase_id=" + item.id)
+        .then(res => {
+          this.purchaseItems = res.data;
+          this.singleitem = item;
+          this.$store.commit("SET_MODAL", {
+            type: "returnPurchase",
+            status: true
+          });
+          this.full_loading = false;
+        });
     },
     deleteProduct(item) {
       this.confirmation = true;
@@ -247,7 +250,7 @@ export default {
         this.purchaselist = response.data;
         console.log(this.purchaselist);
       });
-    },
+    }
   }
 };
 </script>

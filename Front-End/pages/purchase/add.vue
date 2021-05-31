@@ -4,7 +4,6 @@
   </v-container>
 </template>
 
-
 <script>
 import AddOrUpdate from "../../components/purchase/addOrUpdate";
 export default {
@@ -37,4 +36,3 @@ export default {
 </script>
 
 <style scoped></style>
-© 2021 GitHub, Inc.

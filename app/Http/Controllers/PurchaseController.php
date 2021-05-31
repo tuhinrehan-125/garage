@@ -12,6 +12,7 @@ use App\Models\Purchase;
 use App\Models\PurchaseItem;
 use App\Models\PurchasePayment;
 use App\Models\User;
+use App\Models\Contact;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,14 @@ class PurchaseController extends Controller
     {
         $purchase = Purchase::get();
         return response(PurchaseResource::collection($purchase), Response::HTTP_OK);
+    }
+
+    public function getSuppliers()
+    {
+        $suppliers = Contact::where('owner_id',1)->where('type','supplier')->get();
+
+        return response()->json($suppliers);
+
     }
 
     public function store(Request $request)
@@ -115,12 +124,15 @@ class PurchaseController extends Controller
         return response(new PurchaseResource($purchase), Response::HTTP_CREATED);
     }
 
+    public function show(Purchase $purchase)
+    {
+        return new PurchaseResource($purchase);
+    }
+
     public function update(Request $request, $id)
     {
-
         DB::beginTransaction();
         try {
-
             $purchase = Purchase::findOrFail($id);
 
             // $business_location = BusinessLocation::findOrFail($request->business_location_id);
@@ -208,57 +220,12 @@ class PurchaseController extends Controller
         return response()->json(['success' => true, 'message' => 'Deleted successfully'], 204);
     }
 
-    //For payment
-    public function addPayment(Request $request, $id)
-    {
-        $purchase = Purchase::findOrFail($id);
-
-        $previousPayment = $purchase->payments->sum('payment_amount');
-
-        if ($purchase->total_cost >= ($previousPayment + $request->payment_amount)) {
-            $newPayment = $purchase->payments()->create([
-                'payment_amount' => $request->payment_amount,
-                'payment_method' => $request->payment_method,
-                'payment_date' =>  date("Y-m-d", strtotime($request->payment_date ? $request->payment_date : now()))
-            ]);
-
-            $purchase->payment_status = "partial";
-            if ($purchase->total_cost == ($previousPayment + $request->payment_amount)) {
-                $purchase->payment_status = "paid";
-            }
-            $purchase->save();
-
-            return response(new PurchaseResource($purchase), Response::HTTP_OK);
-        } elseif ($purchase->total_cost < ($previousPayment + $request->payment_amount)) {
-            return response()->json(['success' => false, 'message' => 'You can not pay more than the original amount!'], 400);
-        }
-    }
-
-    public function viewPayment(Request $request)
-    {
-        $purchaseid = $request->id;
-        $purchase = Purchase::findOrFail($purchaseid);
-        $all_payments = $purchase->payments;
-        return response()->json(['data' => $all_payments], 200);
-    }
-
     public function purchaseItemsList(Request $request)
     {
         $purchaseid = $request->purchase_id;
         $purchase = Purchase::findOrFail($purchaseid);
         $all_items = $purchase->purchaseItems;
         return response(PurchaseItemsResource::collection($all_items), Response::HTTP_OK);
-    }
-
-    public function returnPurchase(Request $request, $id)
-    {
-        $purchase = Purchase::findOrFail($id);
-
-        // $sum = PurchasePayment::where('purchase_id', $id);
-        // $previousPayment = $sum->sum("payment_amount");
-
-        $business_location = BusinessLocation::findOrFail($request->business_location_id);
-        $purchase->business_location_id = $business_location->id;
     }
 
     public function getContacts()

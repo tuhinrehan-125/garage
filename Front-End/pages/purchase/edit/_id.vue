@@ -15,15 +15,27 @@ export default {
   async asyncData({ params, $axios }) {
     const [data, suppliers] = await Promise.all([
       $axios.get(`purchase/${params.id}`),
-      $axios.get("/contact?type=supplier"),
+      $axios.get("/get-suppliers")
     ]);
     return {
       data: data.data.data,
-      suppliers: suppliers.data,
+      suppliers: suppliers.data
     };
   },
   mounted() {},
-  methods: {}
+  methods: {
+    // async getSuppliers() {
+    //   await this.$axios.get("/contact?type=supplier").then(response => {
+    //     this.suppliers = response.data;
+    //   });
+    // }
+    async getSuppliers() {
+      await this.$axios.get("/get-suppliers").then(response => {
+        this.suppliers = response.data;
+        console.log(this.suppliers);
+      });
+    }
+  }
 };
 </script>
 

@@ -27,7 +27,7 @@
                     outlined
                   ></v-select>
                 </v-col>
-                
+
                 <v-col cols="12" md="4" sm="12" xl="4">
                   <v-dialog
                     ref="dialog"
@@ -89,7 +89,7 @@
 
               <v-row no-gutters>
                 <v-col>
-                  <search-product :type="purchase"/>
+                  <search-product :type="purchase" />
                 </v-col>
               </v-row>
 
@@ -214,7 +214,7 @@ import purchaseTable from "../../components/purchase/purchaseTable";
 
 export default {
   props: ["suppliers", "data"],
-  name: "addPurchase",
+  name: "addOrPurchase",
   middleware: "auth",
   head: {
     title: "Add Purchase"
@@ -229,18 +229,19 @@ export default {
       purchase: "purchase",
       purchase_statuses: ["Received", "Pending", "Ordered", "Draft", "Final"],
       modal: false,
-      form: {
-        owner_id: "",
-        supplier_id: "",
-        purchase_status: "",
-        purchase_date: new Date().toISOString().substr(0, 10),
-        purchase_tax: "",
-        purchase_discount: "",
-        shipping_cost: "",
-        payment_amount: "",
-        payment_method: "",
-        payment_note: ""
-      },
+      // form: {
+      //   owner_id: "",
+      //   supplier_id: "",
+      //   purchase_status: "",
+      //   purchase_date: new Date().toISOString().substr(0, 10),
+      //   purchase_tax: "",
+      //   purchase_discount: "",
+      //   shipping_cost: "",
+      //   payment_amount: "",
+      //   payment_method: "",
+      //   payment_note: ""
+      // },
+      form: {},
       methods: ["Cash", "Card", "Bank Transfer"]
     };
   },
@@ -261,10 +262,10 @@ export default {
   },
   async asyncData({ params, axios }) {},
   mounted() {
-    // this.getSuppliers();
     if (Object.keys(this.data).length > 1) {
       this.isEdit = true;
       this.form = this.data;
+      // console.log(this.form);
       this.$store.commit("product/SET_PURCHASE_PRODUCTS", this.data.items);
     }
   },
@@ -282,71 +283,67 @@ export default {
         type: "purchasediscount"
       });
     },
-    // addShippingCost(val) {
-    //   this.$store.dispatch("product/updateCartItem", {
-    //     shipping_cost: val,
-    //     type: "shippingcost"
-    //   });
-    // },
-    async getSuppliers() {
-      await this.$axios.get("/contact?type=supplier").then(response => {
-        this.supplier = response.data;
-      });
-    },
     async submitForm() {
       if (this.$refs.form.validate()) {
-       if (this.purchaseItems.length < 1) {
-        this.type = "error";
-        this.alert = true;
-        this.message = { msg: ["Please Select Product"] };
-        return;
-      }
-      if (this.grandTotal < 1) {
-        this.type = "error";
-        this.alert = true;
-        this.message = { msg: ["Total price can not be 0"] };
-        return;
-      }
-      if (this.isEdit !== true) {
-        await this.$axios
-          .post("/purchase", {
-            purchase_items: this.purchaseItems,
-            // owner_id: this.form.owner_id,
-            supplier_id: this.form.supplier_id,
-            purchase_status: this.form.purchase_status,
-            purchase_date: this.form.purchase_date,
-            //purchase_status: this.form.purchase_status,
-            // purchase_tax: this.form.purchase_tax,
-            purchase_discount: this.form.purchase_discount,
-          })
-          .then(response => {
-            this.isLoading = false;
-            let data = { alert: true, message: "Purchase Addedd Successfully", type:'success' };
-            this.$store.commit("SET_ALERT", data);
-            this.$store.commit("SET_MODAL", true);
-            this.$router.push({ name: "purchase-list" });
-          });
-      }
-      else{
-        await this.$axios
-          .patch(`purchase/${this.form.id}`, {
-            purchase_items: this.purchaseItems,
-            // owner_id: this.form.owner_id,
-            supplier_id: this.form.supplier_id,
-            purchase_status: this.form.purchase_status,
-            purchase_date: this.form.purchase_date,
-            //purchase_status: this.form.purchase_status,
-            // purchase_tax: this.form.purchase_tax,
-            purchase_discount: this.form.purchase_discount,
-          })
-          .then(response => {
-            this.isLoading = false;
-            let data = { alert: true, message: "Purchase Updated Successfully", type:'success' };
-            this.$store.commit("SET_ALERT", data);
-            this.$store.commit("SET_MODAL", true);
-            this.$router.push({ name: "purchase-list" });
-          });
-      }
+        if (this.purchaseItems.length < 1) {
+          this.type = "error";
+          this.alert = true;
+          this.message = { msg: ["Please Select Product"] };
+          return;
+        }
+        if (this.grandTotal < 1) {
+          this.type = "error";
+          this.alert = true;
+          this.message = { msg: ["Total price can not be 0"] };
+          return;
+        }
+        if (this.isEdit !== true) {
+          await this.$axios
+            .post("/purchase", {
+              purchase_items: this.purchaseItems,
+              // owner_id: this.form.owner_id,
+              supplier_id: this.form.supplier_id,
+              purchase_status: this.form.purchase_status,
+              purchase_date: this.form.purchase_date,
+              //purchase_status: this.form.purchase_status,
+              // purchase_tax: this.form.purchase_tax,
+              purchase_discount: this.form.purchase_discount
+            })
+            .then(response => {
+              this.isLoading = false;
+              let data = {
+                alert: true,
+                message: "Purchase Addedd Successfully",
+                type: "success"
+              };
+              this.$store.commit("SET_ALERT", data);
+              this.$store.commit("SET_MODAL", true);
+              this.$router.push({ name: "purchase-list" });
+            });
+        } else {
+          await this.$axios
+            .patch(`purchase/${this.form.id}`, {
+              purchase_items: this.purchaseItems,
+              // owner_id: this.form.owner_id,
+              supplier_id: this.form.supplier_id,
+              purchase_status: this.form.purchase_status,
+              purchase_date: this.form.purchase_date,
+              //purchase_status: this.form.purchase_status,
+              // purchase_tax: this.form.purchase_tax,
+              purchase_discount: this.form.purchase_discount
+            })
+            .then(response => {
+              this.isLoading = false;
+              let data = {
+                alert: true,
+                message: "Purchase Updated Successfully",
+                type: "success"
+              };
+              this.$store.commit("SET_ALERT", data);
+              this.$store.commit("SET_MODAL", true);
+              this.$router.push({ name: "purchase-list" });
+            });
+        }
       }
     }
   }
@@ -354,9 +351,9 @@ export default {
 </script>
 
 <style scoped>
-
-.theme--light.v-input, .theme--light.v-input input, .theme--light.v-input textarea{
-  height:30px;
+.theme--light.v-input,
+.theme--light.v-input input,
+.theme--light.v-input textarea {
+  height: 30px;
 }
-
 </style>
