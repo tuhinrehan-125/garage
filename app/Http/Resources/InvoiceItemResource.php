@@ -15,7 +15,6 @@ class InvoiceItemResource extends JsonResource
      */
     public function toArray($request)
     {
-//        $invoice = Invoice::find($this->invoice_id);
         return [
 
             'id' => $this->product_id ? $this->product_id : $this->service_id,
