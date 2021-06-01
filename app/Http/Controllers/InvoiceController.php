@@ -26,7 +26,7 @@ class InvoiceController extends Controller
         $invoices = Invoice::where('owner_id', auth()->user()->id)->paginate(5);
         return  InvoiceResource::collection($invoices);
 
-//        return response(InvoiceResource::collection($invoices), Response::HTTP_OK);
+        //        return response(InvoiceResource::collection($invoices), Response::HTTP_OK);
     }
 
     public function store(Request $request)
@@ -48,13 +48,11 @@ class InvoiceController extends Controller
             $type = $request->type;
             $invoice->contact_id = $request->contact_id;
             $invoice->owner_id = auth()->user()->id;
-//            $sale->sale_status = $request->sale_status;
-            $invoice->paid_price = $request->paid_amount;
-            $invoice->date = date("Y-m-d", strtotime($request->invoice_date));
-            $invoice->discount = $request->invoice_discount;
-            $invoice->vat = $request->invoice_tax;
+            $invoice->paid_price = $request->paid_price;
+            $invoice->date = date("Y-m-d", strtotime($request->date));
+            $invoice->discount = $request->discount;
+            $invoice->vat = $request->vat;
             $invoice->created_by = auth()->user()->id;
-
             $invoice->save();
             $item_subtotal_price = 0;
             $afterTax = 0;
@@ -63,8 +61,7 @@ class InvoiceController extends Controller
                 $invoiceItem = new InvoiceItem();
                 $invoiceItem->invoice_id = $invoice->id;
                 $invoiceItem->vehicle_id = $request->vehicle_id;
-                if ( $item['category_type'] == "Product") {
-//                if ( $request->category_type == "Product") {
+                if ($item['category_type'] == "Product") {
                     $invoiceItem->product_id = $item['id'];
                     $invoiceItem->product_rate = $item['price'];
                     $invoiceItem->product_quantity = $item['invoice_quantity'];
@@ -80,8 +77,7 @@ class InvoiceController extends Controller
                         $product->save();
                     }
                     $invoiceItem->save();
-                }
-                else if ($item['category_type'] == "Service") {
+                } else if ($item['category_type'] == "Service") {
 
                     $invoiceItem->service_id = $item['id'];
                     $invoiceItem->service_rate = $item['price'];
@@ -97,85 +93,143 @@ class InvoiceController extends Controller
             }
 
             $invoice->total_cost = ($item_subtotal_price + $afterTax) - $invoice->discount;
-            $invoice->due_price = $invoice->total_cost - $invoice->paid_price;
-            $invoice->status = $invoice->due_price ==0 ?"Paid":"Due";
+            //            if ($request->has('due_price')) {
+            //                $invoice->due_price = $request->due_price;
+            //            }
+            //            $invoice->due_price = $request->due_price ? $request->due_price: $invoice->total_cost - $invoice->paid_price;
+            $invoice->due_price =  $invoice->total_cost - $invoice->paid_price;
+            $invoice->payment_status = $invoice->due_price == 0 ? "Paid" : "Due";
             $invoice->save();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['success' => false,    'errmsg' => $e->getMessage()], 500);
+            return response()->json(['success' => false, 'errmsg' => $e->getMessage()], 500);
+        }
+        DB::commit();
+
+        return response(new InvoiceResource($invoice), Response::HTTP_CREATED);
+    }
+
+
+    public function update(Request $request, $id)
+    {
+
+        DB::beginTransaction();
+        try {
+
+            $invoice = Invoice::findOrFail($id);
+
+            if ($request->has('contact_id')) {
+                $invoice->contact_id = $request->contact_id;
+            }
+            if ($request->has('paid_price')) {
+                $invoice->paid_price = $request->paid_price;
+            }
+            if ($request->has('date')) {
+                $invoice->date = date("Y-m-d", strtotime($request->date));
+            }
+            if ($request->has('discount')) {
+                $invoice->discount = $request->discount;
+            }
+            if ($request->has('vat')) {
+                $invoice->vat = $request->vat;
+            }
+            $invoice->save();
+
+            $item_subtotal_price = 0;
+            $afterTax = 0;
+            foreach ($request->invoice_items as $item) {
+
+                $product_id_exist = InvoiceItem::where('invoice_id', $invoice->id)->where('product_id', $item['id'])->first();
+                $service_id_exist = InvoiceItem::where('invoice_id', $invoice->id)->where('service_id', $item['id'])->first();
+
+                //                $existed_invoice_item = InvoiceItem::where('invoice_id',$invoice->id)->where('product_id',$item['id'])->where('service_id',$item['id'])->first();
+
+                //                $invoice_item_update = InvoiceItem::find($invoice->id);
+
+                if ($product_id_exist || $service_id_exist) {
+                    if ($item['category_type'] == "Product") {
+                        $invoice_item_update_product = InvoiceItem::where('invoice_id', $invoice->id)->where('product_id', $item['id'])->first();
+
+                        $invoice_item_update_product->product_id = $item['id'];
+                        $invoice_item_update_product->product_rate = $item['price'];
+                        $invoice_item_update_product->product_quantity = $item['invoice_quantity'];
+                        $invoice_item_update_product->total_price = $item['subtotal'];
+
+                        // Subtracting quantity from products
+                        $productID = $item['id'];
+                        $invoice_quantity = $item['invoice_quantity'];
+                        $product = Product::find($productID);
+                        $old_quantity = $product->quantity;
+                        if ($old_quantity >= $invoice_quantity) {
+                            $product->quantity = $old_quantity - $invoice_quantity;
+                            $product->save();
+                        }
+                        $invoice_item_update_product->save();
+                        $item_subtotal_price += $invoice_item_update_product->total_price;
+                    } else if ($item['category_type'] == "Service") {
+
+                        $invoice_item_update_service = InvoiceItem::where('invoice_id', $invoice->id)->where('service_id', $item['id'])->first();
+                        $invoice_item_update_service->service_id = $item['id'];
+                        $invoice_item_update_service->service_rate = $item['price'];
+                        $invoice_item_update_service->service_quantity = $item['invoice_quantity'];
+                        $invoice_item_update_service->total_price = $item['subtotal'];
+                        $invoice_item_update_service->save();
+                        $item_subtotal_price += $invoice_item_update_service->total_price;
+                    }
+                    //                    $item_subtotal_price += $invoice_item_update_service->total_price;
+                } else {
+                    $invoiceItem = new InvoiceItem();
+                    $invoiceItem->invoice_id = $invoice->id;
+
+                    if ($request->has('vehicle_id')) {
+                        $invoiceItem->vehicle_id = $request->vehicle_id;
+                    }
+
+                    //                    $invoiceItem->vehicle_id = $request->vehicle_id;
+                    if ($item['category_type'] == "Product") {
+                        $invoiceItem->product_id = $item['id'];
+                        $invoiceItem->product_rate = $item['price'];
+                        $invoiceItem->product_quantity = $item['invoice_quantity'];
+                        $invoiceItem->total_price = $item['subtotal'];
+
+                        // Subtracting quantity from products
+                        $productID = $item['id'];
+                        $invoice_quantity = $item['invoice_quantity'];
+                        $product = Product::find($productID);
+                        $old_quantity = $product->quantity;
+                        if ($old_quantity >= $invoice_quantity) {
+                            $product->quantity = $old_quantity - $invoice_quantity;
+                            $product->save();
+                        }
+                        $invoiceItem->save();
+                    } else if ($item['category_type'] == "Service") {
+
+                        $invoiceItem->service_id = $item['id'];
+                        $invoiceItem->service_rate = $item['price'];
+                        $invoiceItem->service_quantity = $item['invoice_quantity'];
+                        $invoiceItem->total_price = $item['subtotal'];
+                        $invoiceItem->save();
+                    }
+                    $item_subtotal_price += $invoiceItem->total_price;
+                }
+            }
+            if ($invoice->vat > 0) {
+                $taxInPercentage = ($invoice->vat / 100);
+
+                $afterTax = round($item_subtotal_price * $taxInPercentage);
+            }
+
+            $invoice->total_cost = ($item_subtotal_price + $afterTax) - $invoice->discount;
+            $invoice->due_price = $invoice->total_cost - $invoice->paid_price;
+            //            $invoice->due_price = $request->due_price ? $invoice->due_price: $invoice->total_cost - $invoice->paid_price;
+            $invoice->payment_status = $invoice->due_price == 0 ? "Paid" : "Due";
+            $invoice->save();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['success' => false, 'errmsg' => $e->getMessage()], 500);
         }
         DB::commit();
         return response(new InvoiceResource($invoice), Response::HTTP_CREATED);
-
-//        $test = $request->invoice_items;
-//
-//        return response()->json($test);
-
-    }
-
-
-    public function getVehicles(Request $request)
-    {
-//         $vehicles = Vehicle::where('owner_id',1)->where('contact_id',$request->contact_id)->get();
-        $vehicles = Vehicle::where('contact_id', $request->contact_id)->get();
-
-        return response()->json($vehicles);
-    }
-
-    public function invoiceProductSearch(Request $request)
-    {
-        $type = $request->type;
-
-//        dd($type);
-
-//        return response()->json($type);
-        $keyword = $request->name;
-
-        if ($type == 1) {
-//            $searchQ = Product::where('name', 'like', '%' . $keyword . '%')->where('owner_id', auth()->user()->id)->get();
-            $searchQ = Product::where('name', 'like', '%' . $keyword . '%')->where('owner_id', auth()->user()->id);
-
-        }
-        else {
-//            $searchQ = Service::where('name', 'like', '%' . $keyword . '%')->where('owner_id', auth()->user()->id)->get();
-            $searchQ = Service::where('name', 'like', '%' . $keyword . '%')->where('owner_id', auth()->user()->id);
-        }
-
-        $products = $searchQ->get();
-        $result = [];
-        if (!empty($products)) {
-            foreach ($products as $key => $value) {
-                if ($type == 1) {
-                    $result[] = [
-                        'id' => $value->id,
-                        'name' => $value->name,
-//                        'buying_price' => $value->buying_price,
-                        'price' => $value->selling_price,
-                    ];
-                } else {
-                    $result[] = [
-                        'id' => $value->id,
-                        'name' => $value->name,
-                        'price' => $value->selling_price,
-                    ];
-                }
-            }
-        }
-//        return json_encode($searchQ);
-        return json_encode($result);
-//        return response()->json($result);
-    }
-
-    public function getInvoiceItems(Request $request)
-    {
-        if ($request->category_id === 1) {
-            $items = Product::where('category_id', 1)->where('owner_id', auth()->user()->id)->get();
-
-        } else {
-            $items = Service::where('category_id', 2)->where('owner_id', auth()->user()->id)->get();
-        }
-        return response()->json($items);
     }
 
 
@@ -191,7 +245,6 @@ class InvoiceController extends Controller
     public function show(Invoice $invoice)
     {
         return new InvoiceResource($invoice);
-
     }
 
     public function getVehicles(Request $request)
@@ -206,7 +259,6 @@ class InvoiceController extends Controller
     {
         if ($request->category_id === 1) {
             $items = Product::where('category_id', 1)->where('owner_id', auth()->user()->id)->get();
-
         } else {
             $items = Service::where('category_id', 2)->where('owner_id', auth()->user()->id)->get();
         }
@@ -222,10 +274,10 @@ class InvoiceController extends Controller
             $lists = $items->map(function ($value) {
                 return [
                     'id' => $value->id,
-                    'vehicle_name' => $value->vehicle? $value->vehicle->model:'N/A',
-                    'reg_no' => $value->vehicle? $value->vehicle->reg_no:'N/A',
-                    'chassis_no' => $value->vehicle? $value->vehicle->chassis_no:'N/A',
-                    'item_name' =>$value->product? $value->product->name: $value->service->name,
+                    'vehicle_name' => $value->vehicle ? $value->vehicle->model : 'N/A',
+                    'reg_no' => $value->vehicle ? $value->vehicle->reg_no : 'N/A',
+                    'chassis_no' => $value->vehicle ? $value->vehicle->chassis_no : 'N/A',
+                    'item_name' => $value->product ? $value->product->name : $value->service->name,
                     'item_quantity' => $value->product_quantity ? $value->product_quantity : $value->service_quantity,
                     'item_price' => $value->product_rate ? $value->product_rate : $value->service_rate,
                     'total_price' => $value->total_price ? $value->total_price : 'N/A',
@@ -233,9 +285,6 @@ class InvoiceController extends Controller
             });
         }
 
-        return response()->json( $lists);
-
+        return response()->json($lists);
     }
-
-
 }
