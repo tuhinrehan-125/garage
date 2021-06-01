@@ -50,7 +50,7 @@
             ></v-text-field>
           </v-card-title>
           <v-card-text>
-            <v-data-table :headers="headers" :items="customer" :search="search">
+            <v-data-table :headers="headers" :items="customer" :search="search" :hide-default-footer="true">
               <template v-slot:item.actions="{ item }">
                 <v-btn
                   class="mx-2"
@@ -72,6 +72,12 @@
                 </v-btn>
               </template>
             </v-data-table>
+            <v-pagination
+              class="pt-5"
+              v-model="pagination.current"
+              :length="pagination.total"
+              @input="onPageChange"
+            ></v-pagination>
           </v-card-text>
         </v-card>
       </v-col>
@@ -101,6 +107,10 @@ export default {
       confirmation: false,
       customer: [],
       singleItem: {},
+      pagination: {
+        current: 1,
+        total: 0
+      },
     };
   },
   computed: {
@@ -139,22 +149,45 @@ export default {
     this.getcustomer();
   },
   methods: {
+
+    onPageChange() {
+      this.getcustomer();
+    },
     opendialog(type) {
       this.$store.commit("SET_MODAL", { type: type, status: true });
     },
+    // async getcustomer() {
+    //   this.isLoading = true;
+    //   await this.$axios
+    //     .get("/contact?type=customer")
+    //     .then((response) => {
+    //       this.$store.commit("SET_ALERT", { alert: false, message: "" });
+    //       this.isLoading = false;
+    //       this.customer = response.data;
+    //     })
+    //     .catch((err) => {
+    //       console.log("error");
+    //     });
+    // },
+
+
     async getcustomer() {
       this.isLoading = true;
       await this.$axios
-        .get("/contact?type=customer")
+        .get('/contact?type=customer && page=' + this.pagination.current)
         .then((response) => {
           this.$store.commit("SET_ALERT", { alert: false, message: "" });
           this.isLoading = false;
-          this.customer = response.data;
+          this.customer = response.data.data;
+          this.pagination.current = response.data.meta.current_page;
+          this.pagination.total = response.data.meta.last_page;
         })
         .catch((err) => {
           console.log("error");
         });
     },
+
+
     deleteClient(item) {
       this.confirmation = true;
       this.customerid = item.id;

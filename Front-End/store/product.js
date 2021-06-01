@@ -86,11 +86,10 @@ export const getters = {
     let invoice_discount_percentage = (price * invoice_tax) / 100;
     let invoice_after_tax = price + invoice_discount_percentage;
     let invoice_after_discount = invoice_after_tax - invoice_discount;
-    let invoice_total_amount = parseInt(invoice_after_discount);
-    let final_amount = invoice_after_discount.toFixed(2);
-
-    // return invoice_total_amount;
-    return final_amount;
+    // let invoice_total_amount = parseInt(invoice_after_discount);
+    let invoice_total_amount = parseInt(invoice_after_discount) <0 ?0 : parseInt(invoice_after_discount);
+    return invoice_total_amount;
+    // return final_amount;
   },
 
   sellSubTotalPrice(state, getters) {
@@ -252,7 +251,7 @@ export const actions = {
       tax: tax,
 
       //subtotal: parseInt(purchase_price) + parseInt(tax * purchase_price) / 100
-      
+
       subtotal: parseInt(price) + parseInt(tax * price) / 100
     };
     commit("ADD_PURCHASE_ITEMS", item);
@@ -308,11 +307,9 @@ export const actions = {
       discount: discount,
       tax: tax,
       category_type: category_type,
-
-      // subtotal: parseInt(price) + parseInt(tax * price) / 100
       subtotal: parseInt(price) + parseInt(tax * price) / 100
     };
-    // commit("ADD_SELL_ITEMS", item);
+
     commit("ADD_INVOICE_ITEMS", item);
   },
   // adding invoice item end here
@@ -392,29 +389,11 @@ export const actions = {
 
 
   updateInvoiceItem({ commit, getters }, payload) {
-    // let sellItems = getters.getSellItems;
     let invoiceItems = getters.getInvoiceItems;
     if (payload.type == "qtychange") {
       if (invoiceItems) {
         let index = payload.index;
-        // let newtax = invoiceItems[index].tax * payload.invoice_quantity;
-        invoiceItems[index].invoice_quantity = payload.invoice_quantity;
-
-        invoiceItems[index].subtotal =
-          payload.invoice_quantity * invoiceItems[index].price
-
-        commit("SET_INVOICE_PRODUCTS", invoiceItems);
-      }
-    }
-    if (payload.type == "pricechange") {
-      if (invoiceItems) {
-
-        let index = payload.index;
-        // invoiceItems[index].invoice_quantity = payload.invoice_quantity;
-        // invoiceItems[index].invoice_price = payload.price;
         invoiceItems[index].price = payload.price;
-
-        // invoiceItems[index].subtotal = payload.invoice_quantity * payload.price
         invoiceItems[index].subtotal = payload.price * invoiceItems[index].invoice_quantity
         commit("SET_INVOICE_PRODUCTS", invoiceItems);
       }

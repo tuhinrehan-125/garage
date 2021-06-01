@@ -26,8 +26,14 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = Category::Active()->get();
-        return response(CategoryResource::collection($categories), Response::HTTP_OK);
+        // $categories = Category::Active()->get();
+
+
+        $categories = Category::Active()->paginate(8);
+        return  CategoryResource::collection($categories);
+
+
+        // return response(CategoryResource::collection($categories), Response::HTTP_OK);
     }
 
     public function store(Request $request)

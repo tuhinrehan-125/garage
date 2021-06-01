@@ -1,10 +1,10 @@
 <template>
   <v-container fluid>
-    <v-row justify="center">
+    <v-row justify="center" v-if="productId !==''" class="pt-5">
       <v-col cols="12" sm="12" md="12">
         <v-card>
           <v-card-title>
-            {{ $t("Add Product") }}
+            {{ $t("Edit Product") }}
           </v-card-title>
           <v-card-text>
             <v-form
@@ -51,7 +51,6 @@
                     v-model="form.brand_id"
                   ></v-select>
 
-
                 </v-col>
                 <v-col cols="12" md="4" sm="12" xl="4">
                   <v-text-field
@@ -60,7 +59,6 @@
                     dense
                     required
                     type="number"
-                    :rules="[v => !!v || 'Buying price is required']"
                     v-model="form.buying_price"
                   ></v-text-field>
                 </v-col>
@@ -109,8 +107,6 @@
                     v-model="form.image"
                   ></v-file-input>
                 </v-col>
-
-
               </v-row>
               <v-row>
                 <v-col cols="12" class="">
@@ -124,6 +120,17 @@
                     <v-icon dark> mdi-plus</v-icon>
                     Submit
                   </v-btn>
+
+
+                  <v-btn
+                    class="float-right"
+                    dark
+                    @click="goBack"
+                    :loading="isLoading"
+                  >
+                    Cancel
+                  </v-btn>
+
                 </v-col>
               </v-row>
             </v-form>
@@ -133,16 +140,17 @@
     </v-row>
   </v-container>
 </template>
-
 <script>
 
+
 export default {
-  name: "Add Product",
+  name: "Edit Single Product",
   middleware: "auth",
   head: {
-    title: "Add Product",
+    title: "Product List",
   },
 
+  props: ["productId"],
   data: () => ({
     isLoading: false,
     valid: true,
@@ -155,17 +163,7 @@ export default {
 
     statuses: ["Active", "Inactive"],
     error: null,
-    form: {
-      name: "",
-      buying_price: "",
-      selling_price: "",
-      brand: "",
-      quantity: "",
-      category_id: "",
-      image: "",
-      status: "",
-      brand_id: "",
-    },
+    form: {},
     direction: "top right",
     categories: [],
     brands: [],
@@ -174,6 +172,12 @@ export default {
 
     parsedDirection() {
       return this.direction.split(" ");
+    },
+  },
+
+  watch: {
+    productId(val) {
+      this.form = val;
     },
   },
   async asyncData({params, axios}) {
@@ -188,6 +192,11 @@ export default {
       setTimeout(() => (this.loading = false), 2000);
     },
 
+    async goBack()
+    {
+      this.productId = '';
+      this.$emit('clicked', this.productId)
+    },
     async getCategories() {
       await this.$axios.get("/get-categories").then(response => {
         this.categories = response.data;
@@ -209,17 +218,21 @@ export default {
             formData.append(key, this.form[key]);
           }
 
+          formData.append("_method", "PATCH");
           await this.$axios
-            .post("/product", formData, {
+            .post(`product/${this.form.id}`, formData, {
               headers: {
                 "Content-Type": "multipart/form-data"
               }
             })
             .then(response => {
               this.isLoading = false;
-              let data = {alert: true, message: "Product Added Successfully", type: 'success'};
+              // let data = {alert: true, message: "Product updated Successfully", type: 'success'};
+              let data = {alert: true, message: "Product updated Successfully"};
               this.$store.commit("SET_ALERT", data);
               this.$store.commit("SET_MODAL", true);
+              this.productId = '';
+              this.$emit('clicked', this.productId)
               this.$router.push('/product/list')
             });
         } catch (e) {

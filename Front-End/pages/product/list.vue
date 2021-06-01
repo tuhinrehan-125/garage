@@ -1,25 +1,23 @@
 <template>
   <v-container grid-list-sm>
     <v-row justify="center">
-      <edit-product :item="singleItem"  :items="productslist" @refresh="getProducts()"/>
       <v-dialog v-model="confirmation" max-width="300">
         <v-card>
           <v-card-title>
             Are you sure?
-            <v-spacer />
+            <v-spacer/>
             <v-icon aria-label="Close" @click="confirmation = false">
               mdi-close
             </v-icon>
           </v-card-title>
           <v-card-text class="pb-6 pt-12 text-center">
-            <v-btn class="mr-3" text @click="confirmation = false"> No </v-btn>
-            <v-btn color="success" text @click="confirmDelete()"> Yes </v-btn>
+            <v-btn class="mr-3" text @click="confirmation = false"> No</v-btn>
+            <v-btn color="success" text @click="confirmDelete()"> Yes</v-btn>
           </v-card-text>
         </v-card>
       </v-dialog>
     </v-row>
-    <v-row>
-
+    <v-row  v-if="singleProductId ==''">
       <v-col cols="12" md="12">
         <v-card v-if="isLoading">
           <v-skeleton-loader class="mx-auto" type="table"></v-skeleton-loader>
@@ -41,24 +39,27 @@
               :headers="headers"
               :items="productslist"
               :search="search"
+              :hide-default-footer="true"
             >
-<!--              <template v-slot:item.image="{ item }">-->
-<!--                <img-->
-<!--                  class="product-img"-->
-<!--                  :src="item.image"-->
-<!--                  style="width: 50px; height: 50px"-->
-<!--                />-->
-<!--              </template>-->
+
+              <template v-slot:item.image="{ item }">
+                <img
+                  class="product-img"
+                  :src="item.image"
+                  style="width: 50px; height: 50px"
+                />
+              </template>
 
               <template v-slot:item.actions="{ item }">
+
                 <v-btn
                   class="mx-2"
                   dark
                   small
                   color="cyan"
-                  @click="editProduct(item)"
+                  @click="editSingleProduct(item)"
                 >
-                  <v-icon dark> mdi-pencil </v-icon>
+                  <v-icon dark> mdi-pencil</v-icon>
                 </v-btn>
                 <v-btn
                   class="mx-2"
@@ -67,26 +68,35 @@
                   color="red"
                   @click="deleteProduct(item)"
                 >
-                  <v-icon dark> mdi-delete </v-icon>
+                  <v-icon dark> mdi-delete</v-icon>
                 </v-btn>
               </template>
             </v-data-table>
+            <v-pagination
+              class="pt-5"
+              v-model="pagination.current"
+              :length="pagination.total"
+              @input="onPageChange"
+            ></v-pagination>
           </v-card-text>
         </v-card>
       </v-col>
     </v-row>
+
+    <edit-single-product  @clicked="onClickChild" :productId="singleProductId" :productLists="productslist" @refresh="getProducts()" />
   </v-container>
 </template>
 
 <script>
-import editProduct from "~/components/product/editProduct";
+import editSingleProduct from "~/components/product/editSingleProduct";
+
 export default {
   name: "Products",
   middleware: "auth",
   head: {
     title: "Product List",
   },
-  components: { editProduct},
+  components: {editSingleProduct},
   data() {
     return {
       search: "",
@@ -109,24 +119,28 @@ export default {
         price: "",
         image: null,
       },
+      pagination: {
+        current: 1,
+        total: 0
+      },
       singleItem: {},
+      singleProductId:"",
       prodid: "",
-      // categories: [],
       productslist: [],
-      // categories: [],
       subcategories: [],
       units: [],
       items: [],
     };
   },
   computed: {
+
     headers() {
       return [
-        // {
-        //   sortable: false,
-        //   text: this.$t("image"),
-        //   value: "image",
-        // },
+        {
+          sortable: false,
+          text: this.$t("image"),
+          value: "image",
+        },
         {
           sortable: false,
           text: this.$t("product_name"),
@@ -148,7 +162,7 @@ export default {
           text: this.$t("Buying Price"),
           value: "buying_price",
         },
-         {
+        {
           sortable: false,
           text: this.$t("Selling Price"),
           value: "selling_price",
@@ -177,40 +191,48 @@ export default {
       get: function () {
         return this.$store.getters.alert;
       },
-      set: function (newValue) {},
+      set: function (newValue) {
+      },
     },
     message() {
       return this.$store.getters.message;
     },
   },
-  async asyncData({ params, axios }) {},
+  async asyncData({params, axios}) {
+  },
   created() {
     this.getProducts();
   },
+
   methods: {
+    onPageChange() {
+      this.getProducts();
+    },
+
+    async getProducts() {
+      this.isLoading = true;
+      await this.$axios.get('/product?page=' + this.pagination.current).then((response) => {
+        this.isLoading = false;
+        this.productslist = response.data.data;
+        this.pagination.current = response.data.meta.current_page;
+        this.pagination.total = response.data.meta.last_page;
+      });
+    },
+
     opendialog(type) {
-      this.$store.commit("SET_MODAL", { type: type, status: true });
+      this.$store.commit("SET_MODAL", {type: type, status: true});
     },
-    editProduct(item) {
-      // this.$store.commit('changeDataState',item);
-      this.$store.commit("SET_MODAL", { type: "edit", status: true });
-      this.singleItem = item;
-      // this.$router.push({ path: '/product/edit' ,params: {
-      //     items: item
-      //   }});
-      // this.singleItem = item;
-      // this.update = true;
-      // this.dialog = true;
-      // this.headline = this.$t("edit_product");
-      // this.form.name = item.name;
-      // this.form.details = item.details;
-      // this.form.category_id = item.category_id;
-      // this.form.subcategory_id = item.subcategory_id;
-      // this.form.unit_id = item.unit_id;
-      // this.form.weight = item.weight;
-      // this.form.price = item.price;
-      // this.prodid = item.id;
+
+    editSingleProduct(val) {
+      this.singleProductId = val;
     },
+
+
+    onClickChild (value) {
+      this.singleProductId = value;
+      this.getProducts();
+    },
+
     deleteProduct(item) {
       this.confirmation = true;
       this.prodid = item.id;
@@ -223,23 +245,24 @@ export default {
         this.getProducts();
       });
     },
-    async getProducts() {
-      this.isLoading = true;
-      await this.$axios.get("/product").then((response) => {
-        this.isLoading = false;
-        this.productslist = response.data;
-      });
-    },
+    // async getProducts() {
+    //   this.isLoading = true;
+    //   await this.$axios.get("/product").then((response) => {
+    //     this.isLoading = false;
+    //     this.productslist = response.data;
+    //   });
+    // },
+
+
+
+
+
   },
-  // watch: {
-  //   "form.category_id": function (val) {
-  //     this.getChildOfCategory(val);
-  //   },
-  // },
+
 };
 </script>
 
-<style  scoped>
+<style scoped>
 .product-img {
   margin: 5px;
   border-radius: 5px;

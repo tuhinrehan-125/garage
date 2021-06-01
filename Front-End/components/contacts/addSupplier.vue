@@ -38,6 +38,7 @@
                 :label="$t('phone_no')"
                 v-model="form.mobile"
                 outlined
+                :rules="[v => !!v || 'Phone number is required']"
                 dense
               ></v-text-field>
             </v-col>

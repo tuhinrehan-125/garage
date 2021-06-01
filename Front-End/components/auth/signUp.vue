@@ -6,7 +6,7 @@
          elevation="5"
           class="signup-card d-flex align-content-center flex-wrap mb-70"
         >
-          <v-card-title style="margin: 0 auto" class="mb-2">E-Shop | SignUp</v-card-title>
+          <v-card-title style="margin: 0 auto" class="mb-2">Vehicle Management | SignUp</v-card-title>
           <v-card-text>
             <v-form
               ref="registerForm"

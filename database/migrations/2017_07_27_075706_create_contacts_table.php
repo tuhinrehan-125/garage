@@ -18,17 +18,10 @@ class CreateContactsTable extends Migration
             $table->unsignedBigInteger('owner_id');
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
             $table->enum('type', ['supplier', 'customer', 'both']);
-            $table->string('supplier_business_name')->nullable();
             $table->string('name');
             $table->string('email')->nullable();
             $table->string('mobile')->nullable();
             $table->text('address')->nullable();
-            $table->string('tax_number')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('country')->nullable();
-            $table->string('zip_code')->nullable();
-            $table->string('alternate_number')->nullable();
             $table->unsignedBigInteger('created_by');
             $table->softDeletes();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');

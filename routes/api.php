@@ -71,6 +71,7 @@ Route::get('get-subcategories/{category}', [CategoryController::class, 'getSubca
 Route::get('get-subunits/{unit}', [UnitController::class, 'getSubUnits']);
 Route::get('get-clients', [ContactController::class, 'getClients']);
 Route::get('get-vehicles', [\App\Http\Controllers\InvoiceController::class, 'getVehicles']);
+Route::post('get-invoice-details', [\App\Http\Controllers\InvoiceController::class, 'getInvoiceDetails']);
 
 
 Route::resource('advance', AdvanceController::class);
@@ -155,4 +156,3 @@ Route::get('purchase-items', [PurchaseController::class, 'purchaseItemsList']);
 // Route::patch('purchase-return/{id}', [SellPurchaseReturnController::class, 'returnPurchase']);
 
 Route::resource('invoice', \App\Http\Controllers\InvoiceController::class);
-Route::get('get-suppliers', [PurchaseController::class, 'getSuppliers']);

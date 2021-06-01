@@ -10,7 +10,7 @@
     hide-selected
     item-text="name"
     item-value="id"
-    placeholder="Search Product by Name"
+    placeholder="Search Items by Name"
     solo-inverted
     filled
     return-object

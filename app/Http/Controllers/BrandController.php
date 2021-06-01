@@ -17,8 +17,12 @@ class BrandController extends Controller
 
     public function index()
     {
-        $brand = Brand::Active()->get();
-        return response(BrandResource::collection($brand), Response::HTTP_OK);
+        // $brand = Brand::Active()->get();
+        // return response(BrandResource::collection($brand), Response::HTTP_OK);
+
+        $brand = Brand::Active()->paginate(8);
+        return  BrandResource::collection($brand);
+
     }
 
     public function store(Request $request)

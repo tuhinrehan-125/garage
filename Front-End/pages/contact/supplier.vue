@@ -39,7 +39,7 @@
         </v-card>
         <v-card v-else>
           <v-card-title>
-            {{ $t("supplier_list") }}
+            {{ $t("Supplier list") }}
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
@@ -50,7 +50,7 @@
             ></v-text-field>
           </v-card-title>
           <v-card-text>
-            <v-data-table :headers="headers" :items="supplier" :search="search">
+            <v-data-table :headers="headers" :items="supplier" :search="search" :hide-default-footer="true">
               <template v-slot:item.actions="{ item }">
                 <v-btn
                   class="mx-2"
@@ -72,6 +72,12 @@
                 </v-btn>
               </template>
             </v-data-table>
+            <v-pagination
+              class="pt-5"
+              v-model="pagination.current"
+              :length="pagination.total"
+              @input="onPageChange"
+            ></v-pagination>
           </v-card-text>
         </v-card>
       </v-col>
@@ -99,6 +105,10 @@ export default {
       confirmation: false,
       supplier: [],
       singleItem: {},
+      pagination: {
+        current: 1,
+        total: 0
+      },
     };
   },
   computed: {
@@ -137,22 +147,50 @@ export default {
     this.getsupplier();
   },
   methods: {
+
+    onPageChange() {
+      this.getsupplier();
+    },
+
+
     opendialog(type) {
       this.$store.commit("SET_MODAL", { type: type, status: true });
     },
+
+
+    // async getsupplier() {
+    //   this.isLoading = true;
+    //   await this.$axios
+    //     .get("/contact?type=supplier")
+    //     .then((response) => {
+    //       this.$store.commit("SET_ALERT", {alert:false,message:""});
+    //       this.isLoading = false;
+    //       this.supplier = response.data;
+    //     })
+    //     .catch((err) => {
+    //       console.log("error");
+    //     });
+    // },
+
+
     async getsupplier() {
       this.isLoading = true;
       await this.$axios
-        .get("/contact?type=supplier")
+        .get('/contact?type=supplier && page=' + this.pagination.current)
         .then((response) => {
           this.$store.commit("SET_ALERT", {alert:false,message:""});
           this.isLoading = false;
-          this.supplier = response.data;
+          this.supplier = response.data.data;
+          this.pagination.current = response.data.meta.current_page;
+          this.pagination.total = response.data.meta.last_page;
         })
         .catch((err) => {
           console.log("error");
         });
     },
+
+
+
     deleteClient(item) {
       this.confirmation = true;
       this.supplierid = item.id;

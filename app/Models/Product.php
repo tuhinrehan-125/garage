@@ -23,6 +23,10 @@ class Product extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function invoiceItems(){
+        return $this->hasMany(InvoiceItem::class);
+    }
+
     public function Unit()
     {
         return $this->belongsTo(Unit::class, 'unit_id');
@@ -35,7 +39,8 @@ class Product extends Model
 
     public function getImageAttribute($value)
     {
-        return asset('images/' . $value);
+//        return asset('images/' . $value);
+        return  $value?   asset('/' . $value) :"";
     }
 
     public function SalePurchaseReturn()
