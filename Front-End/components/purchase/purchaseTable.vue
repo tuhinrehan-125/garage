@@ -18,19 +18,19 @@
             @keyup="qtyChange($event.target.value, purchaseItems.indexOf(item))"
           ></v-text-field>
         </template>
-        <template v-slot:[`item.purchase_price`]="{ item }">
+        <template v-slot:[`item.price`]="{ item }">
           <v-text-field
             dense
             outlined
             class="shrink"
             type="number"
-            :value="item.purchase_price"
+            :value="item.price"
             @keyup="
               priceChange($event.target.value, purchaseItems.indexOf(item))
             "
           ></v-text-field>
         </template>
-        <template v-slot:[`item.discount`]="{ item }">
+        <!-- <template v-slot:[`item.discount`]="{ item }">
           <v-text-field
             dense
             outlined
@@ -51,7 +51,7 @@
             :value="item.tax"
             @keyup="taxChange($event.target.value, purchaseItems.indexOf(item))"
           ></v-text-field>
-        </template>
+        </template> -->
         <template v-slot:[`item.action`]="{ item }">
           <v-icon small @click="removeItem(item, purchaseItems.indexOf(item))">
             mdi-delete
@@ -67,11 +67,11 @@ export default {
   data() {
     return {
       headers: [
-        { text: "Name", value: "product" },
+        { text: "Name", value: "name" },
         { text: "Quantity", value: "purchase_quantity" },
-        { text: "Net Unit Cost", value: "purchase_price" },
-        { text: "Discount", value: "discount" },
-        { text: "Tax", value: "tax" },
+        { text: "Price", value: "price" },
+        // { text: "Discount", value: "discount" },
+        // { text: "Tax", value: "tax" },
         { text: "Subtotal", value: "subtotal" },
         { text: "Action", value: "action" }
       ]
@@ -100,20 +100,20 @@ export default {
         type: "pricechange"
       });
     },
-    discountChange(val, index) {
-      this.$store.dispatch("product/updateCartItem", {
-        discount: parseInt(val),
-        index: index,
-        type: "discountchange"
-      });
-    },
-    taxChange(val, index) {
-      this.$store.dispatch("product/updateCartItem", {
-        tax: parseInt(val),
-        index: index,
-        type: "taxchange"
-      });
-    },
+    // discountChange(val, index) {
+    //   this.$store.dispatch("product/updateCartItem", {
+    //     discount: parseInt(val),
+    //     index: index,
+    //     type: "discountchange"
+    //   });
+    // },
+    // taxChange(val, index) {
+    //   this.$store.dispatch("product/updateCartItem", {
+    //     tax: parseInt(val),
+    //     index: index,
+    //     type: "taxchange"
+    //   });
+    // },
     removeItem(val,index){
       this.$store.commit("product/REMOVE_PRODUCT", {
         id: val.id,

@@ -5,7 +5,7 @@
     </v-overlay>
     <add-payment :item="singleitem" type="purchase" />
     <view-payment :data="paymentinfo" />
-    <return-purchase :item="singleitem"  :ItemList="purchaseItems"/>
+    <return-purchase :item="singleitem" :ItemList="purchaseItems" />
     <v-row justify="center">
       <v-dialog v-model="confirmation" max-width="300">
         <v-card>
@@ -70,21 +70,17 @@
                     </v-btn>
                   </template>
                   <v-list>
+                    <v-list-item link @click="openViewPayment(item)">
+                      <v-list-item-title>View Details</v-list-item-title>
+                    </v-list-item>
                     <v-list-item
                       link
-                      @click="openAddPayment(item)"
-                      v-if="item.total_due != 0"
+                      :to="{
+                        name: 'purchase-edit-id',
+                        params: { id: item.id }
+                      }"
                     >
-                      <v-list-item-title>Add Payment</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link @click="openViewPayment(item)">
-                      <v-list-item-title>View Payment</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link @click="openReturnPurchase(item)">
-                      <v-list-item-title>Return Purchase</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link @click="editProduct(item)">
-                      <v-list-item-title>Edit</v-list-item-title>
+                      <v-list-item-title> Edit</v-list-item-title>
                     </v-list-item>
                     <v-list-item link @click="deleteProduct(item)">
                       <v-list-item-title>Delete</v-list-item-title>
@@ -103,18 +99,18 @@
 <script>
 import addPayment from "../../components/payment/addPayment";
 import viewPayment from "../../components/payment/viewPayment";
-import returnPurchase from '../../components/purchase/returnPurchase';
+import returnPurchase from "../../components/purchase/returnPurchase";
 export default {
   name: "Purchase",
   middleware: "auth",
   head: {
     title: "Purchase List"
   },
-  components: { addPayment, viewPayment,returnPurchase },
+  components: { addPayment, viewPayment, returnPurchase },
   data() {
     return {
       full_loading: false,
-      purchaseItems:[],
+      purchaseItems: [],
       singleitem: {},
       paymentinfo: [],
       search: "",
@@ -147,13 +143,13 @@ export default {
       return [
         {
           sortable: false,
-          text: this.$t("Date"),
-          value: "purchase_date"
+          text: this.$t("Purchase Number"),
+          value: "purchase_number"
         },
         {
           sortable: false,
-          text: this.$t("location"),
-          value: "business_location"
+          text: this.$t("Date"),
+          value: "purchase_date"
         },
         {
           sortable: false,
@@ -165,27 +161,27 @@ export default {
           text: this.$t("Purchase Stutas"),
           value: "purchase_status"
         },
+
+        {
+          sortable: false,
+          text: this.$t("Total Amount"),
+          value: "total_cost"
+        },
+        {
+          sortable: false,
+          text: this.$t("Paid Amount"),
+          value: "paid_amount"
+        },
+        {
+          sortable: false,
+          text: this.$t("Due Amount"),
+          value: "due_amount"
+        },
         {
           sortable: false,
           text: this.$t("Payment Status"),
           value: "payment_status"
         },
-        {
-          sortable: false,
-          text: this.$t("Grand Total"),
-          value: "total_cost"
-        },
-        {
-          sortable: false,
-          text: this.$t("Paid"),
-          value: "total_paid"
-        },
-        {
-          sortable: false,
-          text: this.$t("Due"),
-          value: "total_due"
-        },
-
         {
           sortable: false,
           text: this.$t("action"),
@@ -211,14 +207,19 @@ export default {
         this.full_loading = false;
       });
     },
-    async openReturnPurchase(item){
+    async openReturnPurchase(item) {
       this.full_loading = true;
-       await this.$axios.get("purchase-items?purchase_id=" + item.id).then(res => {
-        this.purchaseItems=res.data
-        this.singleitem = item;
-        this.$store.commit("SET_MODAL", { type: "returnPurchase", status: true });
-         this.full_loading = false;
-       })
+      await this.$axios
+        .get("purchase-items?purchase_id=" + item.id)
+        .then(res => {
+          this.purchaseItems = res.data;
+          this.singleitem = item;
+          this.$store.commit("SET_MODAL", {
+            type: "returnPurchase",
+            status: true
+          });
+          this.full_loading = false;
+        });
     },
     deleteProduct(item) {
       this.confirmation = true;
@@ -233,12 +234,13 @@ export default {
       });
     },
     async getPurchaseList() {
-      this.isLoading = true;
+      // this.isLoading = true;
       await this.$axios.get("/purchase").then(response => {
-        this.isLoading = false;
+        // this.isLoading = false;
         this.purchaselist = response.data;
+        console.log(this.purchaselist);
       });
-    },
+    }
   }
 };
 </script>

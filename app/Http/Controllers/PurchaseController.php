@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
 use App\Models\PurchasePayment;
+use App\Models\User;
+use App\Models\Contact;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -18,16 +21,23 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PurchaseController extends Controller
 {
-//     public function __construct()
-//     {
-//         $this->middleware('jwt', ['except' => ['index']]);
-//     }
+    public function __construct()
+    {
+        $this->middleware('jwt', ['except' => ['index']]);
+    }
 
     public function index()
     {
-        $business_location = Auth::user()->Business->Location->pluck('id');
-        $purchase = Purchase::whereIn('business_location_id', $business_location)->get();
+        $purchase = Purchase::get();
         return response(PurchaseResource::collection($purchase), Response::HTTP_OK);
+    }
+
+    public function getSuppliers()
+    {
+        $suppliers = Contact::where('owner_id',1)->where('type','supplier')->get();
+
+        return response()->json($suppliers);
+
     }
 
     public function store(Request $request)
@@ -35,7 +45,8 @@ class PurchaseController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'business_location_id' => 'required',
+                // 'business_location_id' => 'required',
+                // 'owner_id' => 'required',
                 'supplier_id' => 'required',
                 'purchase_date' => 'required',
                 'purchase_status' => 'required',
@@ -50,23 +61,27 @@ class PurchaseController extends Controller
 
             $purchase = new Purchase();
 
-            $business_location = BusinessLocation::findOrFail($request->business_location_id);
-            $purchase->business_location_id = $business_location->id;
+            //$business_location = BusinessLocation::findOrFail($request->business_location_id);
+            //$owner = User::findOrFail($request->owner_id);
+            //$purchase->business_location_id = $business_location->id;
+            //$purchase->owner_id = $owner->id;
+
+            $purchase->owner_id = 1;
             $purchase->contact_id = $request->supplier_id;
             $purchase->purchase_status = $request->purchase_status;
             $purchase->purchase_date = date("Y-m-d", strtotime($request->purchase_date));
-            $purchase->purchase_discount = $request->purchase_discount;
-            $purchase->purchase_tax = $request->purchase_tax;
-            $purchase->shipping_charge = $request->shipping_cost;
-            $purchase->shipping_details = $request->shipping_details;
+            // $purchase->purchase_discount = $request->purchase_discount;
+            // $purchase->purchase_tax = $request->purchase_tax;
+            //$purchase->shipping_charge = $request->shipping_cost;
+            //$purchase->shipping_details = $request->shipping_details;
             $purchase->created_by = auth()->user()->id;
             $purchase->updated_by = auth()->user()->id;
             $purchase->save();
 
-            if (!empty($request->purchase_doc)) {
-                $purchase_doc = $request->purchase_doc;
-                Helper::uploadFile($purchase_doc, $purchase, $business_location->business_id);
-            }
+            // if (!empty($request->purchase_doc)) {
+            //     $purchase_doc = $request->purchase_doc;
+            //     Helper::uploadFile($purchase_doc, $purchase, $business_location->business_id);
+            // }
 
             $item_purchase_quantity = 0;
             $item_subtotal_price = 0;
@@ -75,31 +90,31 @@ class PurchaseController extends Controller
 
             foreach ($request->purchase_items as $item) {
                 $purchase_item = PurchaseItem::savePurchaseItem($purchase->id, $item);
-                $stockProduct = LocationProductStock::saveProductInStock($item, $business_location->id, $business_location->business_id);
+                //$stockProduct = LocationProductStock::saveProductInStock($item, $business_location->id, $business_location->business_id);
                 $item_purchase_quantity += $purchase_item->purchase_quantity;
                 $item_subtotal_price += $purchase_item->total_price;
             }
 
             $purchase->total_purchase_quantity = $item_purchase_quantity;
-            $purchase->subtotal_cost = $item_subtotal_price;
+            //$purchase->subtotal_cost = $item_subtotal_price;
 
-            if ($purchase->purchase_tax > 0) {
-                $taxInPercentage = ($purchase->purchase_tax / 100);
-                $afterTax = $item_subtotal_price * $taxInPercentage;
-            }
+            // if ($purchase->purchase_tax > 0) {
+            //     $taxInPercentage = ($purchase->purchase_tax / 100);
+            //     $afterTax = $item_subtotal_price * $taxInPercentage;
+            // }
 
-            $purchase->total_cost = ($item_subtotal_price + $afterTax + $purchase->shipping_charge) - $purchase->purchase_discount;
-
+            //$purchase->total_cost = ($item_subtotal_price + $afterTax + $purchase->shipping_charge) - $purchase->purchase_discount;
+            $purchase->total_cost = $item_subtotal_price;
             $purchase->save();
 
-            if ($request->payment_amount != null) {
-                $purchase->payments()->create([
-                    'payment_amount' => $request->payment_amount,
-                    'payment_method' => $request->payment_method,
-                    'payment_date' =>  date("Y-m-d", strtotime($request->payment_date ? $request->payment_date : now()))
-                ]);
-                //PurchasePayment::savePurchasePayment($purchase->id, $request->payment_amount, $request->payment_type, $request->payment_date);
-            }
+            // if ($request->payment_amount != null) {
+            //     $purchase->payments()->create([
+            //         'payment_amount' => $request->payment_amount,
+            //         'payment_method' => $request->payment_method,
+            //         'payment_date' =>  date("Y-m-d", strtotime($request->payment_date ? $request->payment_date : now()))
+            //     ]);
+            //     //PurchasePayment::savePurchasePayment($purchase->id, $request->payment_amount, $request->payment_type, $request->payment_date);
+            // }
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['success' => false, 'errmsg' => $e->getMessage()], 500);
@@ -109,12 +124,15 @@ class PurchaseController extends Controller
         return response(new PurchaseResource($purchase), Response::HTTP_CREATED);
     }
 
+    public function show(Purchase $purchase)
+    {
+        return new PurchaseResource($purchase);
+    }
+
     public function update(Request $request, $id)
     {
-
         DB::beginTransaction();
         try {
-
             $purchase = Purchase::findOrFail($id);
 
             // $business_location = BusinessLocation::findOrFail($request->business_location_id);
@@ -202,57 +220,12 @@ class PurchaseController extends Controller
         return response()->json(['success' => true, 'message' => 'Deleted successfully'], 204);
     }
 
-    //For payment
-    public function addPayment(Request $request, $id)
-    {
-        $purchase = Purchase::findOrFail($id);
-
-        $previousPayment = $purchase->payments->sum('payment_amount');
-
-        if ($purchase->total_cost >= ($previousPayment + $request->payment_amount)) {
-            $newPayment = $purchase->payments()->create([
-                'payment_amount' => $request->payment_amount,
-                'payment_method' => $request->payment_method,
-                'payment_date' =>  date("Y-m-d", strtotime($request->payment_date ? $request->payment_date : now()))
-            ]);
-
-            $purchase->payment_status = "partial";
-            if ($purchase->total_cost == ($previousPayment + $request->payment_amount)) {
-                $purchase->payment_status = "paid";
-            }
-            $purchase->save();
-
-            return response(new PurchaseResource($purchase), Response::HTTP_OK);
-        } elseif ($purchase->total_cost < ($previousPayment + $request->payment_amount)) {
-            return response()->json(['success' => false, 'message' => 'You can not pay more than the original amount!'], 400);
-        }
-    }
-
-    public function viewPayment(Request $request)
-    {
-        $purchaseid = $request->id;
-        $purchase = Purchase::findOrFail($purchaseid);
-        $all_payments = $purchase->payments;
-        return response()->json(['data' => $all_payments], 200);
-    }
-
     public function purchaseItemsList(Request $request)
     {
         $purchaseid = $request->purchase_id;
         $purchase = Purchase::findOrFail($purchaseid);
         $all_items = $purchase->purchaseItems;
         return response(PurchaseItemsResource::collection($all_items), Response::HTTP_OK);
-    }
-
-    public function returnPurchase(Request $request, $id)
-    {
-        $purchase = Purchase::findOrFail($id);
-
-        // $sum = PurchasePayment::where('purchase_id', $id);
-        // $previousPayment = $sum->sum("payment_amount");
-
-        $business_location = BusinessLocation::findOrFail($request->business_location_id);
-        $purchase->business_location_id = $business_location->id;
     }
 
     public function getContacts()

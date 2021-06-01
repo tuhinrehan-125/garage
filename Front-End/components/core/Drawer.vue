@@ -133,17 +133,7 @@ export default {
               icon: "mdi-shape",
               title: this.$t("Brand"),
               to: "/brand"
-            },
-            // {
-            //   icon: "mdi-shape",
-            //   title: this.$t("Unit"),
-            //   to: "/unit"
-            // },
-            // {
-            //   icon: "mdi-shape",
-            //   title: this.$t("variation"),
-            //   to: "/variation"
-            // }
+            }
           ]
         },
         {
@@ -160,7 +150,7 @@ export default {
               icon: "mdi-account-arrow-right-outline",
               title: this.$t("clients"),
               to: "/customers"
-            },
+            }
             // {
             //   icon: "mdi-account-group-outline",
             //   title: this.$t("customer_group"),
@@ -168,7 +158,6 @@ export default {
             // }
           ]
         },
-
         {
           icon: "mdi-car",
           title: this.$t("Vehicles"),
@@ -193,14 +182,14 @@ export default {
               icon: "mdi-shape",
               title: this.$t("Vehicle Color"),
               to: "/vehiclecolor"
-            },
+            }
           ]
         },
 
         {
           icon: "mdi-link",
           title: this.$t("Services"),
-          to: "/service",
+          to: "/service"
         },
         {
           icon: "mdi-cart",
@@ -232,7 +221,7 @@ export default {
             {
               icon: "mdi-inbox-arrow-up",
               title: this.$t("add_expense"),
-              to: "/add",
+              to: "/add"
             },
             {
               icon: "mdi-shape",

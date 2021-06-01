@@ -8,8 +8,8 @@
     clearable
     hide-no-data
     hide-selected
-    item-text="product"
-    item-value="variation_id"
+    item-text="name"
+    item-value="id"
     placeholder="Search Product by Name/SKU"
     solo-inverted
     filled
@@ -20,7 +20,7 @@
 <script>
 export default {
   name: "searchProduct",
-  props: ["type","location_id"],
+  props: ["type"],
   components: {},
   data() {
     return {
@@ -36,55 +36,36 @@ export default {
   methods: {},
   watch: {
     item(val) {
-      if (this.type == "sell") {
-        this.$store.dispatch("product/addItemToSell", {
-          product: val.product,
-          product_id: val.product_id,
-          variation_id: val.variation_id,
-          sell_quantity: 1,
-          sell_price: val.sell_price,
-          unit: val.unit,
+      if (this.type == "invoice") {
+        this.$store.dispatch("product/addItemToInvoice", {
+          name: val.name,
+          id: val.id,
+          invoice_quantity: 1,
+          price: val.price,
           discount: 0,
-          tax: val.tax
+          tax: 0
         });
       } else if (this.type == "purchase") {
         this.$store.dispatch("product/addItemToPurchase", {
-          product: val.product,
-          product_id: val.product_id,
-          variation_id: val.variation_id,
+          name: val.name,
+          id: val.id,
           purchase_quantity: 1,
-          purchase_price: val.purchase_price,
+          price: val.price,
           discount: 0,
-          tax: val.tax
-        });
-      }
-      else if (this.type == "transfer") {
-        this.$store.dispatch("product/addItemToTransfer", {
-          product: val.product,
-          product_id: val.product_id,
-          qty_available: val.qty_available,
-          variation_id: val.variation_id,
-          quantity: 1,
-          unit: val.unit,
-          purchase_price: val.purchase_price,
+          tax: 0
         });
       }
     },
     getProducts(val) {
       if (val) {
-        if(this.type=='transfer'){
-          if(this.location_id=='' || this.location_id==null){
-            alert('Select location from')
-            return;
-          }
-        }
         this.loading = true;
         this.$axios
-          .post("/product/search", { name: val, location_id:this.location_id })
+          .post("/product/search", { name: val, type: "Product" })
           .then(response => {
             this.products = [];
             this.loading = false;
             this.products = response.data;
+            console.log(this.products);
           })
           .catch(err => {
             this.loading = false;

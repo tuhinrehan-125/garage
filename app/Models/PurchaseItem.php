@@ -19,8 +19,7 @@ class PurchaseItem extends Model
     {
         $pi = PurchaseItem::create([
             'purchase_id' => $purchase_id,
-            'product_id' => $store_items['product_id'],
-            'product_variation_id' => $store_items['variation_id'],
+            'product_id' => $store_items['id'],
             'purchase_quantity' => $store_items['purchase_quantity'],
             'purchase_price' => $store_items['purchase_price'],
             'total_price' => $store_items['subtotal']
@@ -28,21 +27,9 @@ class PurchaseItem extends Model
 
         return $pi;
     }
-    public static function returnPurchaseItem($purchase_id, $return_items)
-    {
-        $pi = PurchaseItem::create([
-            'purchase_id' => $purchase_id,
-            'product_id' => $return_items['product_id'],
-            'product_variation_id' => $return_items['variation_id'],
-            'purchase_quantity' => $return_items['purchase_quantity'],
-            'purchase_price' => $return_items['purchase_price'],
-            'total_price' => $return_items['purchase_quantity'] * $return_items['purchase_price'],
-        ]);
+    
 
-        return $pi;
-    }
-
-    public function Purchase()
+    public function purchase()
     {
         return $this->belongsTo(Purchase::class);
     }
@@ -52,13 +39,13 @@ class PurchaseItem extends Model
         return $this->belongsTo(Products::class,'product_id');
     }
 
-    public function productVariation()
-    {
-        return $this->belongsTo(ProductVariation::class,'product_variation_id');
-    }
+    // public function productVariation()
+    // {
+    //     return $this->belongsTo(ProductVariation::class,'product_variation_id');
+    // }
 
-    public function SalePurchaseReturn()
-    {
-        return $this->belongsTo(SalePurchaseReturn::class);
-    }
+    // public function SalePurchaseReturn()
+    // {
+    //     return $this->belongsTo(SalePurchaseReturn::class);
+    // }
 }

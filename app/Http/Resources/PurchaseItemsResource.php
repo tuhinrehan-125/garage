@@ -16,18 +16,18 @@ class PurchaseItemsResource extends JsonResource
      */
     public function toArray($request)
     {
-        //get previous purchase return quantity
-        $purchase_returned=0;
         $purchase = Purchase::find($this->purchase_id);
-        $purchase_returned=$purchase->return->where('variation_id', $this->product_variation_id)->sum('return_quantity');
-
+        
         return [
             'id' => $this->id,
+            'purchase_id' => $this->purchase_id ? $this->purchase_id : 'N\A',
+            'purchase' => $this->purchase ? $this->purchase->name  : 'N/A',
             'product_id' => $this->product_id,
-            'product_variation_id' => $this->product_variation_id,
             'product' => $this->product ? $this->product->name : '',
-            'product_variation' => $this->productVariation ? $this->productVariation->name : '',
-            'quantity' => $this->purchase_quantity-$purchase_returned,
+            'quantity' => $this->purchase_quantity->$purchase_returned,
+            'purchase_quantity' => $this->purchase_quantity ? $this->purchase_quantity : 'N/A',
+            'purchase_price' => $this->purchase_price ? $this->purchase_price : 'N/A',
+            'total_price' => $this->total_price ? $this->total_price : 'N/A',
         ];
     }
 }
