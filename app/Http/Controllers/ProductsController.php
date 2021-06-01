@@ -153,7 +153,7 @@ class ProductsController extends Controller
         $type = $request->type;
         $keyword = $request->name;
         if ($type == "Product") {
-            $searchQ = Product::where('name', 'like', '%' . $keyword . '%')->where('owner_id', auth()->user()->id);
+            $searchQ = Product::where('name', 'like', '%' . $keyword . '%')->where('owner_id', auth()->user()->id)->where('status',0);
 
         }
         else {

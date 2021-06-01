@@ -15,15 +15,13 @@ class InvoiceItemResource extends JsonResource
      */
     public function toArray($request)
     {
-        $invoice = Invoice::find($this->invoice_id);
+//        $invoice = Invoice::find($this->invoice_id);
         return [
-//            'id' => $this->id,
-//            'id' => $this->product_id == null ? $this->service_id : $this->product_id,
+
             'id' => $this->product_id ? $this->product_id : $this->service_id,
             'vehicle_id' => $this->vehicle_id ? $this->vehicle_id : 'N\A',
             'vehicle_name' => $this->vehicle ? $this->vehicle->model : 'N/A',
             'reg_no' => $this->vehicle ? $this->vehicle->reg_no : 'N/A',
-//            "category_type" =>$this->product_id == null ? "Service":"Product",
             "category_type" =>$this->product_id ? "Product":"Service",
             'chassis_no' => $this->vehicle ? $this->vehicle->chassis_no : 'N/A',
             'name' => $this->product ? $this->product->name : $this->service->name,

@@ -241,6 +241,7 @@ export default {
     if (Object.keys(this.data).length > 1) {
       this.isEdit = true;
       this.form = this.data;
+
        this.$axios.get("/get-vehicles", {params: {contact_id:  this.form.contact_id}}).then(response => {
         this.vehicles = response.data;
         this.vehicle_id = this.data.items[0].vehicle_id;
